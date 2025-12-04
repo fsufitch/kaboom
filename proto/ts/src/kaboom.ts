@@ -6,7 +6,7 @@
 
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { PawnBump, PawnKaboom, PawnMove } from "./pawn";
+import { KaboomMove } from "./move";
 import { ChessPiece } from "./piece";
 
 export const protobufPackage = "kaboomproto";
@@ -18,7 +18,7 @@ export interface GameState {
 export interface BoardState {
   whitePlayer?: Player | undefined;
   blackPlayer?: Player | undefined;
-  board?:
+  chessBoard?:
     | ChessBoard
     | undefined;
   /** Current turn, turn count, etc can be implied from the move history */
@@ -35,12 +35,6 @@ export interface ChessBoard {
   uuid: string;
   name: string;
   pieces: ChessPiece[];
-}
-
-export interface KaboomMove {
-  pawnMove?: PawnMove | undefined;
-  pawnBump?: PawnBump | undefined;
-  pawnKaboom?: PawnKaboom | undefined;
 }
 
 function createBaseGameState(): GameState {
@@ -103,7 +97,7 @@ export const GameState = {
 };
 
 function createBaseBoardState(): BoardState {
-  return { whitePlayer: undefined, blackPlayer: undefined, board: undefined, moveHistory: [] };
+  return { whitePlayer: undefined, blackPlayer: undefined, chessBoard: undefined, moveHistory: [] };
 }
 
 export const BoardState = {
@@ -114,8 +108,8 @@ export const BoardState = {
     if (message.blackPlayer !== undefined) {
       Player.encode(message.blackPlayer, writer.uint32(18).fork()).ldelim();
     }
-    if (message.board !== undefined) {
-      ChessBoard.encode(message.board, writer.uint32(26).fork()).ldelim();
+    if (message.chessBoard !== undefined) {
+      ChessBoard.encode(message.chessBoard, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.moveHistory) {
       KaboomMove.encode(v!, writer.uint32(34).fork()).ldelim();
@@ -149,7 +143,7 @@ export const BoardState = {
             break;
           }
 
-          message.board = ChessBoard.decode(reader, reader.uint32());
+          message.chessBoard = ChessBoard.decode(reader, reader.uint32());
           continue;
         case 4:
           if (tag !== 34) {
@@ -171,7 +165,7 @@ export const BoardState = {
     return {
       whitePlayer: isSet(object.whitePlayer) ? Player.fromJSON(object.whitePlayer) : undefined,
       blackPlayer: isSet(object.blackPlayer) ? Player.fromJSON(object.blackPlayer) : undefined,
-      board: isSet(object.board) ? ChessBoard.fromJSON(object.board) : undefined,
+      chessBoard: isSet(object.chessBoard) ? ChessBoard.fromJSON(object.chessBoard) : undefined,
       moveHistory: globalThis.Array.isArray(object?.moveHistory)
         ? object.moveHistory.map((e: any) => KaboomMove.fromJSON(e))
         : [],
@@ -186,8 +180,8 @@ export const BoardState = {
     if (message.blackPlayer !== undefined) {
       obj.blackPlayer = Player.toJSON(message.blackPlayer);
     }
-    if (message.board !== undefined) {
-      obj.board = ChessBoard.toJSON(message.board);
+    if (message.chessBoard !== undefined) {
+      obj.chessBoard = ChessBoard.toJSON(message.chessBoard);
     }
     if (message.moveHistory?.length) {
       obj.moveHistory = message.moveHistory.map((e) => KaboomMove.toJSON(e));
@@ -206,8 +200,8 @@ export const BoardState = {
     message.blackPlayer = (object.blackPlayer !== undefined && object.blackPlayer !== null)
       ? Player.fromPartial(object.blackPlayer)
       : undefined;
-    message.board = (object.board !== undefined && object.board !== null)
-      ? ChessBoard.fromPartial(object.board)
+    message.chessBoard = (object.chessBoard !== undefined && object.chessBoard !== null)
+      ? ChessBoard.fromPartial(object.chessBoard)
       : undefined;
     message.moveHistory = object.moveHistory?.map((e) => KaboomMove.fromPartial(e)) || [];
     return message;
@@ -390,101 +384,6 @@ export const ChessBoard = {
     message.uuid = object.uuid ?? "";
     message.name = object.name ?? "";
     message.pieces = object.pieces?.map((e) => ChessPiece.fromPartial(e)) || [];
-    return message;
-  },
-};
-
-function createBaseKaboomMove(): KaboomMove {
-  return { pawnMove: undefined, pawnBump: undefined, pawnKaboom: undefined };
-}
-
-export const KaboomMove = {
-  encode(message: KaboomMove, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.pawnMove !== undefined) {
-      PawnMove.encode(message.pawnMove, writer.uint32(10).fork()).ldelim();
-    }
-    if (message.pawnBump !== undefined) {
-      PawnBump.encode(message.pawnBump, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.pawnKaboom !== undefined) {
-      PawnKaboom.encode(message.pawnKaboom, writer.uint32(26).fork()).ldelim();
-    }
-    return writer;
-  },
-
-  decode(input: _m0.Reader | Uint8Array, length?: number): KaboomMove {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
-    let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseKaboomMove();
-    while (reader.pos < end) {
-      const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
-          if (tag !== 10) {
-            break;
-          }
-
-          message.pawnMove = PawnMove.decode(reader, reader.uint32());
-          continue;
-        case 2:
-          if (tag !== 18) {
-            break;
-          }
-
-          message.pawnBump = PawnBump.decode(reader, reader.uint32());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.pawnKaboom = PawnKaboom.decode(reader, reader.uint32());
-          continue;
-      }
-      if ((tag & 7) === 4 || tag === 0) {
-        break;
-      }
-      reader.skipType(tag & 7);
-    }
-    return message;
-  },
-
-  fromJSON(object: any): KaboomMove {
-    return {
-      pawnMove: isSet(object.pawnMove) ? PawnMove.fromJSON(object.pawnMove) : undefined,
-      pawnBump: isSet(object.pawnBump) ? PawnBump.fromJSON(object.pawnBump) : undefined,
-      pawnKaboom: isSet(object.pawnKaboom) ? PawnKaboom.fromJSON(object.pawnKaboom) : undefined,
-    };
-  },
-
-  toJSON(message: KaboomMove): unknown {
-    const obj: any = {};
-    if (message.pawnMove !== undefined) {
-      obj.pawnMove = PawnMove.toJSON(message.pawnMove);
-    }
-    if (message.pawnBump !== undefined) {
-      obj.pawnBump = PawnBump.toJSON(message.pawnBump);
-    }
-    if (message.pawnKaboom !== undefined) {
-      obj.pawnKaboom = PawnKaboom.toJSON(message.pawnKaboom);
-    }
-    return obj;
-  },
-
-  create<I extends Exact<DeepPartial<KaboomMove>, I>>(base?: I): KaboomMove {
-    return KaboomMove.fromPartial(base ?? ({} as any));
-  },
-  fromPartial<I extends Exact<DeepPartial<KaboomMove>, I>>(object: I): KaboomMove {
-    const message = createBaseKaboomMove();
-    message.pawnMove = (object.pawnMove !== undefined && object.pawnMove !== null)
-      ? PawnMove.fromPartial(object.pawnMove)
-      : undefined;
-    message.pawnBump = (object.pawnBump !== undefined && object.pawnBump !== null)
-      ? PawnBump.fromPartial(object.pawnBump)
-      : undefined;
-    message.pawnKaboom = (object.pawnKaboom !== undefined && object.pawnKaboom !== null)
-      ? PawnKaboom.fromPartial(object.pawnKaboom)
-      : undefined;
     return message;
   },
 };

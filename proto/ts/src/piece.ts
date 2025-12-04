@@ -6,37 +6,42 @@
 
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
+import { Position } from "./position";
 
 export const protobufPackage = "kaboomproto";
 
 export enum PieceType {
-  PAWN = 0,
-  KNIGHT = 1,
-  BISHOP = 2,
-  ROOK = 3,
-  QUEEN = 4,
-  KING = 5,
+  INVALID_PIECE = 0,
+  PAWN = 1,
+  KNIGHT = 2,
+  BISHOP = 3,
+  ROOK = 4,
+  QUEEN = 5,
+  KING = 6,
   UNRECOGNIZED = -1,
 }
 
 export function pieceTypeFromJSON(object: any): PieceType {
   switch (object) {
     case 0:
+    case "INVALID_PIECE":
+      return PieceType.INVALID_PIECE;
+    case 1:
     case "PAWN":
       return PieceType.PAWN;
-    case 1:
+    case 2:
     case "KNIGHT":
       return PieceType.KNIGHT;
-    case 2:
+    case 3:
     case "BISHOP":
       return PieceType.BISHOP;
-    case 3:
+    case 4:
     case "ROOK":
       return PieceType.ROOK;
-    case 4:
+    case 5:
     case "QUEEN":
       return PieceType.QUEEN;
-    case 5:
+    case 6:
     case "KING":
       return PieceType.KING;
     case -1:
@@ -48,6 +53,8 @@ export function pieceTypeFromJSON(object: any): PieceType {
 
 export function pieceTypeToJSON(object: PieceType): string {
   switch (object) {
+    case PieceType.INVALID_PIECE:
+      return "INVALID_PIECE";
     case PieceType.PAWN:
       return "PAWN";
     case PieceType.KNIGHT:
@@ -67,17 +74,21 @@ export function pieceTypeToJSON(object: PieceType): string {
 }
 
 export enum Color {
-  WHITE = 0,
-  BLACK = 1,
+  INVALID_COLOR = 0,
+  WHITE = 1,
+  BLACK = 2,
   UNRECOGNIZED = -1,
 }
 
 export function colorFromJSON(object: any): Color {
   switch (object) {
     case 0:
+    case "INVALID_COLOR":
+      return Color.INVALID_COLOR;
+    case 1:
     case "WHITE":
       return Color.WHITE;
-    case 1:
+    case 2:
     case "BLACK":
       return Color.BLACK;
     case -1:
@@ -89,6 +100,8 @@ export function colorFromJSON(object: any): Color {
 
 export function colorToJSON(object: Color): string {
   switch (object) {
+    case Color.INVALID_COLOR:
+      return "INVALID_COLOR";
     case Color.WHITE:
       return "WHITE";
     case Color.BLACK:
@@ -102,14 +115,11 @@ export function colorToJSON(object: Color): string {
 export interface ChessPiece {
   type: PieceType;
   color: Color;
-  /** 0-7 for columns a-h */
-  positionRow: number;
-  /** 0-7 for rows 1-8 */
-  positionCol: number;
+  position?: Position | undefined;
 }
 
 function createBaseChessPiece(): ChessPiece {
-  return { type: 0, color: 0, positionRow: 0, positionCol: 0 };
+  return { type: 0, color: 0, position: undefined };
 }
 
 export const ChessPiece = {
@@ -120,11 +130,8 @@ export const ChessPiece = {
     if (message.color !== 0) {
       writer.uint32(16).int32(message.color);
     }
-    if (message.positionRow !== 0) {
-      writer.uint32(24).int32(message.positionRow);
-    }
-    if (message.positionCol !== 0) {
-      writer.uint32(32).int32(message.positionCol);
+    if (message.position !== undefined) {
+      Position.encode(message.position, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -151,18 +158,11 @@ export const ChessPiece = {
           message.color = reader.int32() as any;
           continue;
         case 3:
-          if (tag !== 24) {
+          if (tag !== 26) {
             break;
           }
 
-          message.positionRow = reader.int32();
-          continue;
-        case 4:
-          if (tag !== 32) {
-            break;
-          }
-
-          message.positionCol = reader.int32();
+          message.position = Position.decode(reader, reader.uint32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -177,8 +177,7 @@ export const ChessPiece = {
     return {
       type: isSet(object.type) ? pieceTypeFromJSON(object.type) : 0,
       color: isSet(object.color) ? colorFromJSON(object.color) : 0,
-      positionRow: isSet(object.positionRow) ? globalThis.Number(object.positionRow) : 0,
-      positionCol: isSet(object.positionCol) ? globalThis.Number(object.positionCol) : 0,
+      position: isSet(object.position) ? Position.fromJSON(object.position) : undefined,
     };
   },
 
@@ -190,11 +189,8 @@ export const ChessPiece = {
     if (message.color !== 0) {
       obj.color = colorToJSON(message.color);
     }
-    if (message.positionRow !== 0) {
-      obj.positionRow = Math.round(message.positionRow);
-    }
-    if (message.positionCol !== 0) {
-      obj.positionCol = Math.round(message.positionCol);
+    if (message.position !== undefined) {
+      obj.position = Position.toJSON(message.position);
     }
     return obj;
   },
@@ -206,8 +202,9 @@ export const ChessPiece = {
     const message = createBaseChessPiece();
     message.type = object.type ?? 0;
     message.color = object.color ?? 0;
-    message.positionRow = object.positionRow ?? 0;
-    message.positionCol = object.positionCol ?? 0;
+    message.position = (object.position !== undefined && object.position !== null)
+      ? Position.fromPartial(object.position)
+      : undefined;
     return message;
   },
 };

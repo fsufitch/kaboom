@@ -34,8 +34,9 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.piece = exports.pawn = exports.kaboom = void 0;
+exports.position = exports.piece = exports.move = exports.kaboom = void 0;
 exports.kaboom = __importStar(require("./kaboom"));
-exports.pawn = __importStar(require("./pawn"));
+exports.move = __importStar(require("./move"));
 exports.piece = __importStar(require("./piece"));
+exports.position = __importStar(require("./position"));
 //# sourceMappingURL=index.js.map

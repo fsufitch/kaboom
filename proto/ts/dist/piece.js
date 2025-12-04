@@ -15,35 +15,40 @@ exports.colorFromJSON = colorFromJSON;
 exports.colorToJSON = colorToJSON;
 /* eslint-disable */
 const minimal_1 = __importDefault(require("protobufjs/minimal"));
+const position_1 = require("./position");
 exports.protobufPackage = "kaboomproto";
 var PieceType;
 (function (PieceType) {
-    PieceType[PieceType["PAWN"] = 0] = "PAWN";
-    PieceType[PieceType["KNIGHT"] = 1] = "KNIGHT";
-    PieceType[PieceType["BISHOP"] = 2] = "BISHOP";
-    PieceType[PieceType["ROOK"] = 3] = "ROOK";
-    PieceType[PieceType["QUEEN"] = 4] = "QUEEN";
-    PieceType[PieceType["KING"] = 5] = "KING";
+    PieceType[PieceType["INVALID_PIECE"] = 0] = "INVALID_PIECE";
+    PieceType[PieceType["PAWN"] = 1] = "PAWN";
+    PieceType[PieceType["KNIGHT"] = 2] = "KNIGHT";
+    PieceType[PieceType["BISHOP"] = 3] = "BISHOP";
+    PieceType[PieceType["ROOK"] = 4] = "ROOK";
+    PieceType[PieceType["QUEEN"] = 5] = "QUEEN";
+    PieceType[PieceType["KING"] = 6] = "KING";
     PieceType[PieceType["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
 })(PieceType || (exports.PieceType = PieceType = {}));
 function pieceTypeFromJSON(object) {
     switch (object) {
         case 0:
+        case "INVALID_PIECE":
+            return PieceType.INVALID_PIECE;
+        case 1:
         case "PAWN":
             return PieceType.PAWN;
-        case 1:
+        case 2:
         case "KNIGHT":
             return PieceType.KNIGHT;
-        case 2:
+        case 3:
         case "BISHOP":
             return PieceType.BISHOP;
-        case 3:
+        case 4:
         case "ROOK":
             return PieceType.ROOK;
-        case 4:
+        case 5:
         case "QUEEN":
             return PieceType.QUEEN;
-        case 5:
+        case 6:
         case "KING":
             return PieceType.KING;
         case -1:
@@ -54,6 +59,8 @@ function pieceTypeFromJSON(object) {
 }
 function pieceTypeToJSON(object) {
     switch (object) {
+        case PieceType.INVALID_PIECE:
+            return "INVALID_PIECE";
         case PieceType.PAWN:
             return "PAWN";
         case PieceType.KNIGHT:
@@ -73,16 +80,20 @@ function pieceTypeToJSON(object) {
 }
 var Color;
 (function (Color) {
-    Color[Color["WHITE"] = 0] = "WHITE";
-    Color[Color["BLACK"] = 1] = "BLACK";
+    Color[Color["INVALID_COLOR"] = 0] = "INVALID_COLOR";
+    Color[Color["WHITE"] = 1] = "WHITE";
+    Color[Color["BLACK"] = 2] = "BLACK";
     Color[Color["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
 })(Color || (exports.Color = Color = {}));
 function colorFromJSON(object) {
     switch (object) {
         case 0:
+        case "INVALID_COLOR":
+            return Color.INVALID_COLOR;
+        case 1:
         case "WHITE":
             return Color.WHITE;
-        case 1:
+        case 2:
         case "BLACK":
             return Color.BLACK;
         case -1:
@@ -93,6 +104,8 @@ function colorFromJSON(object) {
 }
 function colorToJSON(object) {
     switch (object) {
+        case Color.INVALID_COLOR:
+            return "INVALID_COLOR";
         case Color.WHITE:
             return "WHITE";
         case Color.BLACK:
@@ -103,7 +116,7 @@ function colorToJSON(object) {
     }
 }
 function createBaseChessPiece() {
-    return { type: 0, color: 0, positionRow: 0, positionCol: 0 };
+    return { type: 0, color: 0, position: undefined };
 }
 exports.ChessPiece = {
     encode(message, writer = minimal_1.default.Writer.create()) {
@@ -113,11 +126,8 @@ exports.ChessPiece = {
         if (message.color !== 0) {
             writer.uint32(16).int32(message.color);
         }
-        if (message.positionRow !== 0) {
-            writer.uint32(24).int32(message.positionRow);
-        }
-        if (message.positionCol !== 0) {
-            writer.uint32(32).int32(message.positionCol);
+        if (message.position !== undefined) {
+            position_1.Position.encode(message.position, writer.uint32(26).fork()).ldelim();
         }
         return writer;
     },
@@ -141,16 +151,10 @@ exports.ChessPiece = {
                     message.color = reader.int32();
                     continue;
                 case 3:
-                    if (tag !== 24) {
+                    if (tag !== 26) {
                         break;
                     }
-                    message.positionRow = reader.int32();
-                    continue;
-                case 4:
-                    if (tag !== 32) {
-                        break;
-                    }
-                    message.positionCol = reader.int32();
+                    message.position = position_1.Position.decode(reader, reader.uint32());
                     continue;
             }
             if ((tag & 7) === 4 || tag === 0) {
@@ -164,8 +168,7 @@ exports.ChessPiece = {
         return {
             type: isSet(object.type) ? pieceTypeFromJSON(object.type) : 0,
             color: isSet(object.color) ? colorFromJSON(object.color) : 0,
-            positionRow: isSet(object.positionRow) ? globalThis.Number(object.positionRow) : 0,
-            positionCol: isSet(object.positionCol) ? globalThis.Number(object.positionCol) : 0,
+            position: isSet(object.position) ? position_1.Position.fromJSON(object.position) : undefined,
         };
     },
     toJSON(message) {
@@ -176,11 +179,8 @@ exports.ChessPiece = {
         if (message.color !== 0) {
             obj.color = colorToJSON(message.color);
         }
-        if (message.positionRow !== 0) {
-            obj.positionRow = Math.round(message.positionRow);
-        }
-        if (message.positionCol !== 0) {
-            obj.positionCol = Math.round(message.positionCol);
+        if (message.position !== undefined) {
+            obj.position = position_1.Position.toJSON(message.position);
         }
         return obj;
     },
@@ -188,12 +188,13 @@ exports.ChessPiece = {
         return exports.ChessPiece.fromPartial(base !== null && base !== void 0 ? base : {});
     },
     fromPartial(object) {
-        var _a, _b, _c, _d;
+        var _a, _b;
         const message = createBaseChessPiece();
         message.type = (_a = object.type) !== null && _a !== void 0 ? _a : 0;
         message.color = (_b = object.color) !== null && _b !== void 0 ? _b : 0;
-        message.positionRow = (_c = object.positionRow) !== null && _c !== void 0 ? _c : 0;
-        message.positionCol = (_d = object.positionCol) !== null && _d !== void 0 ? _d : 0;
+        message.position = (object.position !== undefined && object.position !== null)
+            ? position_1.Position.fromPartial(object.position)
+            : undefined;
         return message;
     },
 };

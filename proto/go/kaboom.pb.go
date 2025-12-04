@@ -69,7 +69,7 @@ type BoardState struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	WhitePlayer   *Player                `protobuf:"bytes,1,opt,name=white_player,json=whitePlayer,proto3" json:"white_player,omitempty"`
 	BlackPlayer   *Player                `protobuf:"bytes,2,opt,name=black_player,json=blackPlayer,proto3" json:"black_player,omitempty"`
-	Board         *ChessBoard            `protobuf:"bytes,3,opt,name=board,proto3" json:"board,omitempty"`
+	ChessBoard    *ChessBoard            `protobuf:"bytes,3,opt,name=chess_board,json=chessBoard,proto3" json:"chess_board,omitempty"`
 	MoveHistory   []*KaboomMove          `protobuf:"bytes,4,rep,name=move_history,json=moveHistory,proto3" json:"move_history,omitempty"` // Current turn, turn count, etc can be implied from the move history
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -119,9 +119,9 @@ func (x *BoardState) GetBlackPlayer() *Player {
 	return nil
 }
 
-func (x *BoardState) GetBoard() *ChessBoard {
+func (x *BoardState) GetChessBoard() *ChessBoard {
 	if x != nil {
-		return x.Board
+		return x.ChessBoard
 	}
 	return nil
 }
@@ -253,117 +253,20 @@ func (x *ChessBoard) GetPieces() []*ChessPiece {
 	return nil
 }
 
-type KaboomMove struct {
-	state protoimpl.MessageState `protogen:"open.v1"`
-	// Types that are valid to be assigned to Move:
-	//
-	//	*KaboomMove_PawnMove
-	//	*KaboomMove_PawnBump
-	//	*KaboomMove_PawnKaboom
-	Move          isKaboomMove_Move `protobuf_oneof:"move"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *KaboomMove) Reset() {
-	*x = KaboomMove{}
-	mi := &file_kaboom_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *KaboomMove) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*KaboomMove) ProtoMessage() {}
-
-func (x *KaboomMove) ProtoReflect() protoreflect.Message {
-	mi := &file_kaboom_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use KaboomMove.ProtoReflect.Descriptor instead.
-func (*KaboomMove) Descriptor() ([]byte, []int) {
-	return file_kaboom_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *KaboomMove) GetMove() isKaboomMove_Move {
-	if x != nil {
-		return x.Move
-	}
-	return nil
-}
-
-func (x *KaboomMove) GetPawnMove() *PawnMove {
-	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_PawnMove); ok {
-			return x.PawnMove
-		}
-	}
-	return nil
-}
-
-func (x *KaboomMove) GetPawnBump() *PawnBump {
-	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_PawnBump); ok {
-			return x.PawnBump
-		}
-	}
-	return nil
-}
-
-func (x *KaboomMove) GetPawnKaboom() *PawnKaboom {
-	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_PawnKaboom); ok {
-			return x.PawnKaboom
-		}
-	}
-	return nil
-}
-
-type isKaboomMove_Move interface {
-	isKaboomMove_Move()
-}
-
-type KaboomMove_PawnMove struct {
-	PawnMove *PawnMove `protobuf:"bytes,1,opt,name=pawn_move,json=pawnMove,proto3,oneof"`
-}
-
-type KaboomMove_PawnBump struct {
-	PawnBump *PawnBump `protobuf:"bytes,2,opt,name=pawn_bump,json=pawnBump,proto3,oneof"`
-}
-
-type KaboomMove_PawnKaboom struct {
-	PawnKaboom *PawnKaboom `protobuf:"bytes,3,opt,name=pawn_kaboom,json=pawnKaboom,proto3,oneof"`
-}
-
-func (*KaboomMove_PawnMove) isKaboomMove_Move() {}
-
-func (*KaboomMove_PawnBump) isKaboomMove_Move() {}
-
-func (*KaboomMove_PawnKaboom) isKaboomMove_Move() {}
-
 var File_kaboom_proto protoreflect.FileDescriptor
 
 const file_kaboom_proto_rawDesc = "" +
 	"\n" +
 	"\fkaboom.proto\x12\vkaboomproto\x1a\vpiece.proto\x1a\n" +
-	"pawn.proto\"<\n" +
+	"move.proto\"<\n" +
 	"\tGameState\x12/\n" +
-	"\x06boards\x18\x01 \x03(\v2\x17.kaboomproto.BoardStateR\x06boards\"\xe7\x01\n" +
+	"\x06boards\x18\x01 \x03(\v2\x17.kaboomproto.BoardStateR\x06boards\"\xf2\x01\n" +
 	"\n" +
 	"BoardState\x126\n" +
 	"\fwhite_player\x18\x01 \x01(\v2\x13.kaboomproto.PlayerR\vwhitePlayer\x126\n" +
-	"\fblack_player\x18\x02 \x01(\v2\x13.kaboomproto.PlayerR\vblackPlayer\x12-\n" +
-	"\x05board\x18\x03 \x01(\v2\x17.kaboomproto.ChessBoardR\x05board\x12:\n" +
+	"\fblack_player\x18\x02 \x01(\v2\x13.kaboomproto.PlayerR\vblackPlayer\x128\n" +
+	"\vchess_board\x18\x03 \x01(\v2\x17.kaboomproto.ChessBoardR\n" +
+	"chessBoard\x12:\n" +
 	"\fmove_history\x18\x04 \x03(\v2\x17.kaboomproto.KaboomMoveR\vmoveHistory\"O\n" +
 	"\x06Player\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x12\n" +
@@ -374,14 +277,7 @@ const file_kaboom_proto_rawDesc = "" +
 	"ChessBoard\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12/\n" +
-	"\x06pieces\x18\x03 \x03(\v2\x17.kaboomproto.ChessPieceR\x06pieces\"\xbc\x01\n" +
-	"\n" +
-	"KaboomMove\x124\n" +
-	"\tpawn_move\x18\x01 \x01(\v2\x15.kaboomproto.PawnMoveH\x00R\bpawnMove\x124\n" +
-	"\tpawn_bump\x18\x02 \x01(\v2\x15.kaboomproto.PawnBumpH\x00R\bpawnBump\x12:\n" +
-	"\vpawn_kaboom\x18\x03 \x01(\v2\x17.kaboomproto.PawnKaboomH\x00R\n" +
-	"pawnKaboomB\x06\n" +
-	"\x04moveB1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"
+	"\x06pieces\x18\x03 \x03(\v2\x17.kaboomproto.ChessPieceR\x06piecesB1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"
 
 var (
 	file_kaboom_proto_rawDescOnce sync.Once
@@ -395,7 +291,7 @@ func file_kaboom_proto_rawDescGZIP() []byte {
 	return file_kaboom_proto_rawDescData
 }
 
-var file_kaboom_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
+var file_kaboom_proto_msgTypes = make([]protoimpl.MessageInfo, 4)
 var file_kaboom_proto_goTypes = []any{
 	(*GameState)(nil),  // 0: kaboomproto.GameState
 	(*BoardState)(nil), // 1: kaboomproto.BoardState
@@ -403,25 +299,19 @@ var file_kaboom_proto_goTypes = []any{
 	(*ChessBoard)(nil), // 3: kaboomproto.ChessBoard
 	(*KaboomMove)(nil), // 4: kaboomproto.KaboomMove
 	(*ChessPiece)(nil), // 5: kaboomproto.ChessPiece
-	(*PawnMove)(nil),   // 6: kaboomproto.PawnMove
-	(*PawnBump)(nil),   // 7: kaboomproto.PawnBump
-	(*PawnKaboom)(nil), // 8: kaboomproto.PawnKaboom
 }
 var file_kaboom_proto_depIdxs = []int32{
 	1, // 0: kaboomproto.GameState.boards:type_name -> kaboomproto.BoardState
 	2, // 1: kaboomproto.BoardState.white_player:type_name -> kaboomproto.Player
 	2, // 2: kaboomproto.BoardState.black_player:type_name -> kaboomproto.Player
-	3, // 3: kaboomproto.BoardState.board:type_name -> kaboomproto.ChessBoard
+	3, // 3: kaboomproto.BoardState.chess_board:type_name -> kaboomproto.ChessBoard
 	4, // 4: kaboomproto.BoardState.move_history:type_name -> kaboomproto.KaboomMove
 	5, // 5: kaboomproto.ChessBoard.pieces:type_name -> kaboomproto.ChessPiece
-	6, // 6: kaboomproto.KaboomMove.pawn_move:type_name -> kaboomproto.PawnMove
-	7, // 7: kaboomproto.KaboomMove.pawn_bump:type_name -> kaboomproto.PawnBump
-	8, // 8: kaboomproto.KaboomMove.pawn_kaboom:type_name -> kaboomproto.PawnKaboom
-	9, // [9:9] is the sub-list for method output_type
-	9, // [9:9] is the sub-list for method input_type
-	9, // [9:9] is the sub-list for extension type_name
-	9, // [9:9] is the sub-list for extension extendee
-	0, // [0:9] is the sub-list for field type_name
+	6, // [6:6] is the sub-list for method output_type
+	6, // [6:6] is the sub-list for method input_type
+	6, // [6:6] is the sub-list for extension type_name
+	6, // [6:6] is the sub-list for extension extendee
+	0, // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_kaboom_proto_init() }
@@ -430,19 +320,14 @@ func file_kaboom_proto_init() {
 		return
 	}
 	file_piece_proto_init()
-	file_pawn_proto_init()
-	file_kaboom_proto_msgTypes[4].OneofWrappers = []any{
-		(*KaboomMove_PawnMove)(nil),
-		(*KaboomMove_PawnBump)(nil),
-		(*KaboomMove_PawnKaboom)(nil),
-	}
+	file_move_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_kaboom_proto_rawDesc), len(file_kaboom_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   5,
+			NumMessages:   4,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

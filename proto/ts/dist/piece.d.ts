@@ -1,19 +1,22 @@
 import _m0 from "protobufjs/minimal";
+import { Position } from "./position";
 export declare const protobufPackage = "kaboomproto";
 export declare enum PieceType {
-    PAWN = 0,
-    KNIGHT = 1,
-    BISHOP = 2,
-    ROOK = 3,
-    QUEEN = 4,
-    KING = 5,
+    INVALID_PIECE = 0,
+    PAWN = 1,
+    KNIGHT = 2,
+    BISHOP = 3,
+    ROOK = 4,
+    QUEEN = 5,
+    KING = 6,
     UNRECOGNIZED = -1
 }
 export declare function pieceTypeFromJSON(object: any): PieceType;
 export declare function pieceTypeToJSON(object: PieceType): string;
 export declare enum Color {
-    WHITE = 0,
-    BLACK = 1,
+    INVALID_COLOR = 0,
+    WHITE = 1,
+    BLACK = 2,
     UNRECOGNIZED = -1
 }
 export declare function colorFromJSON(object: any): Color;
@@ -21,10 +24,7 @@ export declare function colorToJSON(object: Color): string;
 export interface ChessPiece {
     type: PieceType;
     color: Color;
-    /** 0-7 for columns a-h */
-    positionRow: number;
-    /** 0-7 for rows 1-8 */
-    positionCol: number;
+    position?: Position | undefined;
 }
 export declare const ChessPiece: {
     encode(message: ChessPiece, writer?: _m0.Writer): _m0.Writer;

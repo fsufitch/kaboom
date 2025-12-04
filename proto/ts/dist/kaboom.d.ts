@@ -1,5 +1,5 @@
 import _m0 from "protobufjs/minimal";
-import { PawnBump, PawnKaboom, PawnMove } from "./pawn";
+import { KaboomMove } from "./move";
 import { ChessPiece } from "./piece";
 export declare const protobufPackage = "kaboomproto";
 export interface GameState {
@@ -8,7 +8,7 @@ export interface GameState {
 export interface BoardState {
     whitePlayer?: Player | undefined;
     blackPlayer?: Player | undefined;
-    board?: ChessBoard | undefined;
+    chessBoard?: ChessBoard | undefined;
     /** Current turn, turn count, etc can be implied from the move history */
     moveHistory: KaboomMove[];
 }
@@ -21,11 +21,6 @@ export interface ChessBoard {
     uuid: string;
     name: string;
     pieces: ChessPiece[];
-}
-export interface KaboomMove {
-    pawnMove?: PawnMove | undefined;
-    pawnBump?: PawnBump | undefined;
-    pawnKaboom?: PawnKaboom | undefined;
 }
 export declare const GameState: {
     encode(message: GameState, writer?: _m0.Writer): _m0.Writer;
@@ -58,14 +53,6 @@ export declare const ChessBoard: {
     toJSON(message: ChessBoard): unknown;
     create<I extends Exact<DeepPartial<ChessBoard>, I>>(base?: I): ChessBoard;
     fromPartial<I extends Exact<DeepPartial<ChessBoard>, I>>(object: I): ChessBoard;
-};
-export declare const KaboomMove: {
-    encode(message: KaboomMove, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): KaboomMove;
-    fromJSON(object: any): KaboomMove;
-    toJSON(message: KaboomMove): unknown;
-    create<I extends Exact<DeepPartial<KaboomMove>, I>>(base?: I): KaboomMove;
-    fromPartial<I extends Exact<DeepPartial<KaboomMove>, I>>(object: I): KaboomMove;
 };
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin ? T : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>> : T extends {} ? {

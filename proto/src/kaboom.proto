@@ -1,11 +1,10 @@
 syntax = "proto3";
 
 package kaboomproto;
-
 option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
 import "piece.proto";
-import "pawn.proto";
+import "move.proto";
 
 message GameState {
     repeated BoardState boards = 1;    
@@ -14,7 +13,7 @@ message GameState {
 message BoardState {
     Player white_player = 1;
     Player black_player = 2;
-    ChessBoard board = 3;
+    ChessBoard chess_board = 3;
 
     repeated KaboomMove move_history = 4;
     // Current turn, turn count, etc can be implied from the move history
@@ -33,14 +32,3 @@ message ChessBoard {
     repeated ChessPiece pieces = 3;
 }
 
-
-message KaboomMove {
-    oneof move {
-        PawnMove pawn_move = 1;
-        PawnBump pawn_bump = 2;
-        PawnKaboom pawn_kaboom = 3;
-
-        // Future moves for other piece types can be added here
-
-    }
-}

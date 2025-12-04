@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package kaboomproto;
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+message Position {
+    int32 row = 1;
+    int32 col = 2;
+}

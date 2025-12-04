@@ -1,0 +1,234 @@
+syntax = "proto3";
+
+package kaboomproto;
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+import "position.proto";
+import "piece.proto";
+
+message KaboomMove {
+    oneof move {
+        C_PawnMove c_pawn_move = 10;
+        C_PawnCapture c_pawn_capture = 11;
+        K_PawnBump k_pawn_bump = 12;
+        K_PawnExplosion k_pawn_explosion = 13;
+
+        C_KnightMove c_knight_move = 20;
+        C_KnightCapture c_knight_capture = 21;
+        K_KnightBump k_knight_bump = 22;
+        K_KnightStomp k_knight_stomp = 23;
+
+        C_BishopMove c_bishop_move = 30;
+        C_BishopCapture c_bishop_capture = 31;
+        K_BishopBump k_bishop_bump = 32;
+        K_BishopSnipe k_bishop_snipe = 33;
+
+        C_RookMove c_rook_move = 40;
+        C_RookCapture c_rook_capture = 41;
+        K_RookBump k_rook_bump = 42;
+        K_RookTackle k_rook_tackle = 43;
+
+        C_QueenMove c_queen_move = 50;
+        C_QueenCapture c_queen_capture = 51;
+        K_QueenBump k_queen_bump = 52;
+        K_QueenNova k_queen_nova = 53;
+
+        C_KingMove c_king_move = 60;
+        C_KingCapture c_king_capture = 61;
+        K_KingBump k_king_bump = 62;
+        K_KingControl k_king_control = 63;
+    }
+}
+
+
+// C_PawnMove is a normal pawn move in regular chess rules.
+// It encompasses single and double square advances.
+message C_PawnMove {
+    Position from = 1;
+    Position to = 2;
+    PieceType promotion = 10; // optional promotion piece type
+}
+
+// C_PawnCapture is a normal pawn capture move in regular chess rules.
+// It encompasses regular and en passant captures.
+message C_PawnCapture {
+    Position from = 1;
+    Position to = 2;
+    PieceType promotion = 10; // optional promotion piece type
+}
+
+// K_PawnBump is a Kaboom-specific move replacing the capture.
+// The pawn moves diagonally (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it to the square directly behind it (in the same direction as the pawn's movement).
+message K_PawnBump {
+    Position from = 1;
+    Position to = 2;
+    PieceType promotion = 10; // optional promotion piece type
+}
+
+// K_PawnExplosion is a Kaboom-specific move where the pawn detonates itself on its current position,
+// removing itself and bumping all adjacent pieces (horizontally, vertically, and diagonally).
+message K_PawnExplosion {
+    Position position = 1;
+}
+
+
+// C_KnightMove is a normal knight move in regular chess rules.
+message C_KnightMove {
+    Position from = 1;
+    Position to = 2;
+}
+
+// C_KnightCapture is a normal knight capture move in regular chess rules.
+message C_KnightCapture {
+    Position from = 1;
+    Position to = 2;
+}
+
+// K_KnightBump is a Kaboom-specific move replacing the capture.
+// The knight moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it. The direction of the bump may be vertical or horizontal, depending on whether the knight's
+// "right angle" move is vertical-first or horizontal-first.
+message K_KnightBump {
+    Position from = 1;
+    Position to = 2;
+
+    enum BumpDirection {
+        BUMP_DIRECTION_UNKNOWN = 0;
+        BUMP_DIRECTION_HORIZONTAL = 1; // bump horizontally
+        BUMP_DIRECTION_VERTICAL = 2;   // bump vertically
+    }
+
+    BumpDirection bump_direction = 3;
+}
+
+// K_KnightStomp is a Kaboom-specific move where the knight moves to an *empty* target square, and bumps all adjacent pieces
+// (horizontally, vertically, and diagonally) away from the target square.
+message K_KnightStomp {
+    Position from = 1;
+    Position to = 2;
+}
+
+
+
+// C_BishopMove is a normal bishop move in regular chess rules.
+message C_BishopMove {
+    Position from = 1;
+    Position to = 2;
+}
+
+// C_BishopCapture is a normal bishop capture move in regular chess rules.
+message C_BishopCapture {
+    Position from = 1;
+    Position to = 2;
+}
+
+// K_BishopBump is a Kaboom-specific move replacing the capture.
+// The bishop moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it along the same diagonal direction to the next square.
+message K_BishopBump {
+    Position from = 1;
+    Position to = 2;
+}
+
+// K_BishopSnipe is a Kaboom-specific move. The bishop does not move from its current position,
+// but instead "snipes" an opponent's piece located anywhere along its diagonal lines of movement,
+// bumping the target piece to the next square along the same diagonal direction.
+message K_BishopSnipe {
+    Position from = 1; // bishop's current position
+    Position target = 2; // position of the opponent's piece to be sniped
+}
+
+
+// C_RookMove is a normal rook move in regular chess rules.
+message C_RookMove {
+    Position from = 1;
+    Position to = 2;
+}
+
+// C_RookCapture is a normal rook capture move in regular chess rules.
+message C_RookCapture {
+    Position from = 1;
+    Position to = 2;
+}
+
+// K_RookBump is a Kaboom-specific move replacing the capture.
+// The rook moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it along the same rank or file to the next square.
+message K_RookBump {
+    Position from = 1;
+    Position to = 2;
+}
+
+// K_RookTackle is a Kaboom-specific move variant of K_RookBump.
+// The rook moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "tackles" it along the same rank or file, moving the bumped piece two squares away instead of one.
+message K_RookTackle {
+    Position from = 1;
+    Position to = 2;
+}
+
+// C_QueenMove is a normal queen move in regular chess rules.
+message C_QueenMove {
+    Position from = 1;
+    Position to = 2;
+}
+
+// C_QueenCapture is a normal queen capture move in regular chess rules.
+message C_QueenCapture {
+    Position from = 1;
+    Position to = 2;
+}
+
+// K_QueenBump is a Kaboom-specific move replacing the capture.
+// The queen moves to its target square (as in regular capturing) but instead of removing the
+// opponent's piece, it "bumps" it along the same rank, file, or diagonal to the next square.
+message K_QueenBump {
+    Position from = 1;
+    Position to = 2;
+}
+
+// K_QueenNova is a Kaboom-specific move where the queen detonates itself on its current position,
+// removing itself and all pieces (both friendly and opponent) located on the same rank, file, and diagonals.
+message K_QueenNova {
+    Position position = 1;
+}
+
+
+// C_KingMove is a normal king move in regular chess rules.
+message C_KingMove {
+    Position from = 1;
+    Position to = 2;
+}
+
+// C_KingCapture is a normal king capture move in regular chess rules.
+message C_KingCapture {
+    Position from = 1;
+    Position to = 2;
+}
+
+// C_KingCastle is a normal king castling move in regular chess rules.
+message C_KingCastle {
+    Position king_from = 1;
+    Position king_to = 2;
+    Position rook_from = 3;
+    Position rook_to = 4;
+}
+
+// K_KingBump is a Kaboom-specific move replacing the capture.
+// The king moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it to an adjacent square in any direction (horizontally, vertically, or diagonally).
+message K_KingBump {
+    Position from = 1;
+    Position to = 2;
+}
+
+// K_KingControl is a Kaboom-specific move where the king "mind-controls" a piece located within a distance of 2 squares
+// (New York distance) from its current position, forcing the target piece to perform any of its valid moves.
+// This can affect both friendly and opponent pieces. Queens are immune to mind control.
+message K_KingControl {
+    Position position = 1; // king's current position
+
+    // The move that the target piece will perform as a result of mind control.
+    KaboomMove forced_move = 3;
+}
