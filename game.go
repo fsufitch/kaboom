@@ -10,6 +10,10 @@ type TwoPlayerGame struct {
 	data *kaboomproto.GameState
 }
 
+func NewTwoPlayerGame(data *kaboomproto.GameState) TwoPlayerGame {
+	return TwoPlayerGame{data: data}
+}
+
 func (g TwoPlayerGame) Board() BoardState {
 	boards := g.data.GetBoards()
 	if len(boards) == 0 || boards[0] == nil {

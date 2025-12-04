@@ -2,27 +2,40 @@ package main
 
 import (
 	"fmt"
+	"os"
 
-	kaboomproto "github.com/fsufitch/kaboom/proto/go"
+	"github.com/fsufitch/kaboom"
+	"github.com/fsufitch/kaboom/examples"
 	"google.golang.org/protobuf/encoding/protojson"
 )
 
 func main() {
-	fmt.Println("Hello, World!")
 
-	gameState := kaboomproto.GameState{}
+	gameProto := examples.GameInProgressProto()
 
-	byts, err := protojson.MarshalOptions{
+	game := kaboom.NewTwoPlayerGame(gameProto)
+
+	fmt.Println("Game loaded successfully. Here is the game state in JSON format:")
+	fmt.Println("-----------------------------------------------------")
+	jsonData, err := protojson.MarshalOptions{
 		Multiline:         true,
-		Indent:            " ",
+		Indent:            "  ",
 		EmitUnpopulated:   true,
 		EmitDefaultValues: true,
-	}.Marshal(&gameState)
-
+	}.Marshal(gameProto)
 	if err != nil {
-		panic(err)
+		fmt.Fprintf(os.Stderr, "Error marshaling game state to JSON: %v\n", err)
+		os.Exit(1)
+	}
+	fmt.Println(string(jsonData))
+	fmt.Println("-----------------------------------------------------")
+
+	fmt.Println("Validating game state...")
+	if err := game.Validate(); err != nil {
+		fmt.Fprintf(os.Stderr, "Game validation error: %v\n", err)
+		os.Exit(1)
 	}
 
-	fmt.Println(string(byts))
+	fmt.Println("Game is valid!")
 
 }
