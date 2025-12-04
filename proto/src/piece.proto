@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package kaboomproto;
+
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+enum PieceType {
+    PAWN = 0;
+    KNIGHT = 1;
+    BISHOP = 2;
+    ROOK = 3;
+    QUEEN = 4;
+    KING = 5;
+}
+
+enum Color {
+    WHITE = 0;
+    BLACK = 1;
+}
+
+message ChessPiece {
+    PieceType type = 1;
+    Color color = 2;
+    int32 position_row = 3; // 0-7 for columns a-h
+    int32 position_col = 4; // 0-7 for rows 1-8
+}

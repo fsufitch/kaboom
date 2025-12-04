@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package kaboomproto;
+
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+import "piece.proto";
+
+message PawnMove {
+    int32 from_row = 1;
+    int32 from_col = 2;
+    int32 to_row = 3;
+    int32 to_col = 4;
+
+    PieceType promotion = 5; // optional promotion piece type
+}
+
+message PawnBump {
+    int32 from_row = 1;
+    int32 from_col = 2;
+    int32 to_row = 3;
+    int32 to_col = 4;
+
+    PieceType promotion = 5; // optional promotion piece type
+}
+
+message PawnKaboom {
+    int32 row = 1;
+    int32 col = 2;
+}
