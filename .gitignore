@@ -27,6 +27,9 @@ go.work.sum
 # env file
 .env
 
+# Generated TypeScript proto artifacts
+proto/ts/node_modules/
+
 # Editor/IDE
 # .idea/
 # .vscode/

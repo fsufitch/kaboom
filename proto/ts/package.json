@@ -1,11 +1,24 @@
 {
-  "name": "kaboomproto",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "kaboom-proto",
+  "version": "0.1.0",
+  "description": "TypeScript bindings for the Kaboom protobuf definitions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc -p tsconfig.json"
   },
+  "files": [
+    "dist",
+    "src"
+  ],
   "author": "",
-  "license": "ISC"
+  "license": "MIT",
+  "dependencies": {
+    "long": "^5.2.3",
+    "protobufjs": "^7.2.4"
+  },
+  "devDependencies": {
+    "ts-proto": "^1.172.0",
+    "typescript": "^5.4.2"
+  }
 }
