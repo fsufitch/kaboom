@@ -1,0 +1,263 @@
+{
+    "uuid": "start",
+    "name": "Starting Position",
+    "pieces": [
+        {
+            "type": "ROOK",
+            "color": "WHITE",
+            "position": {
+                "row": 0,
+                "col": 0
+            }
+        },
+        {
+            "type": "KNIGHT",
+            "color": "WHITE",
+            "position": {
+                "row": 0,
+                "col": 1
+            }
+        },
+        {
+            "type": "BISHOP",
+            "color": "WHITE",
+            "position": {
+                "row": 0,
+                "col": 2
+            }
+        },
+        {
+            "type": "QUEEN",
+            "color": "WHITE",
+            "position": {
+                "row": 0,
+                "col": 3
+            }
+        },
+        {
+            "type": "KING",
+            "color": "WHITE",
+            "position": {
+                "row": 0,
+                "col": 4
+            }
+        },
+        {
+            "type": "BISHOP",
+            "color": "WHITE",
+            "position": {
+                "row": 0,
+                "col": 5
+            }
+        },
+        {
+            "type": "KNIGHT",
+            "color": "WHITE",
+            "position": {
+                "row": 0,
+                "col": 6
+            }
+        },
+        {
+            "type": "ROOK",
+            "color": "WHITE",
+            "position": {
+                "row": 0,
+                "col": 7
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "WHITE",
+            "position": {
+                "row": 1,
+                "col": 0
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "WHITE",
+            "position": {
+                "row": 1,
+                "col": 1
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "WHITE",
+            "position": {
+                "row": 1,
+                "col": 2
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "WHITE",
+            "position": {
+                "row": 1,
+                "col": 3
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "WHITE",
+            "position": {
+                "row": 1,
+                "col": 4
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "WHITE",
+            "position": {
+                "row": 1,
+                "col": 5
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "WHITE",
+            "position": {
+                "row": 1,
+                "col": 6
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "WHITE",
+            "position": {
+                "row": 1,
+                "col": 7
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "BLACK",
+            "position": {
+                "row": 6,
+                "col": 0
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "BLACK",
+            "position": {
+                "row": 6,
+                "col": 1
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "BLACK",
+            "position": {
+                "row": 6,
+                "col": 2
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "BLACK",
+            "position": {
+                "row": 6,
+                "col": 3
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "BLACK",
+            "position": {
+                "row": 6,
+                "col": 4
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "BLACK",
+            "position": {
+                "row": 6,
+                "col": 5
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "BLACK",
+            "position": {
+                "row": 6,
+                "col": 6
+            }
+        },
+        {
+            "type": "PAWN",
+            "color": "BLACK",
+            "position": {
+                "row": 6,
+                "col": 7
+            }
+        },
+        {
+            "type": "ROOK",
+            "color": "BLACK",
+            "position": {
+                "row": 7,
+                "col": 0
+            }
+        },
+        {
+            "type": "KNIGHT",
+            "color": "BLACK",
+            "position": {
+                "row": 7,
+                "col": 1
+            }
+        },
+        {
+            "type": "BISHOP",
+            "color": "BLACK",
+            "position": {
+                "row": 7,
+                "col": 2
+            }
+        },
+        {
+            "type": "QUEEN",
+            "color": "BLACK",
+            "position": {
+                "row": 7,
+                "col": 3
+            }
+        },
+        {
+            "type": "KING",
+            "color": "BLACK",
+            "position": {
+                "row": 7,
+                "col": 4
+            }
+        },
+        {
+            "type": "BISHOP",
+            "color": "BLACK",
+            "position": {
+                "row": 7,
+                "col": 5
+            }
+        },
+        {
+            "type": "KNIGHT",
+            "color": "BLACK",
+            "position": {
+                "row": 7,
+                "col": 6
+            }
+        },
+        {
+            "type": "ROOK",
+            "color": "BLACK",
+            "position": {
+                "row": 7,
+                "col": 7
+            }
+        }
+    ],
+    "moveHistory": []
+}

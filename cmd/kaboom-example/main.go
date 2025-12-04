@@ -37,5 +37,16 @@ func main() {
 	}
 
 	fmt.Println("Game is valid!")
+	fmt.Println("------------------------------------------------------")
 
+	fmt.Println("Serializing current chess board state...")
+	boardData, err := kaboom.SerializeChessBoard(game.Board().ChessBoard())
+
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "Error serializing chess board: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Println("Serialized chess board data:")
+	fmt.Println(string(boardData))
 }

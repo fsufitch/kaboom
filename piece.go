@@ -22,7 +22,14 @@ func (b baseChessPiece) Position() Position {
 }
 
 func (b baseChessPiece) Color() Color {
-	return Color(b.data.GetColor())
+	switch b.data.GetColor() {
+	case kaboomproto.Color_WHITE:
+		return ColorWhite
+	case kaboomproto.Color_BLACK:
+		return ColorBlack
+	default:
+		return ColorUnknown
+	}
 }
 
 func protoChessPieceTypeToChessPieceKind(pt kaboomproto.PieceType) ChessPieceKind {

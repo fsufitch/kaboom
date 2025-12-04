@@ -29,6 +29,7 @@ go.work.sum
 
 # Local Go build cache
 .gocache/
+.gopath/
 
 # Generated TypeScript proto artifacts
 proto/ts/node_modules/
