@@ -16,23 +16,19 @@ const (
 
 func init() {
 	chessPieceTypeToKindMap[kaboomproto.PieceType_BISHOP] = ChessPieceKind_Bishop
-	moveKindEvaluators[MoveKind_BishopMove] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCBishopMove() != nil
-	}
-	moveKindEvaluators[MoveKind_BishopCapture] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCBishopCapture() != nil
-	}
-	moveKindEvaluators[MoveKind_KBishopBump] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKBishopBump() != nil
-	}
-	moveKindEvaluators[MoveKind_KBishopSnipe] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKBishopSnipe() != nil
-	}
+	registerMoveConstructor(MoveKind_BishopMove, NewBishopMove)
+	registerMoveConstructor(MoveKind_BishopCapture, NewBishopCapture)
+	registerMoveConstructor(MoveKind_KBishopBump, NewBishopBump)
+	registerMoveConstructor(MoveKind_KBishopSnipe, NewBishopSnipe)
 }
 
 // Bishop represents a bishop chess piece.
 type Bishop struct {
 	baseChessPiece
+}
+
+func (b Bishop) Validate() error {
+	return b.validateBasePiece("bishop", ChessPieceKind_Bishop)
 }
 
 // NewBishop creates a new Bishop from proto data.
@@ -70,6 +66,17 @@ func (bm BishopMove) Destination() Position {
 	return Position{data: bm.moveData().To}
 }
 
+func (bm BishopMove) Validate() error {
+	data := bm.moveData()
+	if err := bm.validateBaseMove("bishop move", data == nil, bm.PiecePosition); err != nil {
+		return err
+	}
+	if err := bm.Destination().Validate(); err != nil {
+		return fmt.Errorf("bishop move (to): %w", err)
+	}
+	return nil
+}
+
 // BishopCapture represents a bishop capture move.
 type BishopCapture struct {
 	baseMove
@@ -94,6 +101,17 @@ func (bc BishopCapture) PiecePosition() Position {
 
 func (bc BishopCapture) Destination() Position {
 	return Position{data: bc.moveData().To}
+}
+
+func (bc BishopCapture) Validate() error {
+	data := bc.moveData()
+	if err := bc.validateBaseMove("bishop capture", data == nil, bc.PiecePosition); err != nil {
+		return err
+	}
+	if err := bc.Destination().Validate(); err != nil {
+		return fmt.Errorf("bishop capture (to): %w", err)
+	}
+	return nil
 }
 
 // BishopBump represents the Kaboom bishop bump move.
@@ -122,7 +140,18 @@ func (bb BishopBump) Destination() Position {
 	return Position{data: bb.moveData().To}
 }
 
-// BumpVector returns the diagonal direction the opponent is pushed.
+func (bb BishopBump) Validate() error {
+	data := bb.moveData()
+	if err := bb.validateBaseMove("bishop bump", data == nil, bb.PiecePosition); err != nil {
+		return err
+	}
+	if err := bb.Destination().Validate(); err != nil {
+		return fmt.Errorf("bishop bump (to): %w", err)
+	}
+	return nil
+}
+
+// BumpVector returns the diagonal direction the target piece is bumped.
 func (bb BishopBump) BumpVector() Vector {
 	return normalizedVectorBetween(bb.PiecePosition(), bb.Destination())
 }
@@ -154,7 +183,18 @@ func (bs BishopSnipe) Target() Position {
 	return Position{data: bs.moveData().Target}
 }
 
-// BumpVector returns the direction the sniped piece is displaced.
+func (bs BishopSnipe) Validate() error {
+	data := bs.moveData()
+	if err := bs.validateBaseMove("bishop snipe", data == nil, bs.PiecePosition); err != nil {
+		return err
+	}
+	if err := bs.Target().Validate(); err != nil {
+		return fmt.Errorf("bishop snipe (target): %w", err)
+	}
+	return nil
+}
+
+// BumpVector returns the direction the target piece is bumped away from the bishop.
 func (bs BishopSnipe) BumpVector() Vector {
 	return normalizedVectorBetween(bs.PiecePosition(), bs.Target())
 }

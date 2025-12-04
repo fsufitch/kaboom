@@ -1,12 +1,17 @@
 package kaboom
 
-import kaboomproto "github.com/fsufitch/kaboom/proto/go"
+import (
+	"fmt"
+
+	kaboomproto "github.com/fsufitch/kaboom/proto/go"
+)
 
 // ChessPiece represents a chess piece on the board (position, color, type). It is an interface implemented by each piece type.
 type ChessPiece interface {
 	Position() Position
 	Color() Color
 	Kind() ChessPieceKind
+	Validate() error
 }
 
 // chessPieceTypeToKindMap maps kaboomproto.PieceType to ChessPieceKind. It is populated in the individual piece files.
@@ -34,6 +39,25 @@ func protoChessPieceTypeToChessPieceKind(pt kaboomproto.PieceType) ChessPieceKin
 
 func (b baseChessPiece) Kind() ChessPieceKind {
 	return protoChessPieceTypeToChessPieceKind(b.data.GetType())
+}
+
+func (b baseChessPiece) validateBasePiece(label string, expected ChessPieceKind) error {
+	if b.data == nil {
+		return fmt.Errorf("invalid %s (data is nil): %w", label, ErrGameStateInvalid)
+	}
+	if expected != ChessPieceKindUnknown && b.Kind() != expected {
+		return fmt.Errorf("invalid %s (wrong type): %w", label, ErrGameStateInvalid)
+	}
+	switch b.Color() {
+	case ColorWhite, ColorBlack:
+	default:
+		return fmt.Errorf("invalid %s (color invalid): %w", label, ErrGameStateInvalid)
+	}
+	pos := b.Position()
+	if err := pos.Validate(); err != nil {
+		return fmt.Errorf("invalid %s (position): %w", label, err)
+	}
+	return nil
 }
 
 // ChessPieceKind represents the kind of chess piece (pawn, rook, knight, bishop, queen, king). The values are defined in each piece's specific file.

@@ -20,16 +20,37 @@ type BoardState struct {
 	data *kaboomproto.BoardState
 }
 
-func (b BoardState) WhitePlayer() Player {
-	return Player{data: b.data.GetWhitePlayer(), Color: ColorWhite}
+func (b BoardState) WhitePlayerUUID() string {
+	return b.data.GetWhitePlayerUuid()
 }
 
-func (b BoardState) BlackPlayer() Player {
-	return Player{data: b.data.GetBlackPlayer(), Color: ColorBlack}
+func (b BoardState) BlackPlayerUUID() string {
+	return b.data.GetBlackPlayerUuid()
 }
 
 func (b BoardState) ChessBoard() ChessBoard {
 	return ChessBoard{data: b.data.GetChessBoard()}
+}
+
+func (b BoardState) MoveHistory() ([]Move, error) {
+	if b.data == nil {
+		return nil, fmt.Errorf("board state missing data: %w", ErrGameStateInvalid)
+	}
+	moves := []Move{}
+
+	for i, moveData := range b.data.GetMoveHistory() {
+		if moveData == nil {
+			return nil, fmt.Errorf("move %d missing data: %w", i, ErrGameStateInvalid)
+		}
+		moveKind := kindOfMove(moveData)
+		move, err := moveKindConstructors[moveKind](moveData)
+		if err != nil {
+			return nil, fmt.Errorf("invalid move data (kind=%s): %w", moveKind, err)
+		}
+		moves = append(moves, move)
+	}
+
+	return moves, nil
 }
 
 // Player represents a player in the chess game.
@@ -60,6 +81,9 @@ func (cb ChessBoard) Name() string {
 }
 
 func (cb ChessBoard) Pieces() (pieces PieceSet, err error) {
+	if cb.data == nil {
+		return nil, fmt.Errorf("chess board missing data: %w", ErrGameStateInvalid)
+	}
 	pieces = PieceSet{}
 
 	for _, pieceData := range cb.data.GetPieces() {

@@ -16,23 +16,20 @@ const (
 
 func init() {
 	chessPieceTypeToKindMap[kaboomproto.PieceType_QUEEN] = ChessPieceKind_Queen
-	moveKindEvaluators[MoveKind_QueenMove] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCQueenMove() != nil
-	}
-	moveKindEvaluators[MoveKind_QueenCapture] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCQueenCapture() != nil
-	}
-	moveKindEvaluators[MoveKind_KQueenBump] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKQueenBump() != nil
-	}
-	moveKindEvaluators[MoveKind_KQueenNova] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKQueenNova() != nil
-	}
+
+	registerMoveConstructor(MoveKind_QueenMove, NewQueenMove)
+	registerMoveConstructor(MoveKind_QueenCapture, NewQueenCapture)
+	registerMoveConstructor(MoveKind_KQueenBump, NewQueenBump)
+	registerMoveConstructor(MoveKind_KQueenNova, NewQueenNova)
 }
 
 // Queen represents a queen chess piece.
 type Queen struct {
 	baseChessPiece
+}
+
+func (q Queen) Validate() error {
+	return q.validateBasePiece("queen", ChessPieceKind_Queen)
 }
 
 // NewQueen creates a new Queen from proto data.
@@ -70,6 +67,17 @@ func (qm QueenMove) Destination() Position {
 	return Position{data: qm.moveData().To}
 }
 
+func (qm QueenMove) Validate() error {
+	data := qm.moveData()
+	if err := qm.validateBaseMove("queen move", data == nil, qm.PiecePosition); err != nil {
+		return err
+	}
+	if err := qm.Destination().Validate(); err != nil {
+		return fmt.Errorf("queen move (to): %w", err)
+	}
+	return nil
+}
+
 // QueenCapture represents a queen capture move.
 type QueenCapture struct {
 	baseMove
@@ -94,6 +102,17 @@ func (qc QueenCapture) PiecePosition() Position {
 
 func (qc QueenCapture) Destination() Position {
 	return Position{data: qc.moveData().To}
+}
+
+func (qc QueenCapture) Validate() error {
+	data := qc.moveData()
+	if err := qc.validateBaseMove("queen capture", data == nil, qc.PiecePosition); err != nil {
+		return err
+	}
+	if err := qc.Destination().Validate(); err != nil {
+		return fmt.Errorf("queen capture (to): %w", err)
+	}
+	return nil
 }
 
 // QueenBump represents the Kaboom queen bump move.
@@ -122,6 +141,17 @@ func (qb QueenBump) Destination() Position {
 	return Position{data: qb.moveData().To}
 }
 
+func (qb QueenBump) Validate() error {
+	data := qb.moveData()
+	if err := qb.validateBaseMove("queen bump", data == nil, qb.PiecePosition); err != nil {
+		return err
+	}
+	if err := qb.Destination().Validate(); err != nil {
+		return fmt.Errorf("queen bump (to): %w", err)
+	}
+	return nil
+}
+
 // BumpVector returns the direction the target piece is pushed.
 func (qb QueenBump) BumpVector() Vector {
 	return normalizedVectorBetween(qb.PiecePosition(), qb.Destination())
@@ -147,4 +177,8 @@ func (qn QueenNova) moveData() *kaboomproto.K_QueenNova {
 
 func (qn QueenNova) PiecePosition() Position {
 	return Position{data: qn.moveData().GetPosition()}
+}
+
+func (qn QueenNova) Validate() error {
+	return qn.validateBaseMove("queen nova", qn.moveData() == nil, qn.PiecePosition)
 }

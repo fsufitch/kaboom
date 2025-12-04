@@ -6,6 +6,13 @@ import (
 	kaboomproto "github.com/fsufitch/kaboom/proto/go"
 )
 
+const (
+	MIN_ROW = 0
+	MAX_ROW = 7
+	MIN_COL = 0
+	MAX_COL = 7
+)
+
 // Position represents a position on the chess board.
 type Position struct {
 	data *kaboomproto.Position
@@ -27,6 +34,18 @@ func (p Position) OnTheBoard() bool {
 
 func (p Position) String() string {
 	return string(rune('a'+p.Col())) + fmt.Sprintf("%d", p.Row()+1)
+}
+
+func (p Position) Validate() error {
+	if p.data == nil {
+		return fmt.Errorf("invalid position (data is nil): %w", ErrGameStateInvalid)
+	}
+
+	if !p.OnTheBoard() {
+		return fmt.Errorf("invalid position (off board; row=%d, col=%d): %w", p.Row(), p.Col(), ErrGameStateInvalid)
+	}
+
+	return nil
 }
 
 type Vector struct {

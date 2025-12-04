@@ -1,6 +1,10 @@
 package kaboom
 
-import kaboomproto "github.com/fsufitch/kaboom/proto/go"
+import (
+	"fmt"
+
+	kaboomproto "github.com/fsufitch/kaboom/proto/go"
+)
 
 // MoveKind represents the kind of move being made. Values for this enum are in each piece's specific file.
 type MoveKind string
@@ -9,11 +13,24 @@ const (
 	MoveKind_Unknown MoveKind = "movekind.unknown"
 )
 
-var moveKindEvaluators = map[MoveKind]func(move *kaboomproto.KaboomMove) bool{}
+var moveKindConstructors = map[MoveKind]func(move *kaboomproto.KaboomMove) (Move, error){
+	MoveKind_Unknown: func(move *kaboomproto.KaboomMove) (Move, error) {
+		return nil, fmt.Errorf("tried to construct move of unknown kind")
+	},
+}
+
+func registerMoveConstructor[T Move](kind MoveKind, fn func(move *kaboomproto.KaboomMove) (T, error)) {
+	moveKindConstructors[kind] = func(move *kaboomproto.KaboomMove) (Move, error) {
+		return fn(move)
+	}
+}
 
 func kindOfMove(move *kaboomproto.KaboomMove) MoveKind {
-	for kind, evaluator := range moveKindEvaluators {
-		if evaluator(move) {
+	if move == nil {
+		return MoveKind_Unknown
+	}
+	for kind, constructor := range moveKindConstructors {
+		if _, err := constructor(move); err == nil {
 			return kind
 		}
 	}
@@ -32,4 +49,18 @@ type baseMove struct {
 
 func (bm baseMove) Kind() MoveKind {
 	return kindOfMove(bm.data)
+}
+
+func (bm baseMove) validateBaseMove(label string, missingMoveData bool, from func() Position) error {
+	if bm.data == nil {
+		return fmt.Errorf("invalid %s (missing data): %w", label, ErrGameStateInvalid)
+	}
+	if missingMoveData {
+		return fmt.Errorf("invalid %s (missing move data): %w", label, ErrGameStateInvalid)
+	}
+	pos := from()
+	if err := pos.Validate(); err != nil {
+		return fmt.Errorf("%s (from): %w", label, err)
+	}
+	return nil
 }

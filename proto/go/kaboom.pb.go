@@ -24,6 +24,7 @@ const (
 type GameState struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Boards        []*BoardState          `protobuf:"bytes,1,rep,name=boards,proto3" json:"boards,omitempty"`
+	Players       []*Player              `protobuf:"bytes,2,rep,name=players,proto3" json:"players,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -65,14 +66,21 @@ func (x *GameState) GetBoards() []*BoardState {
 	return nil
 }
 
+func (x *GameState) GetPlayers() []*Player {
+	if x != nil {
+		return x.Players
+	}
+	return nil
+}
+
 type BoardState struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	WhitePlayer   *Player                `protobuf:"bytes,1,opt,name=white_player,json=whitePlayer,proto3" json:"white_player,omitempty"`
-	BlackPlayer   *Player                `protobuf:"bytes,2,opt,name=black_player,json=blackPlayer,proto3" json:"black_player,omitempty"`
-	ChessBoard    *ChessBoard            `protobuf:"bytes,3,opt,name=chess_board,json=chessBoard,proto3" json:"chess_board,omitempty"`
-	MoveHistory   []*KaboomMove          `protobuf:"bytes,4,rep,name=move_history,json=moveHistory,proto3" json:"move_history,omitempty"` // Current turn, turn count, etc can be implied from the move history
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	WhitePlayerUuid string                 `protobuf:"bytes,1,opt,name=white_player_uuid,json=whitePlayerUuid,proto3" json:"white_player_uuid,omitempty"`
+	BlackPlayerUuid string                 `protobuf:"bytes,2,opt,name=black_player_uuid,json=blackPlayerUuid,proto3" json:"black_player_uuid,omitempty"`
+	ChessBoard      *ChessBoard            `protobuf:"bytes,3,opt,name=chess_board,json=chessBoard,proto3" json:"chess_board,omitempty"`
+	MoveHistory     []*KaboomMove          `protobuf:"bytes,4,rep,name=move_history,json=moveHistory,proto3" json:"move_history,omitempty"` // Current turn, turn count, etc can be implied from the move history
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *BoardState) Reset() {
@@ -105,18 +113,18 @@ func (*BoardState) Descriptor() ([]byte, []int) {
 	return file_kaboom_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *BoardState) GetWhitePlayer() *Player {
+func (x *BoardState) GetWhitePlayerUuid() string {
 	if x != nil {
-		return x.WhitePlayer
+		return x.WhitePlayerUuid
 	}
-	return nil
+	return ""
 }
 
-func (x *BoardState) GetBlackPlayer() *Player {
+func (x *BoardState) GetBlackPlayerUuid() string {
 	if x != nil {
-		return x.BlackPlayer
+		return x.BlackPlayerUuid
 	}
-	return nil
+	return ""
 }
 
 func (x *BoardState) GetChessBoard() *ChessBoard {
@@ -258,13 +266,14 @@ var File_kaboom_proto protoreflect.FileDescriptor
 const file_kaboom_proto_rawDesc = "" +
 	"\n" +
 	"\fkaboom.proto\x12\vkaboomproto\x1a\vpiece.proto\x1a\n" +
-	"move.proto\"<\n" +
+	"move.proto\"k\n" +
 	"\tGameState\x12/\n" +
-	"\x06boards\x18\x01 \x03(\v2\x17.kaboomproto.BoardStateR\x06boards\"\xf2\x01\n" +
+	"\x06boards\x18\x01 \x03(\v2\x17.kaboomproto.BoardStateR\x06boards\x12-\n" +
+	"\aplayers\x18\x02 \x03(\v2\x13.kaboomproto.PlayerR\aplayers\"\xda\x01\n" +
 	"\n" +
-	"BoardState\x126\n" +
-	"\fwhite_player\x18\x01 \x01(\v2\x13.kaboomproto.PlayerR\vwhitePlayer\x126\n" +
-	"\fblack_player\x18\x02 \x01(\v2\x13.kaboomproto.PlayerR\vblackPlayer\x128\n" +
+	"BoardState\x12*\n" +
+	"\x11white_player_uuid\x18\x01 \x01(\tR\x0fwhitePlayerUuid\x12*\n" +
+	"\x11black_player_uuid\x18\x02 \x01(\tR\x0fblackPlayerUuid\x128\n" +
 	"\vchess_board\x18\x03 \x01(\v2\x17.kaboomproto.ChessBoardR\n" +
 	"chessBoard\x12:\n" +
 	"\fmove_history\x18\x04 \x03(\v2\x17.kaboomproto.KaboomMoveR\vmoveHistory\"O\n" +
@@ -302,16 +311,15 @@ var file_kaboom_proto_goTypes = []any{
 }
 var file_kaboom_proto_depIdxs = []int32{
 	1, // 0: kaboomproto.GameState.boards:type_name -> kaboomproto.BoardState
-	2, // 1: kaboomproto.BoardState.white_player:type_name -> kaboomproto.Player
-	2, // 2: kaboomproto.BoardState.black_player:type_name -> kaboomproto.Player
-	3, // 3: kaboomproto.BoardState.chess_board:type_name -> kaboomproto.ChessBoard
-	4, // 4: kaboomproto.BoardState.move_history:type_name -> kaboomproto.KaboomMove
-	5, // 5: kaboomproto.ChessBoard.pieces:type_name -> kaboomproto.ChessPiece
-	6, // [6:6] is the sub-list for method output_type
-	6, // [6:6] is the sub-list for method input_type
-	6, // [6:6] is the sub-list for extension type_name
-	6, // [6:6] is the sub-list for extension extendee
-	0, // [0:6] is the sub-list for field type_name
+	2, // 1: kaboomproto.GameState.players:type_name -> kaboomproto.Player
+	3, // 2: kaboomproto.BoardState.chess_board:type_name -> kaboomproto.ChessBoard
+	4, // 3: kaboomproto.BoardState.move_history:type_name -> kaboomproto.KaboomMove
+	5, // 4: kaboomproto.ChessBoard.pieces:type_name -> kaboomproto.ChessPiece
+	5, // [5:5] is the sub-list for method output_type
+	5, // [5:5] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_kaboom_proto_init() }

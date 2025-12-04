@@ -16,23 +16,19 @@ const (
 
 func init() {
 	chessPieceTypeToKindMap[kaboomproto.PieceType_ROOK] = ChessPieceKind_Rook
-	moveKindEvaluators[MoveKind_RookMove] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCRookMove() != nil
-	}
-	moveKindEvaluators[MoveKind_RookCapture] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCRookCapture() != nil
-	}
-	moveKindEvaluators[MoveKind_KRookBump] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKRookBump() != nil
-	}
-	moveKindEvaluators[MoveKind_KRookTackle] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKRookTackle() != nil
-	}
+	registerMoveConstructor(MoveKind_RookMove, NewRookMove)
+	registerMoveConstructor(MoveKind_RookCapture, NewRookCapture)
+	registerMoveConstructor(MoveKind_KRookBump, NewRookBump)
+	registerMoveConstructor(MoveKind_KRookTackle, NewRookTackle)
 }
 
 // Rook represents a rook chess piece.
 type Rook struct {
 	baseChessPiece
+}
+
+func (r Rook) Validate() error {
+	return r.validateBasePiece("rook", ChessPieceKind_Rook)
 }
 
 // NewRook creates a new Rook from proto data.
@@ -70,6 +66,17 @@ func (rm RookMove) Destination() Position {
 	return Position{data: rm.moveData().To}
 }
 
+func (rm RookMove) Validate() error {
+	data := rm.moveData()
+	if err := rm.validateBaseMove("rook move", data == nil, rm.PiecePosition); err != nil {
+		return err
+	}
+	if err := rm.Destination().Validate(); err != nil {
+		return fmt.Errorf("rook move (to): %w", err)
+	}
+	return nil
+}
+
 // RookCapture represents a rook capture move.
 type RookCapture struct {
 	baseMove
@@ -96,6 +103,17 @@ func (rc RookCapture) Destination() Position {
 	return Position{data: rc.moveData().To}
 }
 
+func (rc RookCapture) Validate() error {
+	data := rc.moveData()
+	if err := rc.validateBaseMove("rook capture", data == nil, rc.PiecePosition); err != nil {
+		return err
+	}
+	if err := rc.Destination().Validate(); err != nil {
+		return fmt.Errorf("rook capture (to): %w", err)
+	}
+	return nil
+}
+
 // RookBump represents the Kaboom rook bump move.
 type RookBump struct {
 	baseMove
@@ -120,6 +138,17 @@ func (rb RookBump) PiecePosition() Position {
 
 func (rb RookBump) Destination() Position {
 	return Position{data: rb.moveData().To}
+}
+
+func (rb RookBump) Validate() error {
+	data := rb.moveData()
+	if err := rb.validateBaseMove("rook bump", data == nil, rb.PiecePosition); err != nil {
+		return err
+	}
+	if err := rb.Destination().Validate(); err != nil {
+		return fmt.Errorf("rook bump (to): %w", err)
+	}
+	return nil
 }
 
 // BumpVector returns the horizontal or vertical direction the opponent is moved.
@@ -160,4 +189,15 @@ func (rt RookTackle) BumpVector() Vector {
 		RowDelta: dir.RowDelta * 2,
 		ColDelta: dir.ColDelta * 2,
 	}
+}
+
+func (rt RookTackle) Validate() error {
+	data := rt.moveData()
+	if err := rt.validateBaseMove("rook tackle", data == nil, rt.PiecePosition); err != nil {
+		return err
+	}
+	if err := rt.Destination().Validate(); err != nil {
+		return fmt.Errorf("rook tackle (to): %w", err)
+	}
+	return nil
 }

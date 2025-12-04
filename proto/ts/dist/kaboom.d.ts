@@ -4,10 +4,11 @@ import { ChessPiece } from "./piece";
 export declare const protobufPackage = "kaboomproto";
 export interface GameState {
     boards: BoardState[];
+    players: Player[];
 }
 export interface BoardState {
-    whitePlayer?: Player | undefined;
-    blackPlayer?: Player | undefined;
+    whitePlayerUuid: string;
+    blackPlayerUuid: string;
     chessBoard?: ChessBoard | undefined;
     /** Current turn, turn count, etc can be implied from the move history */
     moveHistory: KaboomMove[];

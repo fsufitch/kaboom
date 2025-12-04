@@ -7,12 +7,13 @@ import "piece.proto";
 import "move.proto";
 
 message GameState {
-    repeated BoardState boards = 1;    
+    repeated BoardState boards = 1;
+    repeated Player players = 2;
 }
 
 message BoardState {
-    Player white_player = 1;
-    Player black_player = 2;
+    string white_player_uuid = 1;
+    string black_player_uuid = 2;
     ChessBoard chess_board = 3;
 
     repeated KaboomMove move_history = 4;

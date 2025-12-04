@@ -16,23 +16,19 @@ const (
 
 func init() {
 	chessPieceTypeToKindMap[kaboomproto.PieceType_KNIGHT] = ChessPieceKind_Knight
-	moveKindEvaluators[MoveKind_KnightMove] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCKnightMove() != nil
-	}
-	moveKindEvaluators[MoveKind_KnightCapture] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCKnightCapture() != nil
-	}
-	moveKindEvaluators[MoveKind_KKnightBump] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKKnightBump() != nil
-	}
-	moveKindEvaluators[MoveKind_KKnightStomp] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKKnightStomp() != nil
-	}
+	registerMoveConstructor(MoveKind_KnightMove, NewKnightMove)
+	registerMoveConstructor(MoveKind_KnightCapture, NewKnightCapture)
+	registerMoveConstructor(MoveKind_KKnightBump, NewKnightBump)
+	registerMoveConstructor(MoveKind_KKnightStomp, NewKnightStomp)
 }
 
 // Knight represents a knight chess piece.
 type Knight struct {
 	baseChessPiece
+}
+
+func (k Knight) Validate() error {
+	return k.validateBasePiece("knight", ChessPieceKind_Knight)
 }
 
 // NewKnight creates a new Knight instance from the given proto piece data.
@@ -70,6 +66,17 @@ func (km KnightMove) Destination() Position {
 	return Position{data: km.moveData().To}
 }
 
+func (km KnightMove) Validate() error {
+	data := km.moveData()
+	if err := km.validateBaseMove("knight move", data == nil, km.PiecePosition); err != nil {
+		return err
+	}
+	if err := km.Destination().Validate(); err != nil {
+		return fmt.Errorf("knight move (to): %w", err)
+	}
+	return nil
+}
+
 // KnightCapture represents a classical knight capture move.
 type KnightCapture struct {
 	baseMove
@@ -94,6 +101,17 @@ func (kc KnightCapture) PiecePosition() Position {
 
 func (kc KnightCapture) Destination() Position {
 	return Position{data: kc.moveData().To}
+}
+
+func (kc KnightCapture) Validate() error {
+	data := kc.moveData()
+	if err := kc.validateBaseMove("knight capture", data == nil, kc.PiecePosition); err != nil {
+		return err
+	}
+	if err := kc.Destination().Validate(); err != nil {
+		return fmt.Errorf("knight capture (to): %w", err)
+	}
+	return nil
 }
 
 // KnightBump represents the Kaboom-specific knight bump move.
@@ -124,6 +142,20 @@ func (kb KnightBump) Destination() Position {
 
 func (kb KnightBump) BumpDirection() kaboomproto.K_KnightBump_BumpDirection {
 	return kb.moveData().GetBumpDirection()
+}
+
+func (kb KnightBump) Validate() error {
+	data := kb.moveData()
+	if err := kb.validateBaseMove("knight bump", data == nil, kb.PiecePosition); err != nil {
+		return err
+	}
+	if err := kb.Destination().Validate(); err != nil {
+		return fmt.Errorf("knight bump (to): %w", err)
+	}
+	if data.GetBumpDirection() == kaboomproto.K_KnightBump_BUMP_DIRECTION_UNKNOWN {
+		return fmt.Errorf("knight bump missing bump direction: %w", ErrGameStateInvalid)
+	}
+	return nil
 }
 
 // BumpVector returns the direction the opponent piece is bumped.
@@ -163,4 +195,15 @@ func (ks KnightStomp) PiecePosition() Position {
 
 func (ks KnightStomp) Destination() Position {
 	return Position{data: ks.moveData().To}
+}
+
+func (ks KnightStomp) Validate() error {
+	data := ks.moveData()
+	if err := ks.validateBaseMove("knight stomp", data == nil, ks.PiecePosition); err != nil {
+		return err
+	}
+	if err := ks.Destination().Validate(); err != nil {
+		return fmt.Errorf("knight stomp (to): %w", err)
+	}
+	return nil
 }

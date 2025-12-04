@@ -16,23 +16,20 @@ const (
 
 func init() {
 	chessPieceTypeToKindMap[kaboomproto.PieceType_PAWN] = ChessPieceKind_Pawn
-	moveKindEvaluators[MoveKind_PawnMove] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCPawnMove() != nil
-	}
-	moveKindEvaluators[MoveKind_PawnCapture] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetCPawnCapture() != nil
-	}
-	moveKindEvaluators[MoveKind_KPawnBump] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKPawnBump() != nil
-	}
-	moveKindEvaluators[MoveKind_KPawnExplosion] = func(move *kaboomproto.KaboomMove) bool {
-		return move.GetKPawnExplosion() != nil
-	}
+
+	registerMoveConstructor(MoveKind_PawnMove, NewPawnMove)
+	registerMoveConstructor(MoveKind_PawnCapture, NewPawnCapture)
+	registerMoveConstructor(MoveKind_KPawnBump, NewPawnBump)
+	registerMoveConstructor(MoveKind_KPawnExplosion, NewPawnExplosion)
 }
 
 // Pawn represents a pawn chess piece.
 type Pawn struct {
 	baseChessPiece
+}
+
+func (p Pawn) Validate() error {
+	return p.validateBasePiece("pawn", ChessPieceKind_Pawn)
 }
 
 // NewPawn creates a new Pawn from the given kaboomproto.ChessPiece. It returns an error if the piece is not a pawn.
@@ -76,6 +73,20 @@ func (prm PawnMove) PromotionKind() ChessPieceKind {
 	return protoChessPieceTypeToChessPieceKind(promoType)
 }
 
+func (prm PawnMove) Validate() error {
+	data := prm.moveData()
+	if err := prm.validateBaseMove("pawn move", data == nil, prm.PiecePosition); err != nil {
+		return err
+	}
+	if err := prm.Destination().Validate(); err != nil {
+		return fmt.Errorf("pawn move (to): %w", err)
+	}
+	if err := validatePromotionPiece(data.GetPromotion(), "pawn move"); err != nil {
+		return err
+	}
+	return nil
+}
+
 // PawnCapture represents a capturing move made by a pawn. It implements the Move interface.
 type PawnCapture struct {
 	baseMove
@@ -105,6 +116,20 @@ func (pc PawnCapture) Destination() Position {
 func (pc PawnCapture) PromotionKind() ChessPieceKind {
 	promoType := pc.moveData().Promotion
 	return protoChessPieceTypeToChessPieceKind(promoType)
+}
+
+func (pc PawnCapture) Validate() error {
+	data := pc.moveData()
+	if err := pc.validateBaseMove("pawn capture", data == nil, pc.PiecePosition); err != nil {
+		return err
+	}
+	if err := pc.Destination().Validate(); err != nil {
+		return fmt.Errorf("pawn capture (to): %w", err)
+	}
+	if err := validatePromotionPiece(data.GetPromotion(), "pawn capture"); err != nil {
+		return err
+	}
+	return nil
 }
 
 // PawnBump represents a pawn bump move. It implements the Move interface.
@@ -139,6 +164,20 @@ func (pb PawnBump) PromotionKind() ChessPieceKind {
 	return protoChessPieceTypeToChessPieceKind(promoType)
 }
 
+func (pb PawnBump) Validate() error {
+	data := pb.moveData()
+	if err := pb.validateBaseMove("pawn bump", data == nil, pb.PiecePosition); err != nil {
+		return err
+	}
+	if err := pb.Destination().Validate(); err != nil {
+		return fmt.Errorf("pawn bump (to): %w", err)
+	}
+	if err := validatePromotionPiece(data.GetPromotion(), "pawn bump"); err != nil {
+		return err
+	}
+	return nil
+}
+
 // BumpVector returns the direction the opposing piece is pushed.
 func (pb PawnBump) BumpVector() Vector {
 	return normalizedVectorBetween(pb.PiecePosition(), pb.Destination())
@@ -164,4 +203,11 @@ func (pe PawnExplosion) moveData() *kaboomproto.K_PawnExplosion {
 
 func (pe PawnExplosion) PiecePosition() Position {
 	return Position{data: pe.moveData().GetPosition()}
+}
+
+func (pe PawnExplosion) Validate() error {
+	if err := pe.validateBaseMove("pawn explosion", pe.moveData() == nil, pe.PiecePosition); err != nil {
+		return err
+	}
+	return nil
 }

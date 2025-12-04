@@ -15,12 +15,15 @@ const move_1 = require("./move");
 const piece_1 = require("./piece");
 exports.protobufPackage = "kaboomproto";
 function createBaseGameState() {
-    return { boards: [] };
+    return { boards: [], players: [] };
 }
 exports.GameState = {
     encode(message, writer = minimal_1.default.Writer.create()) {
         for (const v of message.boards) {
             exports.BoardState.encode(v, writer.uint32(10).fork()).ldelim();
+        }
+        for (const v of message.players) {
+            exports.Player.encode(v, writer.uint32(18).fork()).ldelim();
         }
         return writer;
     },
@@ -37,6 +40,12 @@ exports.GameState = {
                     }
                     message.boards.push(exports.BoardState.decode(reader, reader.uint32()));
                     continue;
+                case 2:
+                    if (tag !== 18) {
+                        break;
+                    }
+                    message.players.push(exports.Player.decode(reader, reader.uint32()));
+                    continue;
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -48,13 +57,17 @@ exports.GameState = {
     fromJSON(object) {
         return {
             boards: globalThis.Array.isArray(object === null || object === void 0 ? void 0 : object.boards) ? object.boards.map((e) => exports.BoardState.fromJSON(e)) : [],
+            players: globalThis.Array.isArray(object === null || object === void 0 ? void 0 : object.players) ? object.players.map((e) => exports.Player.fromJSON(e)) : [],
         };
     },
     toJSON(message) {
-        var _a;
+        var _a, _b;
         const obj = {};
         if ((_a = message.boards) === null || _a === void 0 ? void 0 : _a.length) {
             obj.boards = message.boards.map((e) => exports.BoardState.toJSON(e));
+        }
+        if ((_b = message.players) === null || _b === void 0 ? void 0 : _b.length) {
+            obj.players = message.players.map((e) => exports.Player.toJSON(e));
         }
         return obj;
     },
@@ -62,22 +75,23 @@ exports.GameState = {
         return exports.GameState.fromPartial(base !== null && base !== void 0 ? base : {});
     },
     fromPartial(object) {
-        var _a;
+        var _a, _b;
         const message = createBaseGameState();
         message.boards = ((_a = object.boards) === null || _a === void 0 ? void 0 : _a.map((e) => exports.BoardState.fromPartial(e))) || [];
+        message.players = ((_b = object.players) === null || _b === void 0 ? void 0 : _b.map((e) => exports.Player.fromPartial(e))) || [];
         return message;
     },
 };
 function createBaseBoardState() {
-    return { whitePlayer: undefined, blackPlayer: undefined, chessBoard: undefined, moveHistory: [] };
+    return { whitePlayerUuid: "", blackPlayerUuid: "", chessBoard: undefined, moveHistory: [] };
 }
 exports.BoardState = {
     encode(message, writer = minimal_1.default.Writer.create()) {
-        if (message.whitePlayer !== undefined) {
-            exports.Player.encode(message.whitePlayer, writer.uint32(10).fork()).ldelim();
+        if (message.whitePlayerUuid !== "") {
+            writer.uint32(10).string(message.whitePlayerUuid);
         }
-        if (message.blackPlayer !== undefined) {
-            exports.Player.encode(message.blackPlayer, writer.uint32(18).fork()).ldelim();
+        if (message.blackPlayerUuid !== "") {
+            writer.uint32(18).string(message.blackPlayerUuid);
         }
         if (message.chessBoard !== undefined) {
             exports.ChessBoard.encode(message.chessBoard, writer.uint32(26).fork()).ldelim();
@@ -98,13 +112,13 @@ exports.BoardState = {
                     if (tag !== 10) {
                         break;
                     }
-                    message.whitePlayer = exports.Player.decode(reader, reader.uint32());
+                    message.whitePlayerUuid = reader.string();
                     continue;
                 case 2:
                     if (tag !== 18) {
                         break;
                     }
-                    message.blackPlayer = exports.Player.decode(reader, reader.uint32());
+                    message.blackPlayerUuid = reader.string();
                     continue;
                 case 3:
                     if (tag !== 26) {
@@ -128,8 +142,8 @@ exports.BoardState = {
     },
     fromJSON(object) {
         return {
-            whitePlayer: isSet(object.whitePlayer) ? exports.Player.fromJSON(object.whitePlayer) : undefined,
-            blackPlayer: isSet(object.blackPlayer) ? exports.Player.fromJSON(object.blackPlayer) : undefined,
+            whitePlayerUuid: isSet(object.whitePlayerUuid) ? globalThis.String(object.whitePlayerUuid) : "",
+            blackPlayerUuid: isSet(object.blackPlayerUuid) ? globalThis.String(object.blackPlayerUuid) : "",
             chessBoard: isSet(object.chessBoard) ? exports.ChessBoard.fromJSON(object.chessBoard) : undefined,
             moveHistory: globalThis.Array.isArray(object === null || object === void 0 ? void 0 : object.moveHistory)
                 ? object.moveHistory.map((e) => move_1.KaboomMove.fromJSON(e))
@@ -139,11 +153,11 @@ exports.BoardState = {
     toJSON(message) {
         var _a;
         const obj = {};
-        if (message.whitePlayer !== undefined) {
-            obj.whitePlayer = exports.Player.toJSON(message.whitePlayer);
+        if (message.whitePlayerUuid !== "") {
+            obj.whitePlayerUuid = message.whitePlayerUuid;
         }
-        if (message.blackPlayer !== undefined) {
-            obj.blackPlayer = exports.Player.toJSON(message.blackPlayer);
+        if (message.blackPlayerUuid !== "") {
+            obj.blackPlayerUuid = message.blackPlayerUuid;
         }
         if (message.chessBoard !== undefined) {
             obj.chessBoard = exports.ChessBoard.toJSON(message.chessBoard);
@@ -157,18 +171,14 @@ exports.BoardState = {
         return exports.BoardState.fromPartial(base !== null && base !== void 0 ? base : {});
     },
     fromPartial(object) {
-        var _a;
+        var _a, _b, _c;
         const message = createBaseBoardState();
-        message.whitePlayer = (object.whitePlayer !== undefined && object.whitePlayer !== null)
-            ? exports.Player.fromPartial(object.whitePlayer)
-            : undefined;
-        message.blackPlayer = (object.blackPlayer !== undefined && object.blackPlayer !== null)
-            ? exports.Player.fromPartial(object.blackPlayer)
-            : undefined;
+        message.whitePlayerUuid = (_a = object.whitePlayerUuid) !== null && _a !== void 0 ? _a : "";
+        message.blackPlayerUuid = (_b = object.blackPlayerUuid) !== null && _b !== void 0 ? _b : "";
         message.chessBoard = (object.chessBoard !== undefined && object.chessBoard !== null)
             ? exports.ChessBoard.fromPartial(object.chessBoard)
             : undefined;
-        message.moveHistory = ((_a = object.moveHistory) === null || _a === void 0 ? void 0 : _a.map((e) => move_1.KaboomMove.fromPartial(e))) || [];
+        message.moveHistory = ((_c = object.moveHistory) === null || _c === void 0 ? void 0 : _c.map((e) => move_1.KaboomMove.fromPartial(e))) || [];
         return message;
     },
 };
