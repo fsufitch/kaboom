@@ -36,3 +36,5 @@ proto/ts/node_modules/
 # Editor/IDE
 # .idea/
 # .vscode/
+
+bin/

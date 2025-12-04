@@ -122,6 +122,11 @@ func (rb RookBump) Destination() Position {
 	return Position{data: rb.moveData().To}
 }
 
+// BumpVector returns the horizontal or vertical direction the opponent is moved.
+func (rb RookBump) BumpVector() Vector {
+	return normalizedVectorBetween(rb.PiecePosition(), rb.Destination())
+}
+
 // RookTackle represents the Kaboom rook tackle move.
 type RookTackle struct {
 	baseMove
@@ -146,4 +151,13 @@ func (rt RookTackle) PiecePosition() Position {
 
 func (rt RookTackle) Destination() Position {
 	return Position{data: rt.moveData().To}
+}
+
+// BumpVector returns the two-square displacement applied to the opponent.
+func (rt RookTackle) BumpVector() Vector {
+	dir := normalizedVectorBetween(rt.PiecePosition(), rt.Destination())
+	return Vector{
+		RowDelta: dir.RowDelta * 2,
+		ColDelta: dir.ColDelta * 2,
+	}
 }

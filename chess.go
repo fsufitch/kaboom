@@ -122,26 +122,3 @@ func (ps PieceSet) ByColor(color Color) PieceSet {
 	}
 	return filtered
 }
-
-// Position represents a position on the chess board.
-type Position struct {
-	data *kaboomproto.Position
-}
-
-func (p Position) Row() int32 {
-	return p.data.GetRow()
-}
-
-func (p Position) Col() int32 {
-	return p.data.GetCol()
-}
-
-func (p Position) OnTheBoard() bool {
-	row := p.Row()
-	col := p.Col()
-	return row >= 0 && row < 8 && col >= 0 && col < 8
-}
-
-func (p Position) String() string {
-	return string(rune('a'+p.Col())) + fmt.Sprintf("%d", p.Row()+1)
-}

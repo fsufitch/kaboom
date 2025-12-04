@@ -139,6 +139,11 @@ func (pb PawnBump) PromotionKind() ChessPieceKind {
 	return protoChessPieceTypeToChessPieceKind(promoType)
 }
 
+// BumpVector returns the direction the opposing piece is pushed.
+func (pb PawnBump) BumpVector() Vector {
+	return normalizedVectorBetween(pb.PiecePosition(), pb.Destination())
+}
+
 // PawnExplosion represents a pawn explosion move. It implements the Move interface.
 type PawnExplosion struct {
 	baseMove

@@ -122,6 +122,11 @@ func (kb KingBump) Destination() Position {
 	return Position{data: kb.moveData().To}
 }
 
+// BumpVector returns the direction the opposing piece is displaced.
+func (kb KingBump) BumpVector() Vector {
+	return normalizedVectorBetween(kb.PiecePosition(), kb.Destination())
+}
+
 // KingControl represents the Kaboom king control move.
 type KingControl struct {
 	baseMove

@@ -126,6 +126,19 @@ func (kb KnightBump) BumpDirection() kaboomproto.K_KnightBump_BumpDirection {
 	return kb.moveData().GetBumpDirection()
 }
 
+// BumpVector returns the direction the opponent piece is bumped.
+func (kb KnightBump) BumpVector() Vector {
+	dir := normalizedVectorBetween(kb.PiecePosition(), kb.Destination())
+	switch kb.BumpDirection() {
+	case kaboomproto.K_KnightBump_BUMP_DIRECTION_HORIZONTAL:
+		return Vector{RowDelta: 0, ColDelta: dir.ColDelta}
+	case kaboomproto.K_KnightBump_BUMP_DIRECTION_VERTICAL:
+		return Vector{RowDelta: dir.RowDelta, ColDelta: 0}
+	default:
+		return dir
+	}
+}
+
 // KnightStomp represents the Kaboom-specific knight stomp move.
 type KnightStomp struct {
 	baseMove

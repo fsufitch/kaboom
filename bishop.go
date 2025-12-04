@@ -122,6 +122,11 @@ func (bb BishopBump) Destination() Position {
 	return Position{data: bb.moveData().To}
 }
 
+// BumpVector returns the diagonal direction the opponent is pushed.
+func (bb BishopBump) BumpVector() Vector {
+	return normalizedVectorBetween(bb.PiecePosition(), bb.Destination())
+}
+
 // BishopSnipe represents the Kaboom bishop snipe move.
 type BishopSnipe struct {
 	baseMove
@@ -147,4 +152,9 @@ func (bs BishopSnipe) PiecePosition() Position {
 // Target returns the position of the sniped piece.
 func (bs BishopSnipe) Target() Position {
 	return Position{data: bs.moveData().Target}
+}
+
+// BumpVector returns the direction the sniped piece is displaced.
+func (bs BishopSnipe) BumpVector() Vector {
+	return normalizedVectorBetween(bs.PiecePosition(), bs.Target())
 }

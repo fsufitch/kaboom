@@ -122,6 +122,11 @@ func (qb QueenBump) Destination() Position {
 	return Position{data: qb.moveData().To}
 }
 
+// BumpVector returns the direction the target piece is pushed.
+func (qb QueenBump) BumpVector() Vector {
+	return normalizedVectorBetween(qb.PiecePosition(), qb.Destination())
+}
+
 // QueenNova represents the Kaboom queen nova move.
 type QueenNova struct {
 	baseMove
