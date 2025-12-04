@@ -27,10 +27,6 @@ type Bishop struct {
 	baseChessPiece
 }
 
-func (b Bishop) Validate() error {
-	return b.validateBasePiece("bishop", ChessPieceKind_Bishop)
-}
-
 // NewBishop creates a new Bishop from proto data.
 func NewBishop(piece *kaboomproto.ChessPiece) (Bishop, error) {
 	base := baseChessPiece{data: piece}
@@ -66,17 +62,6 @@ func (bm BishopMove) Destination() Position {
 	return Position{data: bm.moveData().To}
 }
 
-func (bm BishopMove) Validate() error {
-	data := bm.moveData()
-	if err := bm.validateBaseMove("bishop move", data == nil, bm.PiecePosition); err != nil {
-		return err
-	}
-	if err := bm.Destination().Validate(); err != nil {
-		return fmt.Errorf("bishop move (to): %w", err)
-	}
-	return nil
-}
-
 // BishopCapture represents a bishop capture move.
 type BishopCapture struct {
 	baseMove
@@ -103,17 +88,6 @@ func (bc BishopCapture) Destination() Position {
 	return Position{data: bc.moveData().To}
 }
 
-func (bc BishopCapture) Validate() error {
-	data := bc.moveData()
-	if err := bc.validateBaseMove("bishop capture", data == nil, bc.PiecePosition); err != nil {
-		return err
-	}
-	if err := bc.Destination().Validate(); err != nil {
-		return fmt.Errorf("bishop capture (to): %w", err)
-	}
-	return nil
-}
-
 // BishopBump represents the Kaboom bishop bump move.
 type BishopBump struct {
 	baseMove
@@ -138,17 +112,6 @@ func (bb BishopBump) PiecePosition() Position {
 
 func (bb BishopBump) Destination() Position {
 	return Position{data: bb.moveData().To}
-}
-
-func (bb BishopBump) Validate() error {
-	data := bb.moveData()
-	if err := bb.validateBaseMove("bishop bump", data == nil, bb.PiecePosition); err != nil {
-		return err
-	}
-	if err := bb.Destination().Validate(); err != nil {
-		return fmt.Errorf("bishop bump (to): %w", err)
-	}
-	return nil
 }
 
 // BumpVector returns the diagonal direction the target piece is bumped.
@@ -181,17 +144,6 @@ func (bs BishopSnipe) PiecePosition() Position {
 // Target returns the position of the sniped piece.
 func (bs BishopSnipe) Target() Position {
 	return Position{data: bs.moveData().Target}
-}
-
-func (bs BishopSnipe) Validate() error {
-	data := bs.moveData()
-	if err := bs.validateBaseMove("bishop snipe", data == nil, bs.PiecePosition); err != nil {
-		return err
-	}
-	if err := bs.Target().Validate(); err != nil {
-		return fmt.Errorf("bishop snipe (target): %w", err)
-	}
-	return nil
 }
 
 // BumpVector returns the direction the target piece is bumped away from the bishop.

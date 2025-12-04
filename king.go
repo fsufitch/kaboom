@@ -28,10 +28,6 @@ type King struct {
 	baseChessPiece
 }
 
-func (k King) Validate() error {
-	return k.validateBasePiece("king", ChessPieceKind_King)
-}
-
 // NewKing creates a new King from proto data.
 func NewKing(piece *kaboomproto.ChessPiece) (King, error) {
 	base := baseChessPiece{data: piece}
@@ -67,17 +63,6 @@ func (km KingMove) Destination() Position {
 	return Position{data: km.moveData().To}
 }
 
-func (km KingMove) Validate() error {
-	data := km.moveData()
-	if err := km.validateBaseMove("king move", data == nil, km.PiecePosition); err != nil {
-		return err
-	}
-	if err := km.Destination().Validate(); err != nil {
-		return fmt.Errorf("king move (to): %w", err)
-	}
-	return nil
-}
-
 // KingCapture represents a classical king capture.
 type KingCapture struct {
 	baseMove
@@ -102,17 +87,6 @@ func (kc KingCapture) PiecePosition() Position {
 
 func (kc KingCapture) Destination() Position {
 	return Position{data: kc.moveData().To}
-}
-
-func (kc KingCapture) Validate() error {
-	data := kc.moveData()
-	if err := kc.validateBaseMove("king capture", data == nil, kc.PiecePosition); err != nil {
-		return err
-	}
-	if err := kc.Destination().Validate(); err != nil {
-		return fmt.Errorf("king capture (to): %w", err)
-	}
-	return nil
 }
 
 // KingBump represents the Kaboom king bump move.
@@ -146,17 +120,6 @@ func (kb KingBump) BumpVector() Vector {
 	return normalizedVectorBetween(kb.PiecePosition(), kb.Destination())
 }
 
-func (kb KingBump) Validate() error {
-	data := kb.moveData()
-	if err := kb.validateBaseMove("king bump", data == nil, kb.PiecePosition); err != nil {
-		return err
-	}
-	if err := kb.Destination().Validate(); err != nil {
-		return fmt.Errorf("king bump (to): %w", err)
-	}
-	return nil
-}
-
 // KingControl represents the Kaboom king control move.
 type KingControl struct {
 	baseMove
@@ -182,24 +145,4 @@ func (kc KingControl) PiecePosition() Position {
 // ForcedMove returns the move forced upon the controlled target.
 func (kc KingControl) ForcedMove() *kaboomproto.KaboomMove {
 	return kc.moveData().GetForcedMove()
-}
-
-func (kc KingControl) Validate() error {
-	data := kc.moveData()
-	if err := kc.validateBaseMove("king control", data == nil, kc.PiecePosition); err != nil {
-		return err
-	}
-	if data.GetForcedMove() == nil {
-		return fmt.Errorf("king control missing forced move: %w", ErrGameStateInvalid)
-	}
-	forcedKind := kindOfMove(data.GetForcedMove())
-	constructor, ok := moveKindConstructors[forcedKind]
-	if !ok {
-		return fmt.Errorf("king control forced move has unknown kind: %w", ErrGameStateInvalid)
-	}
-	forcedMove, err := constructor(data.GetForcedMove())
-	if err != nil {
-		return fmt.Errorf("king control forced move invalid: %w", err)
-	}
-	return validateMove(forcedMove)
 }

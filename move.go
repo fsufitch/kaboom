@@ -50,17 +50,3 @@ type baseMove struct {
 func (bm baseMove) Kind() MoveKind {
 	return kindOfMove(bm.data)
 }
-
-func (bm baseMove) validateBaseMove(label string, missingMoveData bool, from func() Position) error {
-	if bm.data == nil {
-		return fmt.Errorf("invalid %s (missing data): %w", label, ErrGameStateInvalid)
-	}
-	if missingMoveData {
-		return fmt.Errorf("invalid %s (missing move data): %w", label, ErrGameStateInvalid)
-	}
-	pos := from()
-	if err := pos.Validate(); err != nil {
-		return fmt.Errorf("%s (from): %w", label, err)
-	}
-	return nil
-}
