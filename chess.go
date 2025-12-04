@@ -71,6 +71,26 @@ func (cb ChessBoard) Pieces() (pieces PieceSet, err error) {
 			if piece, err = NewPawn(pieceData); err != nil {
 				return nil, err
 			}
+		case ChessPieceKind_Knight:
+			if piece, err = NewKnight(pieceData); err != nil {
+				return nil, err
+			}
+		case ChessPieceKind_Bishop:
+			if piece, err = NewBishop(pieceData); err != nil {
+				return nil, err
+			}
+		case ChessPieceKind_Rook:
+			if piece, err = NewRook(pieceData); err != nil {
+				return nil, err
+			}
+		case ChessPieceKind_Queen:
+			if piece, err = NewQueen(pieceData); err != nil {
+				return nil, err
+			}
+		case ChessPieceKind_King:
+			if piece, err = NewKing(pieceData); err != nil {
+				return nil, err
+			}
 		default:
 			return nil, fmt.Errorf("unsupported piece kind: %s", pieceKind)
 		}
@@ -114,6 +134,12 @@ func (p Position) Row() int32 {
 
 func (p Position) Col() int32 {
 	return p.data.GetCol()
+}
+
+func (p Position) OnTheBoard() bool {
+	row := p.Row()
+	col := p.Col()
+	return row >= 0 && row < 8 && col >= 0 && col < 8
 }
 
 func (p Position) String() string {

@@ -7,14 +7,26 @@ import (
 )
 
 const (
-	ChessPieceKind_Pawn ChessPieceKind = "piecekind.pawn"
-	MoveKind_CPawnMove  MoveKind       = "movekind.pawn.regular_move"
+	ChessPieceKind_Pawn     ChessPieceKind = "piecekind.pawn"
+	MoveKind_PawnMove       MoveKind       = "movekind.pawn.move"
+	MoveKind_PawnCapture    MoveKind       = "movekind.pawn.capture"
+	MoveKind_KPawnBump      MoveKind       = "movekind.pawn.bump"
+	MoveKind_KPawnExplosion MoveKind       = "movekind.pawn.explosion"
 )
 
 func init() {
 	chessPieceTypeToKindMap[kaboomproto.PieceType_PAWN] = ChessPieceKind_Pawn
-	moveKindEvaluators[MoveKind_CPawnMove] = func(move *kaboomproto.KaboomMove) bool {
+	moveKindEvaluators[MoveKind_PawnMove] = func(move *kaboomproto.KaboomMove) bool {
 		return move.GetCPawnMove() != nil
+	}
+	moveKindEvaluators[MoveKind_PawnCapture] = func(move *kaboomproto.KaboomMove) bool {
+		return move.GetCPawnCapture() != nil
+	}
+	moveKindEvaluators[MoveKind_KPawnBump] = func(move *kaboomproto.KaboomMove) bool {
+		return move.GetKPawnBump() != nil
+	}
+	moveKindEvaluators[MoveKind_KPawnExplosion] = func(move *kaboomproto.KaboomMove) bool {
+		return move.GetKPawnExplosion() != nil
 	}
 }
 
@@ -32,35 +44,66 @@ func NewPawn(piece *kaboomproto.ChessPiece) (Pawn, error) {
 	return Pawn{baseChessPiece: base}, nil
 }
 
-// PawnRegularMove represents a regular move made by a pawn. It implements the Move interface.
-type PawnRegularMove struct {
+// PawnMove represents a standard chess move made by a pawn. It implements the Move interface.
+type PawnMove struct {
 	baseMove
 }
 
-func NewPawnRegularMove(move *kaboomproto.KaboomMove) (PawnRegularMove, error) {
-	prm := PawnRegularMove{}
+func NewPawnMove(move *kaboomproto.KaboomMove) (PawnMove, error) {
+	prm := PawnMove{}
 	prm.data = move
 	if prm.moveData() == nil {
-		return PawnRegularMove{}, fmt.Errorf("move is not a pawn regular move")
+		return PawnMove{}, fmt.Errorf("move is not a pawn move")
 	}
 
 	return prm, nil
 }
 
-func (prm PawnRegularMove) moveData() *kaboomproto.C_PawnMove {
+func (prm PawnMove) moveData() *kaboomproto.C_PawnMove {
 	return prm.data.GetCPawnMove()
 }
 
-func (prm PawnRegularMove) PiecePosition() Position {
+func (prm PawnMove) PiecePosition() Position {
 	return Position{data: prm.moveData().From}
 }
 
-func (prm PawnRegularMove) Destination() Position {
+func (prm PawnMove) Destination() Position {
 	return Position{data: prm.moveData().To}
 }
 
-func (prm PawnRegularMove) PromotionKind() ChessPieceKind {
+func (prm PawnMove) PromotionKind() ChessPieceKind {
 	promoType := prm.moveData().Promotion
+	return protoChessPieceTypeToChessPieceKind(promoType)
+}
+
+// PawnCapture represents a capturing move made by a pawn. It implements the Move interface.
+type PawnCapture struct {
+	baseMove
+}
+
+func NewPawnCapture(move *kaboomproto.KaboomMove) (PawnCapture, error) {
+	pc := PawnCapture{}
+	pc.data = move
+	if pc.moveData() == nil {
+		return PawnCapture{}, fmt.Errorf("move is not a pawn capture")
+	}
+	return pc, nil
+}
+
+func (pc PawnCapture) moveData() *kaboomproto.C_PawnCapture {
+	return pc.data.GetCPawnCapture()
+}
+
+func (pc PawnCapture) PiecePosition() Position {
+	return Position{data: pc.moveData().From}
+}
+
+func (pc PawnCapture) Destination() Position {
+	return Position{data: pc.moveData().To}
+}
+
+func (pc PawnCapture) PromotionKind() ChessPieceKind {
+	promoType := pc.moveData().Promotion
 	return protoChessPieceTypeToChessPieceKind(promoType)
 }
 
@@ -102,18 +145,18 @@ type PawnExplosion struct {
 }
 
 func NewPawnExplosion(move *kaboomproto.KaboomMove) (PawnExplosion, error) {
-	pk := PawnExplosion{}
-	pk.data = move
-	if pk.moveData() == nil {
+	pe := PawnExplosion{}
+	pe.data = move
+	if pe.moveData() == nil {
 		return PawnExplosion{}, fmt.Errorf("move is not a pawn explosion")
 	}
 
-	return pk, nil
+	return pe, nil
 }
-func (pk PawnExplosion) moveData() *kaboomproto.K_PawnExplosion {
-	return pk.data.GetKPawnExplosion()
+func (pe PawnExplosion) moveData() *kaboomproto.K_PawnExplosion {
+	return pe.data.GetKPawnExplosion()
 }
 
-func (pk PawnExplosion) PiecePosition() Position {
-	return Position{data: pk.moveData().GetPosition()}
+func (pe PawnExplosion) PiecePosition() Position {
+	return Position{data: pe.moveData().GetPosition()}
 }
