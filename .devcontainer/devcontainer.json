@@ -1,0 +1,33 @@
+{
+    "name": "kaboomchess",
+    "build": {
+        "dockerfile": "Containerfile",
+        "args": {
+            "USERNAME": "${localEnv:USER}" // host username into build
+        }
+    },
+    // Tell VS Code which user to run as
+    "remoteUser": "${localEnv:USER}",
+    "containerUser": "${localEnv:USER}",
+    // On Linux, adjust UID/GID to match your host user
+    "updateRemoteUserUID": true,
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash"
+            },
+            "extensions": [
+                "eamodio.gitlens",
+                "foxundermoon.shell-format",
+                "ms-azuretools.vscode-docker",
+                "wdhongtw.gpg-indicator",
+                "yzhang.markdown-all-in-one",
+                "EditorConfig.EditorConfig",
+                "csstools.postcss",
+                "golang.go",
+                "zxh404.vscode-proto3",
+                "openai.chatgpt"
+            ]
+        }
+    }
+}
