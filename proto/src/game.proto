@@ -10,6 +10,7 @@ import "intent.proto";
 
 message Game {
     string uuid = 1;
+    string rules_variant = 2;
 
     repeated Board boards = 20;
     repeated Player players = 30;

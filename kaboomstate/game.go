@@ -32,6 +32,10 @@ func (g Game) Validate() error {
 		return fmt.Errorf("%w: game uuid is empty", ErrInvalidProto)
 	}
 
+	if g.RulesVariant() == "" {
+		return fmt.Errorf("%w: game rules variant is empty", ErrInvalidProto)
+	}
+
 	for _, board := range g.Boards() {
 		if err := board.Validate(); err != nil {
 			return err
@@ -61,6 +65,10 @@ func (g Game) Validate() error {
 
 func (g Game) UUID() string {
 	return g.proto.GetUuid()
+}
+
+func (g Game) RulesVariant() string {
+	return g.proto.GetRulesVariant()
 }
 
 func (g Game) Boards() []Board {

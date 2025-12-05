@@ -24,6 +24,7 @@ const (
 type Game struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	RulesVariant  string                 `protobuf:"bytes,2,opt,name=rules_variant,json=rulesVariant,proto3" json:"rules_variant,omitempty"`
 	Boards        []*Board               `protobuf:"bytes,20,rep,name=boards,proto3" json:"boards,omitempty"`
 	Players       []*Player              `protobuf:"bytes,30,rep,name=players,proto3" json:"players,omitempty"`
 	Pieces        []*ChessPiece          `protobuf:"bytes,40,rep,name=pieces,proto3" json:"pieces,omitempty"`
@@ -65,6 +66,13 @@ func (*Game) Descriptor() ([]byte, []int) {
 func (x *Game) GetUuid() string {
 	if x != nil {
 		return x.Uuid
+	}
+	return ""
+}
+
+func (x *Game) GetRulesVariant() string {
+	if x != nil {
+		return x.RulesVariant
 	}
 	return ""
 }
@@ -337,9 +345,10 @@ var File_game_proto protoreflect.FileDescriptor
 const file_game_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"game.proto\x12\vkaboomproto\x1a\vcolor.proto\x1a\vpiece.proto\x1a\feffect.proto\x1a\fintent.proto\"\xcf\x01\n" +
+	"game.proto\x12\vkaboomproto\x1a\vcolor.proto\x1a\vpiece.proto\x1a\feffect.proto\x1a\fintent.proto\"\xf4\x01\n" +
 	"\x04Game\x12\x12\n" +
-	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12*\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12#\n" +
+	"\rrules_variant\x18\x02 \x01(\tR\frulesVariant\x12*\n" +
 	"\x06boards\x18\x14 \x03(\v2\x12.kaboomproto.BoardR\x06boards\x12-\n" +
 	"\aplayers\x18\x1e \x03(\v2\x13.kaboomproto.PlayerR\aplayers\x12/\n" +
 	"\x06pieces\x18( \x03(\v2\x17.kaboomproto.ChessPieceR\x06pieces\x12'\n" +

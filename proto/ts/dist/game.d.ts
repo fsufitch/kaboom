@@ -6,6 +6,7 @@ import { ChessPiece } from "./piece";
 export declare const protobufPackage = "kaboomproto";
 export interface Game {
     uuid: string;
+    rulesVariant: string;
     boards: Board[];
     players: Player[];
     pieces: ChessPiece[];

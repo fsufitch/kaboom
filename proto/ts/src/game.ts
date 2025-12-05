@@ -15,6 +15,7 @@ export const protobufPackage = "kaboomproto";
 
 export interface Game {
   uuid: string;
+  rulesVariant: string;
   boards: Board[];
   players: Player[];
   pieces: ChessPiece[];
@@ -50,13 +51,16 @@ export interface Turn {
 }
 
 function createBaseGame(): Game {
-  return { uuid: "", boards: [], players: [], pieces: [], turns: [] };
+  return { uuid: "", rulesVariant: "", boards: [], players: [], pieces: [], turns: [] };
 }
 
 export const Game = {
   encode(message: Game, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.uuid !== "") {
       writer.uint32(10).string(message.uuid);
+    }
+    if (message.rulesVariant !== "") {
+      writer.uint32(18).string(message.rulesVariant);
     }
     for (const v of message.boards) {
       Board.encode(v!, writer.uint32(162).fork()).ldelim();
@@ -86,6 +90,13 @@ export const Game = {
           }
 
           message.uuid = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.rulesVariant = reader.string();
           continue;
         case 20:
           if (tag !== 162) {
@@ -127,6 +138,7 @@ export const Game = {
   fromJSON(object: any): Game {
     return {
       uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
+      rulesVariant: isSet(object.rulesVariant) ? globalThis.String(object.rulesVariant) : "",
       boards: globalThis.Array.isArray(object?.boards) ? object.boards.map((e: any) => Board.fromJSON(e)) : [],
       players: globalThis.Array.isArray(object?.players) ? object.players.map((e: any) => Player.fromJSON(e)) : [],
       pieces: globalThis.Array.isArray(object?.pieces) ? object.pieces.map((e: any) => ChessPiece.fromJSON(e)) : [],
@@ -138,6 +150,9 @@ export const Game = {
     const obj: any = {};
     if (message.uuid !== "") {
       obj.uuid = message.uuid;
+    }
+    if (message.rulesVariant !== "") {
+      obj.rulesVariant = message.rulesVariant;
     }
     if (message.boards?.length) {
       obj.boards = message.boards.map((e) => Board.toJSON(e));
@@ -160,6 +175,7 @@ export const Game = {
   fromPartial<I extends Exact<DeepPartial<Game>, I>>(object: I): Game {
     const message = createBaseGame();
     message.uuid = object.uuid ?? "";
+    message.rulesVariant = object.rulesVariant ?? "";
     message.boards = object.boards?.map((e) => Board.fromPartial(e)) || [];
     message.players = object.players?.map((e) => Player.fromPartial(e)) || [];
     message.pieces = object.pieces?.map((e) => ChessPiece.fromPartial(e)) || [];

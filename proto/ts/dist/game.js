@@ -17,12 +17,15 @@ const intent_1 = require("./intent");
 const piece_1 = require("./piece");
 exports.protobufPackage = "kaboomproto";
 function createBaseGame() {
-    return { uuid: "", boards: [], players: [], pieces: [], turns: [] };
+    return { uuid: "", rulesVariant: "", boards: [], players: [], pieces: [], turns: [] };
 }
 exports.Game = {
     encode(message, writer = minimal_1.default.Writer.create()) {
         if (message.uuid !== "") {
             writer.uint32(10).string(message.uuid);
+        }
+        if (message.rulesVariant !== "") {
+            writer.uint32(18).string(message.rulesVariant);
         }
         for (const v of message.boards) {
             exports.Board.encode(v, writer.uint32(162).fork()).ldelim();
@@ -50,6 +53,12 @@ exports.Game = {
                         break;
                     }
                     message.uuid = reader.string();
+                    continue;
+                case 2:
+                    if (tag !== 18) {
+                        break;
+                    }
+                    message.rulesVariant = reader.string();
                     continue;
                 case 20:
                     if (tag !== 162) {
@@ -86,6 +95,7 @@ exports.Game = {
     fromJSON(object) {
         return {
             uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
+            rulesVariant: isSet(object.rulesVariant) ? globalThis.String(object.rulesVariant) : "",
             boards: globalThis.Array.isArray(object === null || object === void 0 ? void 0 : object.boards) ? object.boards.map((e) => exports.Board.fromJSON(e)) : [],
             players: globalThis.Array.isArray(object === null || object === void 0 ? void 0 : object.players) ? object.players.map((e) => exports.Player.fromJSON(e)) : [],
             pieces: globalThis.Array.isArray(object === null || object === void 0 ? void 0 : object.pieces) ? object.pieces.map((e) => piece_1.ChessPiece.fromJSON(e)) : [],
@@ -97,6 +107,9 @@ exports.Game = {
         const obj = {};
         if (message.uuid !== "") {
             obj.uuid = message.uuid;
+        }
+        if (message.rulesVariant !== "") {
+            obj.rulesVariant = message.rulesVariant;
         }
         if ((_a = message.boards) === null || _a === void 0 ? void 0 : _a.length) {
             obj.boards = message.boards.map((e) => exports.Board.toJSON(e));
@@ -116,13 +129,14 @@ exports.Game = {
         return exports.Game.fromPartial(base !== null && base !== void 0 ? base : {});
     },
     fromPartial(object) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f;
         const message = createBaseGame();
         message.uuid = (_a = object.uuid) !== null && _a !== void 0 ? _a : "";
-        message.boards = ((_b = object.boards) === null || _b === void 0 ? void 0 : _b.map((e) => exports.Board.fromPartial(e))) || [];
-        message.players = ((_c = object.players) === null || _c === void 0 ? void 0 : _c.map((e) => exports.Player.fromPartial(e))) || [];
-        message.pieces = ((_d = object.pieces) === null || _d === void 0 ? void 0 : _d.map((e) => piece_1.ChessPiece.fromPartial(e))) || [];
-        message.turns = ((_e = object.turns) === null || _e === void 0 ? void 0 : _e.map((e) => exports.Turn.fromPartial(e))) || [];
+        message.rulesVariant = (_b = object.rulesVariant) !== null && _b !== void 0 ? _b : "";
+        message.boards = ((_c = object.boards) === null || _c === void 0 ? void 0 : _c.map((e) => exports.Board.fromPartial(e))) || [];
+        message.players = ((_d = object.players) === null || _d === void 0 ? void 0 : _d.map((e) => exports.Player.fromPartial(e))) || [];
+        message.pieces = ((_e = object.pieces) === null || _e === void 0 ? void 0 : _e.map((e) => piece_1.ChessPiece.fromPartial(e))) || [];
+        message.turns = ((_f = object.turns) === null || _f === void 0 ? void 0 : _f.map((e) => exports.Turn.fromPartial(e))) || [];
         return message;
     },
 };
