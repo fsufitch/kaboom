@@ -34,9 +34,13 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.position = exports.piece = exports.move = exports.kaboom = void 0;
-exports.kaboom = __importStar(require("./kaboom"));
+exports.visual_hint = exports.position = exports.piece = exports.move = exports.intent = exports.game = exports.effect = exports.color = void 0;
+exports.color = __importStar(require("./color"));
+exports.effect = __importStar(require("./effect"));
+exports.game = __importStar(require("./game"));
+exports.intent = __importStar(require("./intent"));
 exports.move = __importStar(require("./move"));
 exports.piece = __importStar(require("./piece"));
 exports.position = __importStar(require("./position"));
+exports.visual_hint = __importStar(require("./visual_hint"));
 //# sourceMappingURL=index.js.map

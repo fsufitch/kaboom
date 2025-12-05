@@ -1,5 +1,5 @@
 import _m0 from "protobufjs/minimal";
-import { PieceType } from "./piece";
+import { PieceKind } from "./piece";
 import { Position } from "./position";
 export declare const protobufPackage = "kaboomproto";
 export interface KaboomMove {
@@ -36,7 +36,7 @@ export interface CPawnMove {
     from?: Position | undefined;
     to?: Position | undefined;
     /** optional promotion piece type */
-    promotion: PieceType;
+    promotion: PieceKind;
 }
 /**
  * C_PawnCapture is a normal pawn capture move in regular chess rules.
@@ -46,7 +46,7 @@ export interface CPawnCapture {
     from?: Position | undefined;
     to?: Position | undefined;
     /** optional promotion piece type */
-    promotion: PieceType;
+    promotion: PieceKind;
 }
 /**
  * K_PawnBump is a Kaboom-specific move replacing the capture.
@@ -57,7 +57,7 @@ export interface KPawnBump {
     from?: Position | undefined;
     to?: Position | undefined;
     /** optional promotion piece type */
-    promotion: PieceType;
+    promotion: PieceKind;
 }
 /**
  * K_PawnExplosion is a Kaboom-specific move where the pawn detonates itself on its current position,

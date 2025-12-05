@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package kaboomproto;
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+import "color.proto";
+import "piece.proto";
+import "effect.proto";
+import "intent.proto";
+
+message Game {
+    string uuid = 1;
+
+    repeated Board boards = 20;
+    repeated Player players = 30;
+    repeated ChessPiece pieces = 40;
+
+    repeated Turn turns = 50;
+}
+
+
+message Player {
+    string uuid = 1;
+    string name = 2;
+}
+
+message Board {
+    string uuid = 1;
+    string winning_player_uuid = 5;
+
+    repeated PlayerColor player_colors = 10;
+}
+
+message PlayerColor {
+    string player_uuid = 1;
+    Color color = 2;
+}
+
+
+// Turn represents a single turn taken by a player in the game.
+// It includes the player's intents (what they "do") and the resulting effects (what "happens").
+// Note: there can be multiple intents, to accommodate "bughouse" mechanics.
+message Turn {
+    string uuid = 1;
+    string player_uuid = 2;
+
+    repeated Intent intents = 10;
+    repeated Effect effects = 11;
+}

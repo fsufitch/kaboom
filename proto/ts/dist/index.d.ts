@@ -1,4 +1,8 @@
-export * as kaboom from "./kaboom";
+export * as color from "./color";
+export * as effect from "./effect";
+export * as game from "./game";
+export * as intent from "./intent";
 export * as move from "./move";
 export * as piece from "./piece";
 export * as position from "./position";
+export * as visual_hint from "./visual_hint";

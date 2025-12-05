@@ -510,7 +510,7 @@ type C_PawnMove struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
 	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	Promotion     PieceType              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceType" json:"promotion,omitempty"` // optional promotion piece type
+	Promotion     PieceKind              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceKind" json:"promotion,omitempty"` // optional promotion piece type
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -559,11 +559,11 @@ func (x *C_PawnMove) GetTo() *Position {
 	return nil
 }
 
-func (x *C_PawnMove) GetPromotion() PieceType {
+func (x *C_PawnMove) GetPromotion() PieceKind {
 	if x != nil {
 		return x.Promotion
 	}
-	return PieceType_INVALID_PIECE
+	return PieceKind_INVALID_PIECE
 }
 
 // C_PawnCapture is a normal pawn capture move in regular chess rules.
@@ -572,7 +572,7 @@ type C_PawnCapture struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
 	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	Promotion     PieceType              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceType" json:"promotion,omitempty"` // optional promotion piece type
+	Promotion     PieceKind              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceKind" json:"promotion,omitempty"` // optional promotion piece type
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -621,11 +621,11 @@ func (x *C_PawnCapture) GetTo() *Position {
 	return nil
 }
 
-func (x *C_PawnCapture) GetPromotion() PieceType {
+func (x *C_PawnCapture) GetPromotion() PieceKind {
 	if x != nil {
 		return x.Promotion
 	}
-	return PieceType_INVALID_PIECE
+	return PieceKind_INVALID_PIECE
 }
 
 // K_PawnBump is a Kaboom-specific move replacing the capture.
@@ -635,7 +635,7 @@ type K_PawnBump struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
 	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	Promotion     PieceType              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceType" json:"promotion,omitempty"` // optional promotion piece type
+	Promotion     PieceKind              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceKind" json:"promotion,omitempty"` // optional promotion piece type
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -684,11 +684,11 @@ func (x *K_PawnBump) GetTo() *Position {
 	return nil
 }
 
-func (x *K_PawnBump) GetPromotion() PieceType {
+func (x *K_PawnBump) GetPromotion() PieceKind {
 	if x != nil {
 		return x.Promotion
 	}
-	return PieceType_INVALID_PIECE
+	return PieceKind_INVALID_PIECE
 }
 
 // K_PawnExplosion is a Kaboom-specific move where the pawn detonates itself on its current position,
@@ -1928,18 +1928,18 @@ const file_move_proto_rawDesc = "" +
 	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
 	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\x124\n" +
 	"\tpromotion\x18\n" +
-	" \x01(\x0e2\x16.kaboomproto.PieceTypeR\tpromotion\"\x97\x01\n" +
+	" \x01(\x0e2\x16.kaboomproto.PieceKindR\tpromotion\"\x97\x01\n" +
 	"\rC_PawnCapture\x12)\n" +
 	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
 	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\x124\n" +
 	"\tpromotion\x18\n" +
-	" \x01(\x0e2\x16.kaboomproto.PieceTypeR\tpromotion\"\x94\x01\n" +
+	" \x01(\x0e2\x16.kaboomproto.PieceKindR\tpromotion\"\x94\x01\n" +
 	"\n" +
 	"K_PawnBump\x12)\n" +
 	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
 	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\x124\n" +
 	"\tpromotion\x18\n" +
-	" \x01(\x0e2\x16.kaboomproto.PieceTypeR\tpromotion\"D\n" +
+	" \x01(\x0e2\x16.kaboomproto.PieceKindR\tpromotion\"D\n" +
 	"\x0fK_PawnExplosion\x121\n" +
 	"\bposition\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\bposition\"`\n" +
 	"\fC_KnightMove\x12)\n" +
@@ -2060,7 +2060,7 @@ var file_move_proto_goTypes = []any{
 	(*K_KingBump)(nil),              // 25: kaboomproto.K_KingBump
 	(*K_KingControl)(nil),           // 26: kaboomproto.K_KingControl
 	(*Position)(nil),                // 27: kaboomproto.Position
-	(PieceType)(0),                  // 28: kaboomproto.PieceType
+	(PieceKind)(0),                  // 28: kaboomproto.PieceKind
 }
 var file_move_proto_depIdxs = []int32{
 	2,  // 0: kaboomproto.KaboomMove.c_pawn_move:type_name -> kaboomproto.C_PawnMove
@@ -2089,13 +2089,13 @@ var file_move_proto_depIdxs = []int32{
 	26, // 23: kaboomproto.KaboomMove.k_king_control:type_name -> kaboomproto.K_KingControl
 	27, // 24: kaboomproto.C_PawnMove.from:type_name -> kaboomproto.Position
 	27, // 25: kaboomproto.C_PawnMove.to:type_name -> kaboomproto.Position
-	28, // 26: kaboomproto.C_PawnMove.promotion:type_name -> kaboomproto.PieceType
+	28, // 26: kaboomproto.C_PawnMove.promotion:type_name -> kaboomproto.PieceKind
 	27, // 27: kaboomproto.C_PawnCapture.from:type_name -> kaboomproto.Position
 	27, // 28: kaboomproto.C_PawnCapture.to:type_name -> kaboomproto.Position
-	28, // 29: kaboomproto.C_PawnCapture.promotion:type_name -> kaboomproto.PieceType
+	28, // 29: kaboomproto.C_PawnCapture.promotion:type_name -> kaboomproto.PieceKind
 	27, // 30: kaboomproto.K_PawnBump.from:type_name -> kaboomproto.Position
 	27, // 31: kaboomproto.K_PawnBump.to:type_name -> kaboomproto.Position
-	28, // 32: kaboomproto.K_PawnBump.promotion:type_name -> kaboomproto.PieceType
+	28, // 32: kaboomproto.K_PawnBump.promotion:type_name -> kaboomproto.PieceKind
 	27, // 33: kaboomproto.K_PawnExplosion.position:type_name -> kaboomproto.Position
 	27, // 34: kaboomproto.C_KnightMove.from:type_name -> kaboomproto.Position
 	27, // 35: kaboomproto.C_KnightMove.to:type_name -> kaboomproto.Position

@@ -6,11 +6,13 @@
 
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { Position } from "./position";
+import { Color, colorFromJSON, colorToJSON } from "./color";
+import { Position, ZoneKind, zoneKindFromJSON, zoneKindToJSON } from "./position";
 
 export const protobufPackage = "kaboomproto";
 
-export enum PieceType {
+/** PieceKind represents the different kinds of chess pieces. */
+export enum PieceKind {
   INVALID_PIECE = 0,
   PAWN = 1,
   KNIGHT = 2,
@@ -21,117 +23,94 @@ export enum PieceType {
   UNRECOGNIZED = -1,
 }
 
-export function pieceTypeFromJSON(object: any): PieceType {
+export function pieceKindFromJSON(object: any): PieceKind {
   switch (object) {
     case 0:
     case "INVALID_PIECE":
-      return PieceType.INVALID_PIECE;
+      return PieceKind.INVALID_PIECE;
     case 1:
     case "PAWN":
-      return PieceType.PAWN;
+      return PieceKind.PAWN;
     case 2:
     case "KNIGHT":
-      return PieceType.KNIGHT;
+      return PieceKind.KNIGHT;
     case 3:
     case "BISHOP":
-      return PieceType.BISHOP;
+      return PieceKind.BISHOP;
     case 4:
     case "ROOK":
-      return PieceType.ROOK;
+      return PieceKind.ROOK;
     case 5:
     case "QUEEN":
-      return PieceType.QUEEN;
+      return PieceKind.QUEEN;
     case 6:
     case "KING":
-      return PieceType.KING;
+      return PieceKind.KING;
     case -1:
     case "UNRECOGNIZED":
     default:
-      return PieceType.UNRECOGNIZED;
+      return PieceKind.UNRECOGNIZED;
   }
 }
 
-export function pieceTypeToJSON(object: PieceType): string {
+export function pieceKindToJSON(object: PieceKind): string {
   switch (object) {
-    case PieceType.INVALID_PIECE:
+    case PieceKind.INVALID_PIECE:
       return "INVALID_PIECE";
-    case PieceType.PAWN:
+    case PieceKind.PAWN:
       return "PAWN";
-    case PieceType.KNIGHT:
+    case PieceKind.KNIGHT:
       return "KNIGHT";
-    case PieceType.BISHOP:
+    case PieceKind.BISHOP:
       return "BISHOP";
-    case PieceType.ROOK:
+    case PieceKind.ROOK:
       return "ROOK";
-    case PieceType.QUEEN:
+    case PieceKind.QUEEN:
       return "QUEEN";
-    case PieceType.KING:
+    case PieceKind.KING:
       return "KING";
-    case PieceType.UNRECOGNIZED:
+    case PieceKind.UNRECOGNIZED:
     default:
       return "UNRECOGNIZED";
   }
 }
 
-export enum Color {
-  INVALID_COLOR = 0,
-  WHITE = 1,
-  BLACK = 2,
-  UNRECOGNIZED = -1,
-}
-
-export function colorFromJSON(object: any): Color {
-  switch (object) {
-    case 0:
-    case "INVALID_COLOR":
-      return Color.INVALID_COLOR;
-    case 1:
-    case "WHITE":
-      return Color.WHITE;
-    case 2:
-    case "BLACK":
-      return Color.BLACK;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return Color.UNRECOGNIZED;
-  }
-}
-
-export function colorToJSON(object: Color): string {
-  switch (object) {
-    case Color.INVALID_COLOR:
-      return "INVALID_COLOR";
-    case Color.WHITE:
-      return "WHITE";
-    case Color.BLACK:
-      return "BLACK";
-    case Color.UNRECOGNIZED:
-    default:
-      return "UNRECOGNIZED";
-  }
-}
-
+/**
+ * ChessPiece represents a specific chess piece in the game.
+ * It is "location-aware" and knows which board it is on, its position, and its zone.
+ */
 export interface ChessPiece {
-  type: PieceType;
+  uuid: string;
+  kind: PieceKind;
   color: Color;
+  boardUuid: string;
   position?: Position | undefined;
+  zone: ZoneKind;
 }
 
 function createBaseChessPiece(): ChessPiece {
-  return { type: 0, color: 0, position: undefined };
+  return { uuid: "", kind: 0, color: 0, boardUuid: "", position: undefined, zone: 0 };
 }
 
 export const ChessPiece = {
   encode(message: ChessPiece, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.type !== 0) {
-      writer.uint32(8).int32(message.type);
+    if (message.uuid !== "") {
+      writer.uint32(10).string(message.uuid);
+    }
+    if (message.kind !== 0) {
+      writer.uint32(16).int32(message.kind);
     }
     if (message.color !== 0) {
-      writer.uint32(16).int32(message.color);
+      writer.uint32(24).int32(message.color);
+    }
+    if (message.boardUuid !== "") {
+      writer.uint32(34).string(message.boardUuid);
     }
     if (message.position !== undefined) {
-      Position.encode(message.position, writer.uint32(26).fork()).ldelim();
+      Position.encode(message.position, writer.uint32(42).fork()).ldelim();
+    }
+    if (message.zone !== 0) {
+      writer.uint32(48).int32(message.zone);
     }
     return writer;
   },
@@ -144,25 +123,46 @@ export const ChessPiece = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 8) {
+          if (tag !== 10) {
             break;
           }
 
-          message.type = reader.int32() as any;
+          message.uuid = reader.string();
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.color = reader.int32() as any;
+          message.kind = reader.int32() as any;
           continue;
         case 3:
-          if (tag !== 26) {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.color = reader.int32() as any;
+          continue;
+        case 4:
+          if (tag !== 34) {
+            break;
+          }
+
+          message.boardUuid = reader.string();
+          continue;
+        case 5:
+          if (tag !== 42) {
             break;
           }
 
           message.position = Position.decode(reader, reader.uint32());
+          continue;
+        case 6:
+          if (tag !== 48) {
+            break;
+          }
+
+          message.zone = reader.int32() as any;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -175,22 +175,34 @@ export const ChessPiece = {
 
   fromJSON(object: any): ChessPiece {
     return {
-      type: isSet(object.type) ? pieceTypeFromJSON(object.type) : 0,
+      uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
+      kind: isSet(object.kind) ? pieceKindFromJSON(object.kind) : 0,
       color: isSet(object.color) ? colorFromJSON(object.color) : 0,
+      boardUuid: isSet(object.boardUuid) ? globalThis.String(object.boardUuid) : "",
       position: isSet(object.position) ? Position.fromJSON(object.position) : undefined,
+      zone: isSet(object.zone) ? zoneKindFromJSON(object.zone) : 0,
     };
   },
 
   toJSON(message: ChessPiece): unknown {
     const obj: any = {};
-    if (message.type !== 0) {
-      obj.type = pieceTypeToJSON(message.type);
+    if (message.uuid !== "") {
+      obj.uuid = message.uuid;
+    }
+    if (message.kind !== 0) {
+      obj.kind = pieceKindToJSON(message.kind);
     }
     if (message.color !== 0) {
       obj.color = colorToJSON(message.color);
     }
+    if (message.boardUuid !== "") {
+      obj.boardUuid = message.boardUuid;
+    }
     if (message.position !== undefined) {
       obj.position = Position.toJSON(message.position);
+    }
+    if (message.zone !== 0) {
+      obj.zone = zoneKindToJSON(message.zone);
     }
     return obj;
   },
@@ -200,11 +212,14 @@ export const ChessPiece = {
   },
   fromPartial<I extends Exact<DeepPartial<ChessPiece>, I>>(object: I): ChessPiece {
     const message = createBaseChessPiece();
-    message.type = object.type ?? 0;
+    message.uuid = object.uuid ?? "";
+    message.kind = object.kind ?? 0;
     message.color = object.color ?? 0;
+    message.boardUuid = object.boardUuid ?? "";
     message.position = (object.position !== undefined && object.position !== null)
       ? Position.fromPartial(object.position)
       : undefined;
+    message.zone = object.zone ?? 0;
     return message;
   },
 };

@@ -1,7 +1,9 @@
 import _m0 from "protobufjs/minimal";
-import { Position } from "./position";
+import { Color } from "./color";
+import { Position, ZoneKind } from "./position";
 export declare const protobufPackage = "kaboomproto";
-export declare enum PieceType {
+/** PieceKind represents the different kinds of chess pieces. */
+export declare enum PieceKind {
     INVALID_PIECE = 0,
     PAWN = 1,
     KNIGHT = 2,
@@ -11,20 +13,19 @@ export declare enum PieceType {
     KING = 6,
     UNRECOGNIZED = -1
 }
-export declare function pieceTypeFromJSON(object: any): PieceType;
-export declare function pieceTypeToJSON(object: PieceType): string;
-export declare enum Color {
-    INVALID_COLOR = 0,
-    WHITE = 1,
-    BLACK = 2,
-    UNRECOGNIZED = -1
-}
-export declare function colorFromJSON(object: any): Color;
-export declare function colorToJSON(object: Color): string;
+export declare function pieceKindFromJSON(object: any): PieceKind;
+export declare function pieceKindToJSON(object: PieceKind): string;
+/**
+ * ChessPiece represents a specific chess piece in the game.
+ * It is "location-aware" and knows which board it is on, its position, and its zone.
+ */
 export interface ChessPiece {
-    type: PieceType;
+    uuid: string;
+    kind: PieceKind;
     color: Color;
+    boardUuid: string;
     position?: Position | undefined;
+    zone: ZoneKind;
 }
 export declare const ChessPiece: {
     encode(message: ChessPiece, writer?: _m0.Writer): _m0.Writer;

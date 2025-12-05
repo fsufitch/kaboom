@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+package kaboomproto;
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+import "position.proto";
+
+// VisualHint provides information for the frontend to create visual effects corresponding to game events.
+message VisualHint {
+    string uuid = 1;
+    string board_uuid = 2;
+
+    // Timing indicates when this visual hint should be displayed relative to other visual hints in the same TurnEffect.
+    int32 timing = 3;
+
+    oneof hint {
+        VisualHint__Collision collision = 10;
+        VisualHint__Explosion explosion = 11;
+        VisualHint__Stomp stomp = 12;
+        VisualHint__Snipe snipe = 13;
+        VisualHint__Nova nova = 14;
+        VisualHint__MindControl mind_control = 15;
+        VisualHint__Disintegration disintegration = 16;
+        VisualHint__Yeet yeet = 17;
+    }
+}
+
+// VisualHint__Collision indicates a visual effect for two pieces colliding (e.g., during a bump).
+message VisualHint__Collision {
+    string piece_a_uuid = 2;
+    string piece_b_uuid = 3;
+}
+
+// VisualHint__Explosion indicates a visual effect for an explosion at a specific position (e.g. a pawn exploding).
+message VisualHint__Explosion {
+    Position position = 2;
+}
+
+// VisualHint__Stomp indicates a visual effect for a piece stomping on a position (e.g. knight stomp)
+message VisualHint__Stomp {
+    Position position = 1;
+}
+
+// VisualHint__Snipe indicates a visual effect for a piece sniping another piece from a distance (e.g. bishop snipe).
+message VisualHint__Snipe {
+    Position from = 2;
+    Position to = 3;
+}
+
+// VisualHint__Nova indicates a visual effect for a nova explosion at a specific position (e.g. queen nova).
+message VisualHint__Nova {
+    Position position = 2;
+}
+
+// VisualHint__MindControl indicates a visual effect for mind control between two pieces (e.g. king control).
+message VisualHint__MindControl {
+    string piece_a_uuid = 2;
+    string piece_b_uuid = 3;
+}
+
+// VisualHint__Disintegration indicates a visual effect for a piece disintegrating (e.g. classic chess capture, queen nova).
+message VisualHint__Disintegration {
+    string piece_uuid = 2;
+}
+
+// VisualHint__Yeet indicates a visual effect for a piece being yeeted off the board (e.g. kaboom capture).
+message VisualHint__Yeet {
+    string piece_uuid = 2;
+
+    Vector yeet_vector = 3;
+}

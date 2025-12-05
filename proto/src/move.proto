@@ -46,7 +46,7 @@ message KaboomMove {
 message C_PawnMove {
     Position from = 1;
     Position to = 2;
-    PieceType promotion = 10; // optional promotion piece type
+    PieceKind promotion = 10; // optional promotion piece type
 }
 
 // C_PawnCapture is a normal pawn capture move in regular chess rules.
@@ -54,7 +54,7 @@ message C_PawnMove {
 message C_PawnCapture {
     Position from = 1;
     Position to = 2;
-    PieceType promotion = 10; // optional promotion piece type
+    PieceKind promotion = 10; // optional promotion piece type
 }
 
 // K_PawnBump is a Kaboom-specific move replacing the capture.
@@ -63,7 +63,7 @@ message C_PawnCapture {
 message K_PawnBump {
     Position from = 1;
     Position to = 2;
-    PieceType promotion = 10; // optional promotion piece type
+    PieceKind promotion = 10; // optional promotion piece type
 }
 
 // K_PawnExplosion is a Kaboom-specific move where the pawn detonates itself on its current position,

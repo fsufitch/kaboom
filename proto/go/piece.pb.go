@@ -21,21 +21,22 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type PieceType int32
+// PieceKind represents the different kinds of chess pieces.
+type PieceKind int32
 
 const (
-	PieceType_INVALID_PIECE PieceType = 0
-	PieceType_PAWN          PieceType = 1
-	PieceType_KNIGHT        PieceType = 2
-	PieceType_BISHOP        PieceType = 3
-	PieceType_ROOK          PieceType = 4
-	PieceType_QUEEN         PieceType = 5
-	PieceType_KING          PieceType = 6
+	PieceKind_INVALID_PIECE PieceKind = 0
+	PieceKind_PAWN          PieceKind = 1
+	PieceKind_KNIGHT        PieceKind = 2
+	PieceKind_BISHOP        PieceKind = 3
+	PieceKind_ROOK          PieceKind = 4
+	PieceKind_QUEEN         PieceKind = 5
+	PieceKind_KING          PieceKind = 6
 )
 
-// Enum value maps for PieceType.
+// Enum value maps for PieceKind.
 var (
-	PieceType_name = map[int32]string{
+	PieceKind_name = map[int32]string{
 		0: "INVALID_PIECE",
 		1: "PAWN",
 		2: "KNIGHT",
@@ -44,7 +45,7 @@ var (
 		5: "QUEEN",
 		6: "KING",
 	}
-	PieceType_value = map[string]int32{
+	PieceKind_value = map[string]int32{
 		"INVALID_PIECE": 0,
 		"PAWN":          1,
 		"KNIGHT":        2,
@@ -55,87 +56,43 @@ var (
 	}
 )
 
-func (x PieceType) Enum() *PieceType {
-	p := new(PieceType)
+func (x PieceKind) Enum() *PieceKind {
+	p := new(PieceKind)
 	*p = x
 	return p
 }
 
-func (x PieceType) String() string {
+func (x PieceKind) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (PieceType) Descriptor() protoreflect.EnumDescriptor {
+func (PieceKind) Descriptor() protoreflect.EnumDescriptor {
 	return file_piece_proto_enumTypes[0].Descriptor()
 }
 
-func (PieceType) Type() protoreflect.EnumType {
+func (PieceKind) Type() protoreflect.EnumType {
 	return &file_piece_proto_enumTypes[0]
 }
 
-func (x PieceType) Number() protoreflect.EnumNumber {
+func (x PieceKind) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use PieceType.Descriptor instead.
-func (PieceType) EnumDescriptor() ([]byte, []int) {
+// Deprecated: Use PieceKind.Descriptor instead.
+func (PieceKind) EnumDescriptor() ([]byte, []int) {
 	return file_piece_proto_rawDescGZIP(), []int{0}
 }
 
-type Color int32
-
-const (
-	Color_INVALID_COLOR Color = 0
-	Color_WHITE         Color = 1
-	Color_BLACK         Color = 2
-)
-
-// Enum value maps for Color.
-var (
-	Color_name = map[int32]string{
-		0: "INVALID_COLOR",
-		1: "WHITE",
-		2: "BLACK",
-	}
-	Color_value = map[string]int32{
-		"INVALID_COLOR": 0,
-		"WHITE":         1,
-		"BLACK":         2,
-	}
-)
-
-func (x Color) Enum() *Color {
-	p := new(Color)
-	*p = x
-	return p
-}
-
-func (x Color) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (Color) Descriptor() protoreflect.EnumDescriptor {
-	return file_piece_proto_enumTypes[1].Descriptor()
-}
-
-func (Color) Type() protoreflect.EnumType {
-	return &file_piece_proto_enumTypes[1]
-}
-
-func (x Color) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use Color.Descriptor instead.
-func (Color) EnumDescriptor() ([]byte, []int) {
-	return file_piece_proto_rawDescGZIP(), []int{1}
-}
-
+// ChessPiece represents a specific chess piece in the game.
+// It is "location-aware" and knows which board it is on, its position, and its zone.
 type ChessPiece struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Type          PieceType              `protobuf:"varint,1,opt,name=type,proto3,enum=kaboomproto.PieceType" json:"type,omitempty"`
-	Color         Color                  `protobuf:"varint,2,opt,name=color,proto3,enum=kaboomproto.Color" json:"color,omitempty"`
-	Position      *Position              `protobuf:"bytes,3,opt,name=position,proto3" json:"position,omitempty"`
+	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
+	Kind          PieceKind              `protobuf:"varint,2,opt,name=kind,proto3,enum=kaboomproto.PieceKind" json:"kind,omitempty"`
+	Color         Color                  `protobuf:"varint,3,opt,name=color,proto3,enum=kaboomproto.Color" json:"color,omitempty"`
+	BoardUuid     string                 `protobuf:"bytes,4,opt,name=board_uuid,json=boardUuid,proto3" json:"board_uuid,omitempty"`
+	Position      *Position              `protobuf:"bytes,5,opt,name=position,proto3" json:"position,omitempty"`
+	Zone          ZoneKind               `protobuf:"varint,6,opt,name=zone,proto3,enum=kaboomproto.ZoneKind" json:"zone,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -170,18 +127,32 @@ func (*ChessPiece) Descriptor() ([]byte, []int) {
 	return file_piece_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *ChessPiece) GetType() PieceType {
+func (x *ChessPiece) GetUuid() string {
 	if x != nil {
-		return x.Type
+		return x.Uuid
 	}
-	return PieceType_INVALID_PIECE
+	return ""
+}
+
+func (x *ChessPiece) GetKind() PieceKind {
+	if x != nil {
+		return x.Kind
+	}
+	return PieceKind_INVALID_PIECE
 }
 
 func (x *ChessPiece) GetColor() Color {
 	if x != nil {
 		return x.Color
 	}
-	return Color_INVALID_COLOR
+	return Color_COLOR_INVALID
+}
+
+func (x *ChessPiece) GetBoardUuid() string {
+	if x != nil {
+		return x.BoardUuid
+	}
+	return ""
 }
 
 func (x *ChessPiece) GetPosition() *Position {
@@ -191,17 +162,28 @@ func (x *ChessPiece) GetPosition() *Position {
 	return nil
 }
 
+func (x *ChessPiece) GetZone() ZoneKind {
+	if x != nil {
+		return x.Zone
+	}
+	return ZoneKind_ZONE_INVALID
+}
+
 var File_piece_proto protoreflect.FileDescriptor
 
 const file_piece_proto_rawDesc = "" +
 	"\n" +
-	"\vpiece.proto\x12\vkaboomproto\x1a\x0eposition.proto\"\x95\x01\n" +
+	"\vpiece.proto\x12\vkaboomproto\x1a\vcolor.proto\x1a\x0eposition.proto\"\xf3\x01\n" +
 	"\n" +
-	"ChessPiece\x12*\n" +
-	"\x04type\x18\x01 \x01(\x0e2\x16.kaboomproto.PieceTypeR\x04type\x12(\n" +
-	"\x05color\x18\x02 \x01(\x0e2\x12.kaboomproto.ColorR\x05color\x121\n" +
-	"\bposition\x18\x03 \x01(\v2\x15.kaboomproto.PositionR\bposition*_\n" +
-	"\tPieceType\x12\x11\n" +
+	"ChessPiece\x12\x12\n" +
+	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12*\n" +
+	"\x04kind\x18\x02 \x01(\x0e2\x16.kaboomproto.PieceKindR\x04kind\x12(\n" +
+	"\x05color\x18\x03 \x01(\x0e2\x12.kaboomproto.ColorR\x05color\x12\x1d\n" +
+	"\n" +
+	"board_uuid\x18\x04 \x01(\tR\tboardUuid\x121\n" +
+	"\bposition\x18\x05 \x01(\v2\x15.kaboomproto.PositionR\bposition\x12)\n" +
+	"\x04zone\x18\x06 \x01(\x0e2\x15.kaboomproto.ZoneKindR\x04zone*_\n" +
+	"\tPieceKind\x12\x11\n" +
 	"\rINVALID_PIECE\x10\x00\x12\b\n" +
 	"\x04PAWN\x10\x01\x12\n" +
 	"\n" +
@@ -210,11 +192,7 @@ const file_piece_proto_rawDesc = "" +
 	"\x06BISHOP\x10\x03\x12\b\n" +
 	"\x04ROOK\x10\x04\x12\t\n" +
 	"\x05QUEEN\x10\x05\x12\b\n" +
-	"\x04KING\x10\x06*0\n" +
-	"\x05Color\x12\x11\n" +
-	"\rINVALID_COLOR\x10\x00\x12\t\n" +
-	"\x05WHITE\x10\x01\x12\t\n" +
-	"\x05BLACK\x10\x02B1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"
+	"\x04KING\x10\x06B1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"
 
 var (
 	file_piece_proto_rawDescOnce sync.Once
@@ -228,23 +206,25 @@ func file_piece_proto_rawDescGZIP() []byte {
 	return file_piece_proto_rawDescData
 }
 
-var file_piece_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
+var file_piece_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_piece_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_piece_proto_goTypes = []any{
-	(PieceType)(0),     // 0: kaboomproto.PieceType
-	(Color)(0),         // 1: kaboomproto.Color
-	(*ChessPiece)(nil), // 2: kaboomproto.ChessPiece
+	(PieceKind)(0),     // 0: kaboomproto.PieceKind
+	(*ChessPiece)(nil), // 1: kaboomproto.ChessPiece
+	(Color)(0),         // 2: kaboomproto.Color
 	(*Position)(nil),   // 3: kaboomproto.Position
+	(ZoneKind)(0),      // 4: kaboomproto.ZoneKind
 }
 var file_piece_proto_depIdxs = []int32{
-	0, // 0: kaboomproto.ChessPiece.type:type_name -> kaboomproto.PieceType
-	1, // 1: kaboomproto.ChessPiece.color:type_name -> kaboomproto.Color
+	0, // 0: kaboomproto.ChessPiece.kind:type_name -> kaboomproto.PieceKind
+	2, // 1: kaboomproto.ChessPiece.color:type_name -> kaboomproto.Color
 	3, // 2: kaboomproto.ChessPiece.position:type_name -> kaboomproto.Position
-	3, // [3:3] is the sub-list for method output_type
-	3, // [3:3] is the sub-list for method input_type
-	3, // [3:3] is the sub-list for extension type_name
-	3, // [3:3] is the sub-list for extension extendee
-	0, // [0:3] is the sub-list for field type_name
+	4, // 3: kaboomproto.ChessPiece.zone:type_name -> kaboomproto.ZoneKind
+	4, // [4:4] is the sub-list for method output_type
+	4, // [4:4] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_piece_proto_init() }
@@ -252,13 +232,14 @@ func file_piece_proto_init() {
 	if File_piece_proto != nil {
 		return
 	}
+	file_color_proto_init()
 	file_position_proto_init()
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_piece_proto_rawDesc), len(file_piece_proto_rawDesc)),
-			NumEnums:      2,
+			NumEnums:      1,
 			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,

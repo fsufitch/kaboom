@@ -6,7 +6,7 @@
 
 /* eslint-disable */
 import _m0 from "protobufjs/minimal";
-import { PieceType, pieceTypeFromJSON, pieceTypeToJSON } from "./piece";
+import { PieceKind, pieceKindFromJSON, pieceKindToJSON } from "./piece";
 import { Position } from "./position";
 
 export const protobufPackage = "kaboomproto";
@@ -48,7 +48,7 @@ export interface CPawnMove {
     | Position
     | undefined;
   /** optional promotion piece type */
-  promotion: PieceType;
+  promotion: PieceKind;
 }
 
 /**
@@ -61,7 +61,7 @@ export interface CPawnCapture {
     | Position
     | undefined;
   /** optional promotion piece type */
-  promotion: PieceType;
+  promotion: PieceKind;
 }
 
 /**
@@ -75,7 +75,7 @@ export interface KPawnBump {
     | Position
     | undefined;
   /** optional promotion piece type */
-  promotion: PieceType;
+  promotion: PieceKind;
 }
 
 /**
@@ -838,7 +838,7 @@ export const CPawnMove = {
     return {
       from: isSet(object.from) ? Position.fromJSON(object.from) : undefined,
       to: isSet(object.to) ? Position.fromJSON(object.to) : undefined,
-      promotion: isSet(object.promotion) ? pieceTypeFromJSON(object.promotion) : 0,
+      promotion: isSet(object.promotion) ? pieceKindFromJSON(object.promotion) : 0,
     };
   },
 
@@ -851,7 +851,7 @@ export const CPawnMove = {
       obj.to = Position.toJSON(message.to);
     }
     if (message.promotion !== 0) {
-      obj.promotion = pieceTypeToJSON(message.promotion);
+      obj.promotion = pieceKindToJSON(message.promotion);
     }
     return obj;
   },
@@ -927,7 +927,7 @@ export const CPawnCapture = {
     return {
       from: isSet(object.from) ? Position.fromJSON(object.from) : undefined,
       to: isSet(object.to) ? Position.fromJSON(object.to) : undefined,
-      promotion: isSet(object.promotion) ? pieceTypeFromJSON(object.promotion) : 0,
+      promotion: isSet(object.promotion) ? pieceKindFromJSON(object.promotion) : 0,
     };
   },
 
@@ -940,7 +940,7 @@ export const CPawnCapture = {
       obj.to = Position.toJSON(message.to);
     }
     if (message.promotion !== 0) {
-      obj.promotion = pieceTypeToJSON(message.promotion);
+      obj.promotion = pieceKindToJSON(message.promotion);
     }
     return obj;
   },
@@ -1016,7 +1016,7 @@ export const KPawnBump = {
     return {
       from: isSet(object.from) ? Position.fromJSON(object.from) : undefined,
       to: isSet(object.to) ? Position.fromJSON(object.to) : undefined,
-      promotion: isSet(object.promotion) ? pieceTypeFromJSON(object.promotion) : 0,
+      promotion: isSet(object.promotion) ? pieceKindFromJSON(object.promotion) : 0,
     };
   },
 
@@ -1029,7 +1029,7 @@ export const KPawnBump = {
       obj.to = Position.toJSON(message.to);
     }
     if (message.promotion !== 0) {
-      obj.promotion = pieceTypeToJSON(message.promotion);
+      obj.promotion = pieceKindToJSON(message.promotion);
     }
     return obj;
   },

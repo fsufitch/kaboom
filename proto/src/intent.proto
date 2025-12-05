@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package kaboomproto;
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+import "move.proto";
+import "position.proto";
+
+
+message Intent {
+    string uuid = 1;
+    string acting_player_uuid = 2;
+
+
+    Intent_PieceMove piece_move = 10;
+    Intent_PieceTransfer piece_transfer = 11;
+    Intent_Resign resign = 12;
+}
+
+message Intent_PieceMove {
+    string board_uuid = 1;
+    KaboomMove move = 2;
+}
+
+message Intent_PieceTransfer {
+    string piece_uuid = 1;
+
+    
+    string to_board_uuid = 2;
+    ZoneKind to_zone = 3;
+    Position to_position = 4;
+}
+
+message Intent_Resign {
+    string board_uuid = 1;
+    string reason = 2;
+}

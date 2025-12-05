@@ -1,43 +1,30 @@
 import _m0 from "protobufjs/minimal";
-import { KaboomMove } from "./move";
 import { ChessPiece } from "./piece";
+import { Turn } from "./turn";
 export declare const protobufPackage = "kaboomproto";
-export interface GameState {
-    boards: BoardState[];
+export interface Game {
+    uuid: string;
+    boards: ChessBoard[];
     players: Player[];
-}
-export interface BoardState {
-    whitePlayerUuid: string;
-    blackPlayerUuid: string;
-    chessBoard?: ChessBoard | undefined;
-    /** Current turn, turn count, etc can be implied from the move history */
-    moveHistory: KaboomMove[];
+    pieces: ChessPiece[];
+    turns: Turn[];
 }
 export interface Player {
     uuid: string;
     name: string;
-    boardUuid: string[];
 }
 export interface ChessBoard {
     uuid: string;
-    name: string;
-    pieces: ChessPiece[];
+    whitePlayerUuid: string;
+    blackPlayerUuid: string;
 }
-export declare const GameState: {
-    encode(message: GameState, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): GameState;
-    fromJSON(object: any): GameState;
-    toJSON(message: GameState): unknown;
-    create<I extends Exact<DeepPartial<GameState>, I>>(base?: I): GameState;
-    fromPartial<I extends Exact<DeepPartial<GameState>, I>>(object: I): GameState;
-};
-export declare const BoardState: {
-    encode(message: BoardState, writer?: _m0.Writer): _m0.Writer;
-    decode(input: _m0.Reader | Uint8Array, length?: number): BoardState;
-    fromJSON(object: any): BoardState;
-    toJSON(message: BoardState): unknown;
-    create<I extends Exact<DeepPartial<BoardState>, I>>(base?: I): BoardState;
-    fromPartial<I extends Exact<DeepPartial<BoardState>, I>>(object: I): BoardState;
+export declare const Game: {
+    encode(message: Game, writer?: _m0.Writer): _m0.Writer;
+    decode(input: _m0.Reader | Uint8Array, length?: number): Game;
+    fromJSON(object: any): Game;
+    toJSON(message: Game): unknown;
+    create<I extends Exact<DeepPartial<Game>, I>>(base?: I): Game;
+    fromPartial<I extends Exact<DeepPartial<Game>, I>>(object: I): Game;
 };
 export declare const Player: {
     encode(message: Player, writer?: _m0.Writer): _m0.Writer;

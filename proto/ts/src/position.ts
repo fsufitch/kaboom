@@ -9,9 +9,72 @@ import _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "kaboomproto";
 
+/** ZoneKind represents different zones a piece can be in. */
+export enum ZoneKind {
+  ZONE_INVALID = 0,
+  /** ZONE_BOARD - On the main chess board */
+  ZONE_BOARD = 1,
+  /** ZONE_GRAVEYARD - Captured */
+  ZONE_GRAVEYARD = 2,
+  /** ZONE_BENCH - Ready to be deployed */
+  ZONE_BENCH = 3,
+  /** ZONE_TEMPORARY - For transient states */
+  ZONE_TEMPORARY = 4,
+  UNRECOGNIZED = -1,
+}
+
+export function zoneKindFromJSON(object: any): ZoneKind {
+  switch (object) {
+    case 0:
+    case "ZONE_INVALID":
+      return ZoneKind.ZONE_INVALID;
+    case 1:
+    case "ZONE_BOARD":
+      return ZoneKind.ZONE_BOARD;
+    case 2:
+    case "ZONE_GRAVEYARD":
+      return ZoneKind.ZONE_GRAVEYARD;
+    case 3:
+    case "ZONE_BENCH":
+      return ZoneKind.ZONE_BENCH;
+    case 4:
+    case "ZONE_TEMPORARY":
+      return ZoneKind.ZONE_TEMPORARY;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return ZoneKind.UNRECOGNIZED;
+  }
+}
+
+export function zoneKindToJSON(object: ZoneKind): string {
+  switch (object) {
+    case ZoneKind.ZONE_INVALID:
+      return "ZONE_INVALID";
+    case ZoneKind.ZONE_BOARD:
+      return "ZONE_BOARD";
+    case ZoneKind.ZONE_GRAVEYARD:
+      return "ZONE_GRAVEYARD";
+    case ZoneKind.ZONE_BENCH:
+      return "ZONE_BENCH";
+    case ZoneKind.ZONE_TEMPORARY:
+      return "ZONE_TEMPORARY";
+    case ZoneKind.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
+/** Position represents a location on the chess board. */
 export interface Position {
   row: number;
   col: number;
+}
+
+/** Vector represents a directional offset on the chess board. */
+export interface Vector {
+  dRow: number;
+  dCol: number;
 }
 
 function createBasePosition(): Position {
@@ -84,6 +147,80 @@ export const Position = {
     const message = createBasePosition();
     message.row = object.row ?? 0;
     message.col = object.col ?? 0;
+    return message;
+  },
+};
+
+function createBaseVector(): Vector {
+  return { dRow: 0, dCol: 0 };
+}
+
+export const Vector = {
+  encode(message: Vector, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.dRow !== 0) {
+      writer.uint32(8).int32(message.dRow);
+    }
+    if (message.dCol !== 0) {
+      writer.uint32(16).int32(message.dCol);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): Vector {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseVector();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.dRow = reader.int32();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.dCol = reader.int32();
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Vector {
+    return {
+      dRow: isSet(object.dRow) ? globalThis.Number(object.dRow) : 0,
+      dCol: isSet(object.dCol) ? globalThis.Number(object.dCol) : 0,
+    };
+  },
+
+  toJSON(message: Vector): unknown {
+    const obj: any = {};
+    if (message.dRow !== 0) {
+      obj.dRow = Math.round(message.dRow);
+    }
+    if (message.dCol !== 0) {
+      obj.dCol = Math.round(message.dCol);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Vector>, I>>(base?: I): Vector {
+    return Vector.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<Vector>, I>>(object: I): Vector {
+    const message = createBaseVector();
+    message.dRow = object.dRow ?? 0;
+    message.dCol = object.dCol ?? 0;
     return message;
   },
 };

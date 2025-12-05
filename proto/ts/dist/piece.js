@@ -8,126 +8,98 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ChessPiece = exports.Color = exports.PieceType = exports.protobufPackage = void 0;
-exports.pieceTypeFromJSON = pieceTypeFromJSON;
-exports.pieceTypeToJSON = pieceTypeToJSON;
-exports.colorFromJSON = colorFromJSON;
-exports.colorToJSON = colorToJSON;
+exports.ChessPiece = exports.PieceKind = exports.protobufPackage = void 0;
+exports.pieceKindFromJSON = pieceKindFromJSON;
+exports.pieceKindToJSON = pieceKindToJSON;
 /* eslint-disable */
 const minimal_1 = __importDefault(require("protobufjs/minimal"));
+const color_1 = require("./color");
 const position_1 = require("./position");
 exports.protobufPackage = "kaboomproto";
-var PieceType;
-(function (PieceType) {
-    PieceType[PieceType["INVALID_PIECE"] = 0] = "INVALID_PIECE";
-    PieceType[PieceType["PAWN"] = 1] = "PAWN";
-    PieceType[PieceType["KNIGHT"] = 2] = "KNIGHT";
-    PieceType[PieceType["BISHOP"] = 3] = "BISHOP";
-    PieceType[PieceType["ROOK"] = 4] = "ROOK";
-    PieceType[PieceType["QUEEN"] = 5] = "QUEEN";
-    PieceType[PieceType["KING"] = 6] = "KING";
-    PieceType[PieceType["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
-})(PieceType || (exports.PieceType = PieceType = {}));
-function pieceTypeFromJSON(object) {
+/** PieceKind represents the different kinds of chess pieces. */
+var PieceKind;
+(function (PieceKind) {
+    PieceKind[PieceKind["INVALID_PIECE"] = 0] = "INVALID_PIECE";
+    PieceKind[PieceKind["PAWN"] = 1] = "PAWN";
+    PieceKind[PieceKind["KNIGHT"] = 2] = "KNIGHT";
+    PieceKind[PieceKind["BISHOP"] = 3] = "BISHOP";
+    PieceKind[PieceKind["ROOK"] = 4] = "ROOK";
+    PieceKind[PieceKind["QUEEN"] = 5] = "QUEEN";
+    PieceKind[PieceKind["KING"] = 6] = "KING";
+    PieceKind[PieceKind["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
+})(PieceKind || (exports.PieceKind = PieceKind = {}));
+function pieceKindFromJSON(object) {
     switch (object) {
         case 0:
         case "INVALID_PIECE":
-            return PieceType.INVALID_PIECE;
+            return PieceKind.INVALID_PIECE;
         case 1:
         case "PAWN":
-            return PieceType.PAWN;
+            return PieceKind.PAWN;
         case 2:
         case "KNIGHT":
-            return PieceType.KNIGHT;
+            return PieceKind.KNIGHT;
         case 3:
         case "BISHOP":
-            return PieceType.BISHOP;
+            return PieceKind.BISHOP;
         case 4:
         case "ROOK":
-            return PieceType.ROOK;
+            return PieceKind.ROOK;
         case 5:
         case "QUEEN":
-            return PieceType.QUEEN;
+            return PieceKind.QUEEN;
         case 6:
         case "KING":
-            return PieceType.KING;
+            return PieceKind.KING;
         case -1:
         case "UNRECOGNIZED":
         default:
-            return PieceType.UNRECOGNIZED;
+            return PieceKind.UNRECOGNIZED;
     }
 }
-function pieceTypeToJSON(object) {
+function pieceKindToJSON(object) {
     switch (object) {
-        case PieceType.INVALID_PIECE:
+        case PieceKind.INVALID_PIECE:
             return "INVALID_PIECE";
-        case PieceType.PAWN:
+        case PieceKind.PAWN:
             return "PAWN";
-        case PieceType.KNIGHT:
+        case PieceKind.KNIGHT:
             return "KNIGHT";
-        case PieceType.BISHOP:
+        case PieceKind.BISHOP:
             return "BISHOP";
-        case PieceType.ROOK:
+        case PieceKind.ROOK:
             return "ROOK";
-        case PieceType.QUEEN:
+        case PieceKind.QUEEN:
             return "QUEEN";
-        case PieceType.KING:
+        case PieceKind.KING:
             return "KING";
-        case PieceType.UNRECOGNIZED:
-        default:
-            return "UNRECOGNIZED";
-    }
-}
-var Color;
-(function (Color) {
-    Color[Color["INVALID_COLOR"] = 0] = "INVALID_COLOR";
-    Color[Color["WHITE"] = 1] = "WHITE";
-    Color[Color["BLACK"] = 2] = "BLACK";
-    Color[Color["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
-})(Color || (exports.Color = Color = {}));
-function colorFromJSON(object) {
-    switch (object) {
-        case 0:
-        case "INVALID_COLOR":
-            return Color.INVALID_COLOR;
-        case 1:
-        case "WHITE":
-            return Color.WHITE;
-        case 2:
-        case "BLACK":
-            return Color.BLACK;
-        case -1:
-        case "UNRECOGNIZED":
-        default:
-            return Color.UNRECOGNIZED;
-    }
-}
-function colorToJSON(object) {
-    switch (object) {
-        case Color.INVALID_COLOR:
-            return "INVALID_COLOR";
-        case Color.WHITE:
-            return "WHITE";
-        case Color.BLACK:
-            return "BLACK";
-        case Color.UNRECOGNIZED:
+        case PieceKind.UNRECOGNIZED:
         default:
             return "UNRECOGNIZED";
     }
 }
 function createBaseChessPiece() {
-    return { type: 0, color: 0, position: undefined };
+    return { uuid: "", kind: 0, color: 0, boardUuid: "", position: undefined, zone: 0 };
 }
 exports.ChessPiece = {
     encode(message, writer = minimal_1.default.Writer.create()) {
-        if (message.type !== 0) {
-            writer.uint32(8).int32(message.type);
+        if (message.uuid !== "") {
+            writer.uint32(10).string(message.uuid);
+        }
+        if (message.kind !== 0) {
+            writer.uint32(16).int32(message.kind);
         }
         if (message.color !== 0) {
-            writer.uint32(16).int32(message.color);
+            writer.uint32(24).int32(message.color);
+        }
+        if (message.boardUuid !== "") {
+            writer.uint32(34).string(message.boardUuid);
         }
         if (message.position !== undefined) {
-            position_1.Position.encode(message.position, writer.uint32(26).fork()).ldelim();
+            position_1.Position.encode(message.position, writer.uint32(42).fork()).ldelim();
+        }
+        if (message.zone !== 0) {
+            writer.uint32(48).int32(message.zone);
         }
         return writer;
     },
@@ -139,22 +111,40 @@ exports.ChessPiece = {
             const tag = reader.uint32();
             switch (tag >>> 3) {
                 case 1:
-                    if (tag !== 8) {
+                    if (tag !== 10) {
                         break;
                     }
-                    message.type = reader.int32();
+                    message.uuid = reader.string();
                     continue;
                 case 2:
                     if (tag !== 16) {
                         break;
                     }
-                    message.color = reader.int32();
+                    message.kind = reader.int32();
                     continue;
                 case 3:
-                    if (tag !== 26) {
+                    if (tag !== 24) {
+                        break;
+                    }
+                    message.color = reader.int32();
+                    continue;
+                case 4:
+                    if (tag !== 34) {
+                        break;
+                    }
+                    message.boardUuid = reader.string();
+                    continue;
+                case 5:
+                    if (tag !== 42) {
                         break;
                     }
                     message.position = position_1.Position.decode(reader, reader.uint32());
+                    continue;
+                case 6:
+                    if (tag !== 48) {
+                        break;
+                    }
+                    message.zone = reader.int32();
                     continue;
             }
             if ((tag & 7) === 4 || tag === 0) {
@@ -166,21 +156,33 @@ exports.ChessPiece = {
     },
     fromJSON(object) {
         return {
-            type: isSet(object.type) ? pieceTypeFromJSON(object.type) : 0,
-            color: isSet(object.color) ? colorFromJSON(object.color) : 0,
+            uuid: isSet(object.uuid) ? globalThis.String(object.uuid) : "",
+            kind: isSet(object.kind) ? pieceKindFromJSON(object.kind) : 0,
+            color: isSet(object.color) ? (0, color_1.colorFromJSON)(object.color) : 0,
+            boardUuid: isSet(object.boardUuid) ? globalThis.String(object.boardUuid) : "",
             position: isSet(object.position) ? position_1.Position.fromJSON(object.position) : undefined,
+            zone: isSet(object.zone) ? (0, position_1.zoneKindFromJSON)(object.zone) : 0,
         };
     },
     toJSON(message) {
         const obj = {};
-        if (message.type !== 0) {
-            obj.type = pieceTypeToJSON(message.type);
+        if (message.uuid !== "") {
+            obj.uuid = message.uuid;
+        }
+        if (message.kind !== 0) {
+            obj.kind = pieceKindToJSON(message.kind);
         }
         if (message.color !== 0) {
-            obj.color = colorToJSON(message.color);
+            obj.color = (0, color_1.colorToJSON)(message.color);
+        }
+        if (message.boardUuid !== "") {
+            obj.boardUuid = message.boardUuid;
         }
         if (message.position !== undefined) {
             obj.position = position_1.Position.toJSON(message.position);
+        }
+        if (message.zone !== 0) {
+            obj.zone = (0, position_1.zoneKindToJSON)(message.zone);
         }
         return obj;
     },
@@ -188,13 +190,16 @@ exports.ChessPiece = {
         return exports.ChessPiece.fromPartial(base !== null && base !== void 0 ? base : {});
     },
     fromPartial(object) {
-        var _a, _b;
+        var _a, _b, _c, _d, _e;
         const message = createBaseChessPiece();
-        message.type = (_a = object.type) !== null && _a !== void 0 ? _a : 0;
-        message.color = (_b = object.color) !== null && _b !== void 0 ? _b : 0;
+        message.uuid = (_a = object.uuid) !== null && _a !== void 0 ? _a : "";
+        message.kind = (_b = object.kind) !== null && _b !== void 0 ? _b : 0;
+        message.color = (_c = object.color) !== null && _c !== void 0 ? _c : 0;
+        message.boardUuid = (_d = object.boardUuid) !== null && _d !== void 0 ? _d : "";
         message.position = (object.position !== undefined && object.position !== null)
             ? position_1.Position.fromPartial(object.position)
             : undefined;
+        message.zone = (_e = object.zone) !== null && _e !== void 0 ? _e : 0;
         return message;
     },
 };

@@ -8,10 +8,66 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Position = exports.protobufPackage = void 0;
+exports.Vector = exports.Position = exports.ZoneKind = exports.protobufPackage = void 0;
+exports.zoneKindFromJSON = zoneKindFromJSON;
+exports.zoneKindToJSON = zoneKindToJSON;
 /* eslint-disable */
 const minimal_1 = __importDefault(require("protobufjs/minimal"));
 exports.protobufPackage = "kaboomproto";
+/** ZoneKind represents different zones a piece can be in. */
+var ZoneKind;
+(function (ZoneKind) {
+    ZoneKind[ZoneKind["ZONE_INVALID"] = 0] = "ZONE_INVALID";
+    /** ZONE_BOARD - On the main chess board */
+    ZoneKind[ZoneKind["ZONE_BOARD"] = 1] = "ZONE_BOARD";
+    /** ZONE_GRAVEYARD - Captured */
+    ZoneKind[ZoneKind["ZONE_GRAVEYARD"] = 2] = "ZONE_GRAVEYARD";
+    /** ZONE_BENCH - Ready to be deployed */
+    ZoneKind[ZoneKind["ZONE_BENCH"] = 3] = "ZONE_BENCH";
+    /** ZONE_TEMPORARY - For transient states */
+    ZoneKind[ZoneKind["ZONE_TEMPORARY"] = 4] = "ZONE_TEMPORARY";
+    ZoneKind[ZoneKind["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
+})(ZoneKind || (exports.ZoneKind = ZoneKind = {}));
+function zoneKindFromJSON(object) {
+    switch (object) {
+        case 0:
+        case "ZONE_INVALID":
+            return ZoneKind.ZONE_INVALID;
+        case 1:
+        case "ZONE_BOARD":
+            return ZoneKind.ZONE_BOARD;
+        case 2:
+        case "ZONE_GRAVEYARD":
+            return ZoneKind.ZONE_GRAVEYARD;
+        case 3:
+        case "ZONE_BENCH":
+            return ZoneKind.ZONE_BENCH;
+        case 4:
+        case "ZONE_TEMPORARY":
+            return ZoneKind.ZONE_TEMPORARY;
+        case -1:
+        case "UNRECOGNIZED":
+        default:
+            return ZoneKind.UNRECOGNIZED;
+    }
+}
+function zoneKindToJSON(object) {
+    switch (object) {
+        case ZoneKind.ZONE_INVALID:
+            return "ZONE_INVALID";
+        case ZoneKind.ZONE_BOARD:
+            return "ZONE_BOARD";
+        case ZoneKind.ZONE_GRAVEYARD:
+            return "ZONE_GRAVEYARD";
+        case ZoneKind.ZONE_BENCH:
+            return "ZONE_BENCH";
+        case ZoneKind.ZONE_TEMPORARY:
+            return "ZONE_TEMPORARY";
+        case ZoneKind.UNRECOGNIZED:
+        default:
+            return "UNRECOGNIZED";
+    }
+}
 function createBasePosition() {
     return { row: 0, col: 0 };
 }
@@ -76,6 +132,73 @@ exports.Position = {
         const message = createBasePosition();
         message.row = (_a = object.row) !== null && _a !== void 0 ? _a : 0;
         message.col = (_b = object.col) !== null && _b !== void 0 ? _b : 0;
+        return message;
+    },
+};
+function createBaseVector() {
+    return { dRow: 0, dCol: 0 };
+}
+exports.Vector = {
+    encode(message, writer = minimal_1.default.Writer.create()) {
+        if (message.dRow !== 0) {
+            writer.uint32(8).int32(message.dRow);
+        }
+        if (message.dCol !== 0) {
+            writer.uint32(16).int32(message.dCol);
+        }
+        return writer;
+    },
+    decode(input, length) {
+        const reader = input instanceof minimal_1.default.Reader ? input : minimal_1.default.Reader.create(input);
+        let end = length === undefined ? reader.len : reader.pos + length;
+        const message = createBaseVector();
+        while (reader.pos < end) {
+            const tag = reader.uint32();
+            switch (tag >>> 3) {
+                case 1:
+                    if (tag !== 8) {
+                        break;
+                    }
+                    message.dRow = reader.int32();
+                    continue;
+                case 2:
+                    if (tag !== 16) {
+                        break;
+                    }
+                    message.dCol = reader.int32();
+                    continue;
+            }
+            if ((tag & 7) === 4 || tag === 0) {
+                break;
+            }
+            reader.skipType(tag & 7);
+        }
+        return message;
+    },
+    fromJSON(object) {
+        return {
+            dRow: isSet(object.dRow) ? globalThis.Number(object.dRow) : 0,
+            dCol: isSet(object.dCol) ? globalThis.Number(object.dCol) : 0,
+        };
+    },
+    toJSON(message) {
+        const obj = {};
+        if (message.dRow !== 0) {
+            obj.dRow = Math.round(message.dRow);
+        }
+        if (message.dCol !== 0) {
+            obj.dCol = Math.round(message.dCol);
+        }
+        return obj;
+    },
+    create(base) {
+        return exports.Vector.fromPartial(base !== null && base !== void 0 ? base : {});
+    },
+    fromPartial(object) {
+        var _a, _b;
+        const message = createBaseVector();
+        message.dRow = (_a = object.dRow) !== null && _a !== void 0 ? _a : 0;
+        message.dCol = (_b = object.dCol) !== null && _b !== void 0 ? _b : 0;
         return message;
     },
 };

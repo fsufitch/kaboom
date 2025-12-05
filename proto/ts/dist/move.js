@@ -555,7 +555,7 @@ exports.CPawnMove = {
         return {
             from: isSet(object.from) ? position_1.Position.fromJSON(object.from) : undefined,
             to: isSet(object.to) ? position_1.Position.fromJSON(object.to) : undefined,
-            promotion: isSet(object.promotion) ? (0, piece_1.pieceTypeFromJSON)(object.promotion) : 0,
+            promotion: isSet(object.promotion) ? (0, piece_1.pieceKindFromJSON)(object.promotion) : 0,
         };
     },
     toJSON(message) {
@@ -567,7 +567,7 @@ exports.CPawnMove = {
             obj.to = position_1.Position.toJSON(message.to);
         }
         if (message.promotion !== 0) {
-            obj.promotion = (0, piece_1.pieceTypeToJSON)(message.promotion);
+            obj.promotion = (0, piece_1.pieceKindToJSON)(message.promotion);
         }
         return obj;
     },
@@ -636,7 +636,7 @@ exports.CPawnCapture = {
         return {
             from: isSet(object.from) ? position_1.Position.fromJSON(object.from) : undefined,
             to: isSet(object.to) ? position_1.Position.fromJSON(object.to) : undefined,
-            promotion: isSet(object.promotion) ? (0, piece_1.pieceTypeFromJSON)(object.promotion) : 0,
+            promotion: isSet(object.promotion) ? (0, piece_1.pieceKindFromJSON)(object.promotion) : 0,
         };
     },
     toJSON(message) {
@@ -648,7 +648,7 @@ exports.CPawnCapture = {
             obj.to = position_1.Position.toJSON(message.to);
         }
         if (message.promotion !== 0) {
-            obj.promotion = (0, piece_1.pieceTypeToJSON)(message.promotion);
+            obj.promotion = (0, piece_1.pieceKindToJSON)(message.promotion);
         }
         return obj;
     },
@@ -717,7 +717,7 @@ exports.KPawnBump = {
         return {
             from: isSet(object.from) ? position_1.Position.fromJSON(object.from) : undefined,
             to: isSet(object.to) ? position_1.Position.fromJSON(object.to) : undefined,
-            promotion: isSet(object.promotion) ? (0, piece_1.pieceTypeFromJSON)(object.promotion) : 0,
+            promotion: isSet(object.promotion) ? (0, piece_1.pieceKindFromJSON)(object.promotion) : 0,
         };
     },
     toJSON(message) {
@@ -729,7 +729,7 @@ exports.KPawnBump = {
             obj.to = position_1.Position.toJSON(message.to);
         }
         if (message.promotion !== 0) {
-            obj.promotion = (0, piece_1.pieceTypeToJSON)(message.promotion);
+            obj.promotion = (0, piece_1.pieceKindToJSON)(message.promotion);
         }
         return obj;
     },
