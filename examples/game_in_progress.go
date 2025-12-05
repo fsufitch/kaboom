@@ -3,81 +3,76 @@ package examples
 import (
 	"fmt"
 
+	"github.com/fsufitch/kaboom/classic"
+	"github.com/fsufitch/kaboom/kaboomstate"
 	kaboomproto "github.com/fsufitch/kaboom/proto/go"
-	"google.golang.org/protobuf/encoding/protojson"
 )
 
-var GameInProgressJSON = []byte(`{
-  "boards": [
-    {
-      "whitePlayerUuid": "player-white",
-      "blackPlayerUuid": "player-black",
-      "chessBoard": {
-        "uuid": "board-demo",
-        "name": "Kaboom Demo Board",
-        "pieces": [
-          {"type": "KING", "color": "WHITE", "position": {"row": 0, "col": 4}},
-          {"type": "QUEEN", "color": "WHITE", "position": {"row": 0, "col": 3}},
-          {"type": "ROOK", "color": "WHITE", "position": {"row": 0, "col": 0}},
-          {"type": "BISHOP", "color": "WHITE", "position": {"row": 0, "col": 2}},
-          {"type": "KNIGHT", "color": "WHITE", "position": {"row": 0, "col": 1}},
-          {"type": "PAWN", "color": "WHITE", "position": {"row": 1, "col": 4}},
-          {"type": "KING", "color": "BLACK", "position": {"row": 7, "col": 4}},
-          {"type": "QUEEN", "color": "BLACK", "position": {"row": 7, "col": 3}},
-          {"type": "ROOK", "color": "BLACK", "position": {"row": 7, "col": 0}},
-          {"type": "BISHOP", "color": "BLACK", "position": {"row": 7, "col": 2}},
-          {"type": "KNIGHT", "color": "BLACK", "position": {"row": 7, "col": 1}},
-          {"type": "PAWN", "color": "BLACK", "position": {"row": 6, "col": 3}}
-        ]
-      },
-      "moveHistory": [
-        {"cPawnMove": {"from": {"row": 1, "col": 4}, "to": {"row": 3, "col": 4}, "promotion": "QUEEN"}},
-        {"cPawnCapture": {"from": {"row": 6, "col": 3}, "to": {"row": 5, "col": 4}, "promotion": "INVALID_PIECE"}},
-        {"kPawnBump": {"from": {"row": 3, "col": 4}, "to": {"row": 4, "col": 5}, "promotion": "KNIGHT"}},
-        {"kPawnExplosion": {"position": {"row": 5, "col": 4}}},
-        {"cKnightMove": {"from": {"row": 0, "col": 1}, "to": {"row": 2, "col": 2}}},
-        {"cKnightCapture": {"from": {"row": 7, "col": 1}, "to": {"row": 5, "col": 2}}},
-        {"kKnightBump": {"from": {"row": 2, "col": 2}, "to": {"row": 3, "col": 4}, "bumpDirection": "BUMP_DIRECTION_HORIZONTAL"}},
-        {"kKnightStomp": {"from": {"row": 5, "col": 2}, "to": {"row": 3, "col": 3}}},
-        {"cBishopMove": {"from": {"row": 0, "col": 2}, "to": {"row": 2, "col": 4}}},
-        {"cBishopCapture": {"from": {"row": 7, "col": 2}, "to": {"row": 5, "col": 0}}},
-        {"kBishopBump": {"from": {"row": 2, "col": 4}, "to": {"row": 4, "col": 6}}},
-        {"kBishopSnipe": {"from": {"row": 5, "col": 0}, "target": {"row": 3, "col": 2}}},
-        {"cRookMove": {"from": {"row": 0, "col": 0}, "to": {"row": 0, "col": 5}}},
-        {"cRookCapture": {"from": {"row": 7, "col": 0}, "to": {"row": 5, "col": 0}}},
-        {"kRookBump": {"from": {"row": 0, "col": 5}, "to": {"row": 0, "col": 6}}},
-        {"kRookTackle": {"from": {"row": 5, "col": 0}, "to": {"row": 5, "col": 3}}},
-        {"cQueenMove": {"from": {"row": 0, "col": 3}, "to": {"row": 1, "col": 4}}},
-        {"cQueenCapture": {"from": {"row": 7, "col": 3}, "to": {"row": 5, "col": 5}}},
-        {"kQueenBump": {"from": {"row": 1, "col": 4}, "to": {"row": 2, "col": 4}}},
-        {"kQueenNova": {"position": {"row": 5, "col": 5}}},
-        {"cKingMove": {"from": {"row": 0, "col": 4}, "to": {"row": 1, "col": 4}}},
-        {"cKingCapture": {"from": {"row": 7, "col": 4}, "to": {"row": 6, "col": 4}}},
-        {"kKingBump": {"from": {"row": 1, "col": 4}, "to": {"row": 2, "col": 5}}},
-        {
-          "kKingControl": {
-            "position": {"row": 2, "col": 5},
-            "forcedMove": {
-              "cRookMove": {
-                "from": {"row": 5, "col": 3},
-                "to": {"row": 5, "col": 5}
-              }
-            }
-          }
-        }
-      ]
-    }
-  ],
-  "players": [
-    {"uuid": "player-white", "name": "Alice", "boardUuid": ["board-demo"]},
-    {"uuid": "player-black", "name": "Bob", "boardUuid": ["board-demo"]}
-  ]
-}`)
+// GameInProgress returns a sample kaboomstate.Game configured with an arbitrary mid-game position.
+func GameInProgress() kaboomstate.Game {
+	return kaboomstate.GameFromProto(GameInProgressProto())
+}
 
-func GameInProgressProto() *kaboomproto.GameState {
-	var state kaboomproto.GameState
-	if err := protojson.Unmarshal(GameInProgressJSON, &state); err != nil {
-		panic(fmt.Errorf("failed to parse GameInProgressJSON: %w", err))
+// GameInProgressProto exposes the underlying proto for tooling.
+func GameInProgressProto() *kaboomproto.Game {
+	boardUUID := "board-demo"
+	gameUUID := "game-demo"
+	whitePlayerID := "player-white"
+	blackPlayerID := "player-black"
+
+	pieceSpecs := []struct {
+		uuid  string
+		kind  kaboomproto.PieceKind
+		color kaboomproto.Color
+		row   int32
+		col   int32
+	}{
+		{"white-king", kaboomproto.PieceKind_KING, kaboomproto.Color_COLOR_WHITE, 0, 4},
+		{"white-queen", kaboomproto.PieceKind_QUEEN, kaboomproto.Color_COLOR_WHITE, 0, 3},
+		{"white-rook-a", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 0, 0},
+		{"white-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_WHITE, 0, 2},
+		{"white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 0, 1},
+		{"white-pawn-e", kaboomproto.PieceKind_PAWN, kaboomproto.Color_COLOR_WHITE, 1, 4},
+		{"black-king", kaboomproto.PieceKind_KING, kaboomproto.Color_COLOR_BLACK, 7, 4},
+		{"black-queen", kaboomproto.PieceKind_QUEEN, kaboomproto.Color_COLOR_BLACK, 7, 3},
+		{"black-rook-a", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_BLACK, 7, 0},
+		{"black-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_BLACK, 7, 2},
+		{"black-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_BLACK, 7, 1},
+		{"black-pawn-d", kaboomproto.PieceKind_PAWN, kaboomproto.Color_COLOR_BLACK, 6, 3},
 	}
-	return &state
+
+	pieces := make([]*kaboomproto.ChessPiece, 0, len(pieceSpecs))
+	for i, spec := range pieceSpecs {
+		if spec.uuid == "" {
+			spec.uuid = fmt.Sprintf("piece-%d", i)
+		}
+		pieces = append(pieces, &kaboomproto.ChessPiece{
+			Uuid:      spec.uuid,
+			Kind:      spec.kind,
+			Color:     spec.color,
+			BoardUuid: boardUUID,
+			Position:  &kaboomproto.Position{Row: spec.row, Col: spec.col},
+			Zone:      kaboomproto.ZoneKind_ZONE_BOARD,
+		})
+	}
+
+	return &kaboomproto.Game{
+		Uuid:         gameUUID,
+		RulesVariant: classic.ClassicRulesVariant,
+		Players: []*kaboomproto.Player{
+			{Uuid: whitePlayerID, Name: "Alice"},
+			{Uuid: blackPlayerID, Name: "Bob"},
+		},
+		Boards: []*kaboomproto.Board{
+			{
+				Uuid: boardUUID,
+				PlayerColors: []*kaboomproto.PlayerColor{
+					{PlayerUuid: whitePlayerID, Color: kaboomproto.Color_COLOR_WHITE},
+					{PlayerUuid: blackPlayerID, Color: kaboomproto.Color_COLOR_BLACK},
+				},
+			},
+		},
+		Pieces: pieces,
+		Turns:  []*kaboomproto.Turn{},
+	}
 }

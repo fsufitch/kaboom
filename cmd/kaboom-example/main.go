@@ -10,10 +10,12 @@ import (
 )
 
 func main() {
+	game := examples.GameInProgress()
 
-	gameProto := examples.GameInProgressProto()
-
-	game := kaboom.NewTwoPlayerGame(gameProto)
+	if err := game.Validate(); err != nil {
+		fmt.Fprintf(os.Stderr, "game validation error: %v\n", err)
+		os.Exit(1)
+	}
 
 	fmt.Println("Game loaded successfully. Here is the game state in JSON format:")
 	fmt.Println("-----------------------------------------------------")
@@ -22,28 +24,19 @@ func main() {
 		Indent:            "  ",
 		EmitUnpopulated:   true,
 		EmitDefaultValues: true,
-	}.Marshal(gameProto)
+	}.Marshal(game.ToProto())
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error marshaling game state to JSON: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error marshaling game state to JSON: %v\n", err)
 		os.Exit(1)
 	}
 	fmt.Println(string(jsonData))
 	fmt.Println("-----------------------------------------------------")
 
-	fmt.Println("Validating game state...")
-	if err := game.Validate(); err != nil {
-		fmt.Fprintf(os.Stderr, "Game validation error: %v\n", err)
-		os.Exit(1)
-	}
-
-	fmt.Println("Game is valid!")
-	fmt.Println("------------------------------------------------------")
-
 	fmt.Println("Serializing current chess board state...")
-	boardData, err := kaboom.SerializeChessBoard(game.Board().ChessBoard())
-
+	board := game.Boards()[0]
+	boardData, err := kaboom.SerializeChessBoard(board, game.Pieces())
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error serializing chess board: %v\n", err)
+		fmt.Fprintf(os.Stderr, "error serializing chess board: %v\n", err)
 		os.Exit(1)
 	}
 

@@ -52,6 +52,10 @@ func (cp ChessPiece) UUID() string {
 	return cp.proto.GetUuid()
 }
 
+func (cp ChessPiece) Kind() kaboomproto.PieceKind {
+	return cp.proto.GetKind()
+}
+
 func (cp ChessPiece) WithPosition(pos Position) ChessPiece {
 	newPiece := cp.Clone()
 	newPiece.proto.Position = pos.ToProto()
