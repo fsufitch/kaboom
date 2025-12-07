@@ -7,6 +7,7 @@ import (
 	"github.com/fsufitch/kaboom/kaboomstate"
 )
 
+var ErrNotYourTurn = errors.New("not your turn")
 var ErrInvalidMove = errors.New("invalid move")
 
 type VariantAdjudicator struct {
@@ -95,7 +96,7 @@ type MoveToIntentRule struct {
 	// If the rule does not apply to the given Move (the move is either irrelevant
 	//     or invalid according to this rule), it should return (nil, nil).
 	// If the rule applies and the Move is valid, it should return (Intent, nil).
-	// Only return an error if there was an unrecoverable problem during conversion.
+	// Only return an error if a serious problem occurred during conversion.
 	Convert func(game kaboomstate.Game, move kaboomstate.Move) (*kaboomstate.Intent, error)
 }
 
@@ -108,7 +109,9 @@ type IntentToEffectRule struct {
 	// If the rule does not apply to the given Intent (the intent is either irrelevant
 	//     or invalid according to this rule), it should return (nil, nil).
 	// If the rule applies and the Intent is valid, it should return (Effects, nil).
-	// Only return an error if there was an unrecoverable problem during conversion.
+	//     If the Intent is valid but has no effects, it should return a list containing
+	//     at least one kaboomstate.EffectNothingHappens.
+	// Only return an error if a serious problem occurred during conversion.
 	Convert func(game kaboomstate.Game, intent kaboomstate.Intent) ([]*kaboomstate.Effect, error)
 }
 

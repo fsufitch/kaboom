@@ -15,6 +15,49 @@ func IntentFromProto(i *kaboomproto.Intent) Intent {
 	return Intent{proto: i}
 }
 
+// NewIntentPieceMove constructs an intent representing a piece "moving" (taking an action).
+func NewIntentPieceMove(intentUUID, actingPlayerUUID, boardUUID string, move Move) Intent {
+	return IntentFromProto(&kaboomproto.Intent{
+		Uuid:             intentUUID,
+		ActingPlayerUuid: actingPlayerUUID,
+		PieceMove: &kaboomproto.Intent_PieceMove{
+			BoardUuid: boardUUID,
+			Move:      move.ToProto(),
+		},
+	})
+}
+
+// NewIntentPieceTransfer constructs an intent representing a piece transfer action that is outside of a piece performing a move.
+func NewIntentPieceTransfer(intentUUID, actingPlayerUUID, pieceUUID, toBoardUUID string, toZone Zone, toPosition *Position) Intent {
+	var positionProto *kaboomproto.Position
+	if toPosition != nil {
+		positionProto = toPosition.Clone().ToProto()
+	}
+
+	return IntentFromProto(&kaboomproto.Intent{
+		Uuid:             intentUUID,
+		ActingPlayerUuid: actingPlayerUUID,
+		PieceTransfer: &kaboomproto.Intent_PieceTransfer{
+			PieceUuid:   pieceUUID,
+			ToBoardUuid: toBoardUUID,
+			ToZone:      toZone.Value(),
+			ToPosition:  positionProto,
+		},
+	})
+}
+
+// NewIntentResign constructs an intent for a resignation action.
+func NewIntentResign(intentUUID, actingPlayerUUID, boardUUID, reason string) Intent {
+	return IntentFromProto(&kaboomproto.Intent{
+		Uuid:             intentUUID,
+		ActingPlayerUuid: actingPlayerUUID,
+		Resign: &kaboomproto.Intent_Resign{
+			BoardUuid: boardUUID,
+			Reason:    reason,
+		},
+	})
+}
+
 func (i Intent) ToProto() *kaboomproto.Intent {
 	return proto.CloneOf(i.proto)
 }
