@@ -86,7 +86,8 @@ func SerializeChessBoard(board kaboomstate.Board, pieces []kaboomstate.ChessPiec
 	writeFileLabels()
 
 	for row := 7; row >= 0; row-- {
-		builder.WriteString(fmt.Sprintf("%d ", row+1))
+		rank := 8 - row
+		builder.WriteString(fmt.Sprintf("%d ", rank))
 		for col := 0; col < 8; col++ {
 			if col > 0 {
 				builder.WriteRune(' ')
@@ -101,7 +102,7 @@ func SerializeChessBoard(board kaboomstate.Board, pieces []kaboomstate.ChessPiec
 				builder.WriteRune('□')
 			}
 		}
-		builder.WriteString(fmt.Sprintf(" %d\n", row+1))
+		builder.WriteString(fmt.Sprintf(" %d\n", rank))
 	}
 
 	writeFileLabels()
