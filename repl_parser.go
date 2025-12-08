@@ -18,12 +18,26 @@ func ParseReplMove(input string) (kaboomstate.Move, error) {
 
 	pieceToken := strings.ToUpper(tokens[0])
 	actionToken := strings.ToUpper(tokens[1])
+	fromToken := tokens[2]
+	toToken := tokens[3]
 
-	from, err := parseBoardSquare(tokens[2])
+	if pieceToken == "K" && actionToken == "O" {
+		from, err := parseBoardSquare(fromToken)
+		if err != nil {
+			return kaboomstate.Move{}, fmt.Errorf("invalid from-square: %w", err)
+		}
+		side, err := parseCastleSide(toToken)
+		if err != nil {
+			return kaboomstate.Move{}, err
+		}
+		return buildKingCastleMove(from, side), nil
+	}
+
+	from, err := parseBoardSquare(fromToken)
 	if err != nil {
 		return kaboomstate.Move{}, fmt.Errorf("invalid from-square: %w", err)
 	}
-	to, err := parseBoardSquare(tokens[3])
+	to, err := parseBoardSquare(toToken)
 	if err != nil {
 		return kaboomstate.Move{}, fmt.Errorf("invalid to-square: %w", err)
 	}
@@ -43,6 +57,17 @@ func ParseReplMove(input string) (kaboomstate.Move, error) {
 		return buildKingMove(actionToken, from, to)
 	default:
 		return kaboomstate.Move{}, fmt.Errorf("unsupported piece token %q (supported: P, B, R, N, Q, K)", tokens[0])
+	}
+}
+
+func parseCastleSide(token string) (kaboomproto.C_KingCastle_CastleSide, error) {
+	switch strings.ToUpper(strings.TrimSpace(token)) {
+	case "S", "SHORT":
+		return kaboomproto.C_KingCastle_CASTLE_SIDE_SHORT, nil
+	case "L", "LONG":
+		return kaboomproto.C_KingCastle_CASTLE_SIDE_LONG, nil
+	default:
+		return kaboomproto.C_KingCastle_CASTLE_SIDE_UNKNOWN, fmt.Errorf("invalid castle side %q (use S for short or L for long)", token)
 	}
 }
 
@@ -224,4 +249,15 @@ func buildKingMove(action string, from, to kaboomstate.Position) (kaboomstate.Mo
 	default:
 		return kaboomstate.Move{}, fmt.Errorf("unsupported king action %q (use M for move or C for capture)", action)
 	}
+}
+
+func buildKingCastleMove(position kaboomstate.Position, side kaboomproto.C_KingCastle_CastleSide) kaboomstate.Move {
+	return kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
+		Move: &kaboomproto.KaboomMove_CKingCastle{
+			CKingCastle: &kaboomproto.C_KingCastle{
+				Position: position.ToProto(),
+				Side:     side,
+			},
+		},
+	})
 }

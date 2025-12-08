@@ -8,9 +8,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.KKingControl = exports.KKingBump = exports.CKingCastle = exports.CKingCapture = exports.CKingMove = exports.KQueenNova = exports.KQueenBump = exports.CQueenCapture = exports.CQueenMove = exports.KRookTackle = exports.KRookBump = exports.CRookCapture = exports.CRookMove = exports.KBishopSnipe = exports.KBishopBump = exports.CBishopCapture = exports.CBishopMove = exports.KKnightStomp = exports.KKnightBump = exports.CKnightCapture = exports.CKnightMove = exports.KPawnExplosion = exports.KPawnBump = exports.CPawnCapture = exports.CPawnMove = exports.KaboomMove = exports.KKnightBump_BumpDirection = exports.protobufPackage = void 0;
+exports.KKingControl = exports.KKingBump = exports.CKingCastle = exports.CKingCapture = exports.CKingMove = exports.KQueenNova = exports.KQueenBump = exports.CQueenCapture = exports.CQueenMove = exports.KRookTackle = exports.KRookBump = exports.CRookCapture = exports.CRookMove = exports.KBishopSnipe = exports.KBishopBump = exports.CBishopCapture = exports.CBishopMove = exports.KKnightStomp = exports.KKnightBump = exports.CKnightCapture = exports.CKnightMove = exports.KPawnExplosion = exports.KPawnBump = exports.CPawnCapture = exports.CPawnMove = exports.KaboomMove = exports.CKingCastle_CastleSide = exports.KKnightBump_BumpDirection = exports.protobufPackage = void 0;
 exports.kKnightBump_BumpDirectionFromJSON = kKnightBump_BumpDirectionFromJSON;
 exports.kKnightBump_BumpDirectionToJSON = kKnightBump_BumpDirectionToJSON;
+exports.cKingCastle_CastleSideFromJSON = cKingCastle_CastleSideFromJSON;
+exports.cKingCastle_CastleSideToJSON = cKingCastle_CastleSideToJSON;
 /* eslint-disable */
 const minimal_1 = __importDefault(require("protobufjs/minimal"));
 const piece_1 = require("./piece");
@@ -55,6 +57,45 @@ function kKnightBump_BumpDirectionToJSON(object) {
             return "UNRECOGNIZED";
     }
 }
+var CKingCastle_CastleSide;
+(function (CKingCastle_CastleSide) {
+    CKingCastle_CastleSide[CKingCastle_CastleSide["CASTLE_SIDE_UNKNOWN"] = 0] = "CASTLE_SIDE_UNKNOWN";
+    /** CASTLE_SIDE_SHORT - Castle with the rook on the H-file */
+    CKingCastle_CastleSide[CKingCastle_CastleSide["CASTLE_SIDE_SHORT"] = 1] = "CASTLE_SIDE_SHORT";
+    /** CASTLE_SIDE_LONG - Castle with the rook on the A-file */
+    CKingCastle_CastleSide[CKingCastle_CastleSide["CASTLE_SIDE_LONG"] = 2] = "CASTLE_SIDE_LONG";
+    CKingCastle_CastleSide[CKingCastle_CastleSide["UNRECOGNIZED"] = -1] = "UNRECOGNIZED";
+})(CKingCastle_CastleSide || (exports.CKingCastle_CastleSide = CKingCastle_CastleSide = {}));
+function cKingCastle_CastleSideFromJSON(object) {
+    switch (object) {
+        case 0:
+        case "CASTLE_SIDE_UNKNOWN":
+            return CKingCastle_CastleSide.CASTLE_SIDE_UNKNOWN;
+        case 1:
+        case "CASTLE_SIDE_SHORT":
+            return CKingCastle_CastleSide.CASTLE_SIDE_SHORT;
+        case 2:
+        case "CASTLE_SIDE_LONG":
+            return CKingCastle_CastleSide.CASTLE_SIDE_LONG;
+        case -1:
+        case "UNRECOGNIZED":
+        default:
+            return CKingCastle_CastleSide.UNRECOGNIZED;
+    }
+}
+function cKingCastle_CastleSideToJSON(object) {
+    switch (object) {
+        case CKingCastle_CastleSide.CASTLE_SIDE_UNKNOWN:
+            return "CASTLE_SIDE_UNKNOWN";
+        case CKingCastle_CastleSide.CASTLE_SIDE_SHORT:
+            return "CASTLE_SIDE_SHORT";
+        case CKingCastle_CastleSide.CASTLE_SIDE_LONG:
+            return "CASTLE_SIDE_LONG";
+        case CKingCastle_CastleSide.UNRECOGNIZED:
+        default:
+            return "UNRECOGNIZED";
+    }
+}
 function createBaseKaboomMove() {
     return {
         cPawnMove: undefined,
@@ -81,6 +122,7 @@ function createBaseKaboomMove() {
         cKingCapture: undefined,
         kKingBump: undefined,
         kKingControl: undefined,
+        cKingCastle: undefined,
     };
 }
 exports.KaboomMove = {
@@ -156,6 +198,9 @@ exports.KaboomMove = {
         }
         if (message.kKingControl !== undefined) {
             exports.KKingControl.encode(message.kKingControl, writer.uint32(506).fork()).ldelim();
+        }
+        if (message.cKingCastle !== undefined) {
+            exports.CKingCastle.encode(message.cKingCastle, writer.uint32(514).fork()).ldelim();
         }
         return writer;
     },
@@ -310,6 +355,12 @@ exports.KaboomMove = {
                     }
                     message.kKingControl = exports.KKingControl.decode(reader, reader.uint32());
                     continue;
+                case 64:
+                    if (tag !== 514) {
+                        break;
+                    }
+                    message.cKingCastle = exports.CKingCastle.decode(reader, reader.uint32());
+                    continue;
             }
             if ((tag & 7) === 4 || tag === 0) {
                 break;
@@ -344,6 +395,7 @@ exports.KaboomMove = {
             cKingCapture: isSet(object.cKingCapture) ? exports.CKingCapture.fromJSON(object.cKingCapture) : undefined,
             kKingBump: isSet(object.kKingBump) ? exports.KKingBump.fromJSON(object.kKingBump) : undefined,
             kKingControl: isSet(object.kKingControl) ? exports.KKingControl.fromJSON(object.kKingControl) : undefined,
+            cKingCastle: isSet(object.cKingCastle) ? exports.CKingCastle.fromJSON(object.cKingCastle) : undefined,
         };
     },
     toJSON(message) {
@@ -419,6 +471,9 @@ exports.KaboomMove = {
         }
         if (message.kKingControl !== undefined) {
             obj.kKingControl = exports.KKingControl.toJSON(message.kKingControl);
+        }
+        if (message.cKingCastle !== undefined) {
+            obj.cKingCastle = exports.CKingCastle.toJSON(message.cKingCastle);
         }
         return obj;
     },
@@ -498,6 +553,9 @@ exports.KaboomMove = {
             : undefined;
         message.kKingControl = (object.kKingControl !== undefined && object.kKingControl !== null)
             ? exports.KKingControl.fromPartial(object.kKingControl)
+            : undefined;
+        message.cKingCastle = (object.cKingCastle !== undefined && object.cKingCastle !== null)
+            ? exports.CKingCastle.fromPartial(object.cKingCastle)
             : undefined;
         return message;
     },
@@ -1989,21 +2047,15 @@ exports.CKingCapture = {
     },
 };
 function createBaseCKingCastle() {
-    return { kingFrom: undefined, kingTo: undefined, rookFrom: undefined, rookTo: undefined };
+    return { position: undefined, side: 0 };
 }
 exports.CKingCastle = {
     encode(message, writer = minimal_1.default.Writer.create()) {
-        if (message.kingFrom !== undefined) {
-            position_1.Position.encode(message.kingFrom, writer.uint32(10).fork()).ldelim();
+        if (message.position !== undefined) {
+            position_1.Position.encode(message.position, writer.uint32(10).fork()).ldelim();
         }
-        if (message.kingTo !== undefined) {
-            position_1.Position.encode(message.kingTo, writer.uint32(18).fork()).ldelim();
-        }
-        if (message.rookFrom !== undefined) {
-            position_1.Position.encode(message.rookFrom, writer.uint32(26).fork()).ldelim();
-        }
-        if (message.rookTo !== undefined) {
-            position_1.Position.encode(message.rookTo, writer.uint32(34).fork()).ldelim();
+        if (message.side !== 0) {
+            writer.uint32(16).int32(message.side);
         }
         return writer;
     },
@@ -2018,25 +2070,13 @@ exports.CKingCastle = {
                     if (tag !== 10) {
                         break;
                     }
-                    message.kingFrom = position_1.Position.decode(reader, reader.uint32());
+                    message.position = position_1.Position.decode(reader, reader.uint32());
                     continue;
                 case 2:
-                    if (tag !== 18) {
+                    if (tag !== 16) {
                         break;
                     }
-                    message.kingTo = position_1.Position.decode(reader, reader.uint32());
-                    continue;
-                case 3:
-                    if (tag !== 26) {
-                        break;
-                    }
-                    message.rookFrom = position_1.Position.decode(reader, reader.uint32());
-                    continue;
-                case 4:
-                    if (tag !== 34) {
-                        break;
-                    }
-                    message.rookTo = position_1.Position.decode(reader, reader.uint32());
+                    message.side = reader.int32();
                     continue;
             }
             if ((tag & 7) === 4 || tag === 0) {
@@ -2048,25 +2088,17 @@ exports.CKingCastle = {
     },
     fromJSON(object) {
         return {
-            kingFrom: isSet(object.kingFrom) ? position_1.Position.fromJSON(object.kingFrom) : undefined,
-            kingTo: isSet(object.kingTo) ? position_1.Position.fromJSON(object.kingTo) : undefined,
-            rookFrom: isSet(object.rookFrom) ? position_1.Position.fromJSON(object.rookFrom) : undefined,
-            rookTo: isSet(object.rookTo) ? position_1.Position.fromJSON(object.rookTo) : undefined,
+            position: isSet(object.position) ? position_1.Position.fromJSON(object.position) : undefined,
+            side: isSet(object.side) ? cKingCastle_CastleSideFromJSON(object.side) : 0,
         };
     },
     toJSON(message) {
         const obj = {};
-        if (message.kingFrom !== undefined) {
-            obj.kingFrom = position_1.Position.toJSON(message.kingFrom);
+        if (message.position !== undefined) {
+            obj.position = position_1.Position.toJSON(message.position);
         }
-        if (message.kingTo !== undefined) {
-            obj.kingTo = position_1.Position.toJSON(message.kingTo);
-        }
-        if (message.rookFrom !== undefined) {
-            obj.rookFrom = position_1.Position.toJSON(message.rookFrom);
-        }
-        if (message.rookTo !== undefined) {
-            obj.rookTo = position_1.Position.toJSON(message.rookTo);
+        if (message.side !== 0) {
+            obj.side = cKingCastle_CastleSideToJSON(message.side);
         }
         return obj;
     },
@@ -2074,19 +2106,12 @@ exports.CKingCastle = {
         return exports.CKingCastle.fromPartial(base !== null && base !== void 0 ? base : {});
     },
     fromPartial(object) {
+        var _a;
         const message = createBaseCKingCastle();
-        message.kingFrom = (object.kingFrom !== undefined && object.kingFrom !== null)
-            ? position_1.Position.fromPartial(object.kingFrom)
+        message.position = (object.position !== undefined && object.position !== null)
+            ? position_1.Position.fromPartial(object.position)
             : undefined;
-        message.kingTo = (object.kingTo !== undefined && object.kingTo !== null)
-            ? position_1.Position.fromPartial(object.kingTo)
-            : undefined;
-        message.rookFrom = (object.rookFrom !== undefined && object.rookFrom !== null)
-            ? position_1.Position.fromPartial(object.rookFrom)
-            : undefined;
-        message.rookTo = (object.rookTo !== undefined && object.rookTo !== null)
-            ? position_1.Position.fromPartial(object.rookTo)
-            : undefined;
+        message.side = (_a = object.side) !== null && _a !== void 0 ? _a : 0;
         return message;
     },
 };

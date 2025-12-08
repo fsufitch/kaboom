@@ -36,6 +36,7 @@ export interface KaboomMove {
   cKingCapture?: CKingCapture | undefined;
   kKingBump?: KKingBump | undefined;
   kKingControl?: KKingControl | undefined;
+  cKingCastle?: CKingCastle | undefined;
 }
 
 /**
@@ -272,10 +273,49 @@ export interface CKingCapture {
 
 /** C_KingCastle is a normal king castling move in regular chess rules. */
 export interface CKingCastle {
-  kingFrom?: Position | undefined;
-  kingTo?: Position | undefined;
-  rookFrom?: Position | undefined;
-  rookTo?: Position | undefined;
+  position?: Position | undefined;
+  side: CKingCastle_CastleSide;
+}
+
+export enum CKingCastle_CastleSide {
+  CASTLE_SIDE_UNKNOWN = 0,
+  /** CASTLE_SIDE_SHORT - Castle with the rook on the H-file */
+  CASTLE_SIDE_SHORT = 1,
+  /** CASTLE_SIDE_LONG - Castle with the rook on the A-file */
+  CASTLE_SIDE_LONG = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function cKingCastle_CastleSideFromJSON(object: any): CKingCastle_CastleSide {
+  switch (object) {
+    case 0:
+    case "CASTLE_SIDE_UNKNOWN":
+      return CKingCastle_CastleSide.CASTLE_SIDE_UNKNOWN;
+    case 1:
+    case "CASTLE_SIDE_SHORT":
+      return CKingCastle_CastleSide.CASTLE_SIDE_SHORT;
+    case 2:
+    case "CASTLE_SIDE_LONG":
+      return CKingCastle_CastleSide.CASTLE_SIDE_LONG;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return CKingCastle_CastleSide.UNRECOGNIZED;
+  }
+}
+
+export function cKingCastle_CastleSideToJSON(object: CKingCastle_CastleSide): string {
+  switch (object) {
+    case CKingCastle_CastleSide.CASTLE_SIDE_UNKNOWN:
+      return "CASTLE_SIDE_UNKNOWN";
+    case CKingCastle_CastleSide.CASTLE_SIDE_SHORT:
+      return "CASTLE_SIDE_SHORT";
+    case CKingCastle_CastleSide.CASTLE_SIDE_LONG:
+      return "CASTLE_SIDE_LONG";
+    case CKingCastle_CastleSide.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
 }
 
 /**
@@ -328,6 +368,7 @@ function createBaseKaboomMove(): KaboomMove {
     cKingCapture: undefined,
     kKingBump: undefined,
     kKingControl: undefined,
+    cKingCastle: undefined,
   };
 }
 
@@ -404,6 +445,9 @@ export const KaboomMove = {
     }
     if (message.kKingControl !== undefined) {
       KKingControl.encode(message.kKingControl, writer.uint32(506).fork()).ldelim();
+    }
+    if (message.cKingCastle !== undefined) {
+      CKingCastle.encode(message.cKingCastle, writer.uint32(514).fork()).ldelim();
     }
     return writer;
   },
@@ -583,6 +627,13 @@ export const KaboomMove = {
 
           message.kKingControl = KKingControl.decode(reader, reader.uint32());
           continue;
+        case 64:
+          if (tag !== 514) {
+            break;
+          }
+
+          message.cKingCastle = CKingCastle.decode(reader, reader.uint32());
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -618,6 +669,7 @@ export const KaboomMove = {
       cKingCapture: isSet(object.cKingCapture) ? CKingCapture.fromJSON(object.cKingCapture) : undefined,
       kKingBump: isSet(object.kKingBump) ? KKingBump.fromJSON(object.kKingBump) : undefined,
       kKingControl: isSet(object.kKingControl) ? KKingControl.fromJSON(object.kKingControl) : undefined,
+      cKingCastle: isSet(object.cKingCastle) ? CKingCastle.fromJSON(object.cKingCastle) : undefined,
     };
   },
 
@@ -694,6 +746,9 @@ export const KaboomMove = {
     }
     if (message.kKingControl !== undefined) {
       obj.kKingControl = KKingControl.toJSON(message.kKingControl);
+    }
+    if (message.cKingCastle !== undefined) {
+      obj.cKingCastle = CKingCastle.toJSON(message.cKingCastle);
     }
     return obj;
   },
@@ -774,6 +829,9 @@ export const KaboomMove = {
       : undefined;
     message.kKingControl = (object.kKingControl !== undefined && object.kKingControl !== null)
       ? KKingControl.fromPartial(object.kKingControl)
+      : undefined;
+    message.cKingCastle = (object.cKingCastle !== undefined && object.cKingCastle !== null)
+      ? CKingCastle.fromPartial(object.cKingCastle)
       : undefined;
     return message;
   },
@@ -2440,22 +2498,16 @@ export const CKingCapture = {
 };
 
 function createBaseCKingCastle(): CKingCastle {
-  return { kingFrom: undefined, kingTo: undefined, rookFrom: undefined, rookTo: undefined };
+  return { position: undefined, side: 0 };
 }
 
 export const CKingCastle = {
   encode(message: CKingCastle, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.kingFrom !== undefined) {
-      Position.encode(message.kingFrom, writer.uint32(10).fork()).ldelim();
+    if (message.position !== undefined) {
+      Position.encode(message.position, writer.uint32(10).fork()).ldelim();
     }
-    if (message.kingTo !== undefined) {
-      Position.encode(message.kingTo, writer.uint32(18).fork()).ldelim();
-    }
-    if (message.rookFrom !== undefined) {
-      Position.encode(message.rookFrom, writer.uint32(26).fork()).ldelim();
-    }
-    if (message.rookTo !== undefined) {
-      Position.encode(message.rookTo, writer.uint32(34).fork()).ldelim();
+    if (message.side !== 0) {
+      writer.uint32(16).int32(message.side);
     }
     return writer;
   },
@@ -2472,28 +2524,14 @@ export const CKingCastle = {
             break;
           }
 
-          message.kingFrom = Position.decode(reader, reader.uint32());
+          message.position = Position.decode(reader, reader.uint32());
           continue;
         case 2:
-          if (tag !== 18) {
+          if (tag !== 16) {
             break;
           }
 
-          message.kingTo = Position.decode(reader, reader.uint32());
-          continue;
-        case 3:
-          if (tag !== 26) {
-            break;
-          }
-
-          message.rookFrom = Position.decode(reader, reader.uint32());
-          continue;
-        case 4:
-          if (tag !== 34) {
-            break;
-          }
-
-          message.rookTo = Position.decode(reader, reader.uint32());
+          message.side = reader.int32() as any;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2506,26 +2544,18 @@ export const CKingCastle = {
 
   fromJSON(object: any): CKingCastle {
     return {
-      kingFrom: isSet(object.kingFrom) ? Position.fromJSON(object.kingFrom) : undefined,
-      kingTo: isSet(object.kingTo) ? Position.fromJSON(object.kingTo) : undefined,
-      rookFrom: isSet(object.rookFrom) ? Position.fromJSON(object.rookFrom) : undefined,
-      rookTo: isSet(object.rookTo) ? Position.fromJSON(object.rookTo) : undefined,
+      position: isSet(object.position) ? Position.fromJSON(object.position) : undefined,
+      side: isSet(object.side) ? cKingCastle_CastleSideFromJSON(object.side) : 0,
     };
   },
 
   toJSON(message: CKingCastle): unknown {
     const obj: any = {};
-    if (message.kingFrom !== undefined) {
-      obj.kingFrom = Position.toJSON(message.kingFrom);
+    if (message.position !== undefined) {
+      obj.position = Position.toJSON(message.position);
     }
-    if (message.kingTo !== undefined) {
-      obj.kingTo = Position.toJSON(message.kingTo);
-    }
-    if (message.rookFrom !== undefined) {
-      obj.rookFrom = Position.toJSON(message.rookFrom);
-    }
-    if (message.rookTo !== undefined) {
-      obj.rookTo = Position.toJSON(message.rookTo);
+    if (message.side !== 0) {
+      obj.side = cKingCastle_CastleSideToJSON(message.side);
     }
     return obj;
   },
@@ -2535,18 +2565,10 @@ export const CKingCastle = {
   },
   fromPartial<I extends Exact<DeepPartial<CKingCastle>, I>>(object: I): CKingCastle {
     const message = createBaseCKingCastle();
-    message.kingFrom = (object.kingFrom !== undefined && object.kingFrom !== null)
-      ? Position.fromPartial(object.kingFrom)
+    message.position = (object.position !== undefined && object.position !== null)
+      ? Position.fromPartial(object.position)
       : undefined;
-    message.kingTo = (object.kingTo !== undefined && object.kingTo !== null)
-      ? Position.fromPartial(object.kingTo)
-      : undefined;
-    message.rookFrom = (object.rookFrom !== undefined && object.rookFrom !== null)
-      ? Position.fromPartial(object.rookFrom)
-      : undefined;
-    message.rookTo = (object.rookTo !== undefined && object.rookTo !== null)
-      ? Position.fromPartial(object.rookTo)
-      : undefined;
+    message.side = object.side ?? 0;
     return message;
   },
 };

@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/fsufitch/kaboom/kaboomstate"
+	kaboomproto "github.com/fsufitch/kaboom/proto/go"
 )
 
 func TestBuildPieceMoves(t *testing.T) {
@@ -85,6 +86,24 @@ func TestBuildPieceMovesInvalidAction(t *testing.T) {
 	}
 }
 
+func TestBuildKingCastleMove(t *testing.T) {
+	pos := mustPos(t, 7, 4)
+	move := buildKingCastleMove(pos, kaboomproto.C_KingCastle_CASTLE_SIDE_SHORT)
+	if move.Kind() != kaboomstate.MoveKind_KingCastle {
+		t.Fatalf("expected castle move kind, got %s", move.Kind())
+	}
+	castle := move.AsKingCastle()
+	if castle == nil {
+		t.Fatalf("expected castle data")
+	}
+	if castle.GetSide() != kaboomproto.C_KingCastle_CASTLE_SIDE_SHORT {
+		t.Fatalf("expected short castle side")
+	}
+	if castle.GetPosition().GetRow() != 7 || castle.GetPosition().GetCol() != 4 {
+		t.Fatalf("unexpected castle origin")
+	}
+}
+
 func TestParseReplMove_Success(t *testing.T) {
 	tests := []struct {
 		name         string
@@ -123,11 +142,41 @@ func TestParseReplMove_Success(t *testing.T) {
 	}
 }
 
+func TestParseReplMove_Castle(t *testing.T) {
+	move, err := ParseReplMove("K O e1 s")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if move.Kind() != kaboomstate.MoveKind_KingCastle {
+		t.Fatalf("expected castle move, got %s", move.Kind())
+	}
+	castle := move.AsKingCastle()
+	if castle == nil {
+		t.Fatalf("expected castle payload")
+	}
+	if castle.GetSide() != kaboomproto.C_KingCastle_CASTLE_SIDE_SHORT {
+		t.Fatalf("expected short castle")
+	}
+	if castle.GetPosition().GetRow() != 7 || castle.GetPosition().GetCol() != 4 {
+		t.Fatalf("unexpected castle position")
+	}
+
+	move, err = ParseReplMove("K O e8 L")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	castle = move.AsKingCastle()
+	if castle.GetSide() != kaboomproto.C_KingCastle_CASTLE_SIDE_LONG {
+		t.Fatalf("expected long castle")
+	}
+}
+
 func TestParseReplMove_Errors(t *testing.T) {
 	inputs := []string{
 		"P M A2",
 		"Z M A1 A2",
 		"P M I2 I3",
+		"K O E1 X",
 	}
 	for _, input := range inputs {
 		t.Run(input, func(t *testing.T) {

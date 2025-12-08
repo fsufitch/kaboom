@@ -70,6 +70,55 @@ func (K_KnightBump_BumpDirection) EnumDescriptor() ([]byte, []int) {
 	return file_move_proto_rawDescGZIP(), []int{7, 0}
 }
 
+type C_KingCastle_CastleSide int32
+
+const (
+	C_KingCastle_CASTLE_SIDE_UNKNOWN C_KingCastle_CastleSide = 0
+	C_KingCastle_CASTLE_SIDE_SHORT   C_KingCastle_CastleSide = 1 // Castle with the rook on the H-file
+	C_KingCastle_CASTLE_SIDE_LONG    C_KingCastle_CastleSide = 2 // Castle with the rook on the A-file
+)
+
+// Enum value maps for C_KingCastle_CastleSide.
+var (
+	C_KingCastle_CastleSide_name = map[int32]string{
+		0: "CASTLE_SIDE_UNKNOWN",
+		1: "CASTLE_SIDE_SHORT",
+		2: "CASTLE_SIDE_LONG",
+	}
+	C_KingCastle_CastleSide_value = map[string]int32{
+		"CASTLE_SIDE_UNKNOWN": 0,
+		"CASTLE_SIDE_SHORT":   1,
+		"CASTLE_SIDE_LONG":    2,
+	}
+)
+
+func (x C_KingCastle_CastleSide) Enum() *C_KingCastle_CastleSide {
+	p := new(C_KingCastle_CastleSide)
+	*p = x
+	return p
+}
+
+func (x C_KingCastle_CastleSide) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (C_KingCastle_CastleSide) Descriptor() protoreflect.EnumDescriptor {
+	return file_move_proto_enumTypes[1].Descriptor()
+}
+
+func (C_KingCastle_CastleSide) Type() protoreflect.EnumType {
+	return &file_move_proto_enumTypes[1]
+}
+
+func (x C_KingCastle_CastleSide) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use C_KingCastle_CastleSide.Descriptor instead.
+func (C_KingCastle_CastleSide) EnumDescriptor() ([]byte, []int) {
+	return file_move_proto_rawDescGZIP(), []int{23, 0}
+}
+
 type KaboomMove struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Move:
@@ -98,6 +147,7 @@ type KaboomMove struct {
 	//	*KaboomMove_CKingCapture
 	//	*KaboomMove_KKingBump
 	//	*KaboomMove_KKingControl
+	//	*KaboomMove_CKingCastle
 	Move          isKaboomMove_Move `protobuf_oneof:"move"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -356,6 +406,15 @@ func (x *KaboomMove) GetKKingControl() *K_KingControl {
 	return nil
 }
 
+func (x *KaboomMove) GetCKingCastle() *C_KingCastle {
+	if x != nil {
+		if x, ok := x.Move.(*KaboomMove_CKingCastle); ok {
+			return x.CKingCastle
+		}
+	}
+	return nil
+}
+
 type isKaboomMove_Move interface {
 	isKaboomMove_Move()
 }
@@ -456,6 +515,10 @@ type KaboomMove_KKingControl struct {
 	KKingControl *K_KingControl `protobuf:"bytes,63,opt,name=k_king_control,json=kKingControl,proto3,oneof"`
 }
 
+type KaboomMove_CKingCastle struct {
+	CKingCastle *C_KingCastle `protobuf:"bytes,64,opt,name=c_king_castle,json=cKingCastle,proto3,oneof"`
+}
+
 func (*KaboomMove_CPawnMove) isKaboomMove_Move() {}
 
 func (*KaboomMove_CPawnCapture) isKaboomMove_Move() {}
@@ -503,6 +566,8 @@ func (*KaboomMove_CKingCapture) isKaboomMove_Move() {}
 func (*KaboomMove_KKingBump) isKaboomMove_Move() {}
 
 func (*KaboomMove_KKingControl) isKaboomMove_Move() {}
+
+func (*KaboomMove_CKingCastle) isKaboomMove_Move() {}
 
 // C_PawnMove is a normal pawn move in regular chess rules.
 // It encompasses single and double square advances.
@@ -1708,11 +1773,9 @@ func (x *C_KingCapture) GetTo() *Position {
 
 // C_KingCastle is a normal king castling move in regular chess rules.
 type C_KingCastle struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	KingFrom      *Position              `protobuf:"bytes,1,opt,name=king_from,json=kingFrom,proto3" json:"king_from,omitempty"`
-	KingTo        *Position              `protobuf:"bytes,2,opt,name=king_to,json=kingTo,proto3" json:"king_to,omitempty"`
-	RookFrom      *Position              `protobuf:"bytes,3,opt,name=rook_from,json=rookFrom,proto3" json:"rook_from,omitempty"`
-	RookTo        *Position              `protobuf:"bytes,4,opt,name=rook_to,json=rookTo,proto3" json:"rook_to,omitempty"`
+	state         protoimpl.MessageState  `protogen:"open.v1"`
+	Position      *Position               `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
+	Side          C_KingCastle_CastleSide `protobuf:"varint,2,opt,name=side,proto3,enum=kaboomproto.C_KingCastle_CastleSide" json:"side,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1747,32 +1810,18 @@ func (*C_KingCastle) Descriptor() ([]byte, []int) {
 	return file_move_proto_rawDescGZIP(), []int{23}
 }
 
-func (x *C_KingCastle) GetKingFrom() *Position {
+func (x *C_KingCastle) GetPosition() *Position {
 	if x != nil {
-		return x.KingFrom
+		return x.Position
 	}
 	return nil
 }
 
-func (x *C_KingCastle) GetKingTo() *Position {
+func (x *C_KingCastle) GetSide() C_KingCastle_CastleSide {
 	if x != nil {
-		return x.KingTo
+		return x.Side
 	}
-	return nil
-}
-
-func (x *C_KingCastle) GetRookFrom() *Position {
-	if x != nil {
-		return x.RookFrom
-	}
-	return nil
-}
-
-func (x *C_KingCastle) GetRookTo() *Position {
-	if x != nil {
-		return x.RookTo
-	}
-	return nil
+	return C_KingCastle_CASTLE_SIDE_UNKNOWN
 }
 
 // K_KingBump is a Kaboom-specific move replacing the capture.
@@ -1891,7 +1940,7 @@ var File_move_proto protoreflect.FileDescriptor
 const file_move_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"move.proto\x12\vkaboomproto\x1a\x0eposition.proto\x1a\vpiece.proto\"\xb2\f\n" +
+	"move.proto\x12\vkaboomproto\x1a\x0eposition.proto\x1a\vpiece.proto\"\xf3\f\n" +
 	"\n" +
 	"KaboomMove\x129\n" +
 	"\vc_pawn_move\x18\n" +
@@ -1921,7 +1970,8 @@ const file_move_proto_rawDesc = "" +
 	"\vc_king_move\x18< \x01(\v2\x17.kaboomproto.C_KingMoveH\x00R\tcKingMove\x12B\n" +
 	"\x0ec_king_capture\x18= \x01(\v2\x1a.kaboomproto.C_KingCaptureH\x00R\fcKingCapture\x129\n" +
 	"\vk_king_bump\x18> \x01(\v2\x17.kaboomproto.K_KingBumpH\x00R\tkKingBump\x12B\n" +
-	"\x0ek_king_control\x18? \x01(\v2\x1a.kaboomproto.K_KingControlH\x00R\fkKingControlB\x06\n" +
+	"\x0ek_king_control\x18? \x01(\v2\x1a.kaboomproto.K_KingControlH\x00R\fkKingControl\x12?\n" +
+	"\rc_king_castle\x18@ \x01(\v2\x19.kaboomproto.C_KingCastleH\x00R\vcKingCastleB\x06\n" +
 	"\x04move\"\x94\x01\n" +
 	"\n" +
 	"C_PawnMove\x12)\n" +
@@ -2002,12 +2052,15 @@ const file_move_proto_rawDesc = "" +
 	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"a\n" +
 	"\rC_KingCapture\x12)\n" +
 	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"\xd6\x01\n" +
-	"\fC_KingCastle\x122\n" +
-	"\tking_from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\bkingFrom\x12.\n" +
-	"\aking_to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x06kingTo\x122\n" +
-	"\trook_from\x18\x03 \x01(\v2\x15.kaboomproto.PositionR\brookFrom\x12.\n" +
-	"\arook_to\x18\x04 \x01(\v2\x15.kaboomproto.PositionR\x06rookTo\"^\n" +
+	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"\xcf\x01\n" +
+	"\fC_KingCastle\x121\n" +
+	"\bposition\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\bposition\x128\n" +
+	"\x04side\x18\x02 \x01(\x0e2$.kaboomproto.C_KingCastle.CastleSideR\x04side\"R\n" +
+	"\n" +
+	"CastleSide\x12\x17\n" +
+	"\x13CASTLE_SIDE_UNKNOWN\x10\x00\x12\x15\n" +
+	"\x11CASTLE_SIDE_SHORT\x10\x01\x12\x14\n" +
+	"\x10CASTLE_SIDE_LONG\x10\x02\"^\n" +
 	"\n" +
 	"K_KingBump\x12)\n" +
 	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
@@ -2029,123 +2082,123 @@ func file_move_proto_rawDescGZIP() []byte {
 	return file_move_proto_rawDescData
 }
 
-var file_move_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_move_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
 var file_move_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_move_proto_goTypes = []any{
 	(K_KnightBump_BumpDirection)(0), // 0: kaboomproto.K_KnightBump.BumpDirection
-	(*KaboomMove)(nil),              // 1: kaboomproto.KaboomMove
-	(*C_PawnMove)(nil),              // 2: kaboomproto.C_PawnMove
-	(*C_PawnCapture)(nil),           // 3: kaboomproto.C_PawnCapture
-	(*K_PawnBump)(nil),              // 4: kaboomproto.K_PawnBump
-	(*K_PawnExplosion)(nil),         // 5: kaboomproto.K_PawnExplosion
-	(*C_KnightMove)(nil),            // 6: kaboomproto.C_KnightMove
-	(*C_KnightCapture)(nil),         // 7: kaboomproto.C_KnightCapture
-	(*K_KnightBump)(nil),            // 8: kaboomproto.K_KnightBump
-	(*K_KnightStomp)(nil),           // 9: kaboomproto.K_KnightStomp
-	(*C_BishopMove)(nil),            // 10: kaboomproto.C_BishopMove
-	(*C_BishopCapture)(nil),         // 11: kaboomproto.C_BishopCapture
-	(*K_BishopBump)(nil),            // 12: kaboomproto.K_BishopBump
-	(*K_BishopSnipe)(nil),           // 13: kaboomproto.K_BishopSnipe
-	(*C_RookMove)(nil),              // 14: kaboomproto.C_RookMove
-	(*C_RookCapture)(nil),           // 15: kaboomproto.C_RookCapture
-	(*K_RookBump)(nil),              // 16: kaboomproto.K_RookBump
-	(*K_RookTackle)(nil),            // 17: kaboomproto.K_RookTackle
-	(*C_QueenMove)(nil),             // 18: kaboomproto.C_QueenMove
-	(*C_QueenCapture)(nil),          // 19: kaboomproto.C_QueenCapture
-	(*K_QueenBump)(nil),             // 20: kaboomproto.K_QueenBump
-	(*K_QueenNova)(nil),             // 21: kaboomproto.K_QueenNova
-	(*C_KingMove)(nil),              // 22: kaboomproto.C_KingMove
-	(*C_KingCapture)(nil),           // 23: kaboomproto.C_KingCapture
-	(*C_KingCastle)(nil),            // 24: kaboomproto.C_KingCastle
-	(*K_KingBump)(nil),              // 25: kaboomproto.K_KingBump
-	(*K_KingControl)(nil),           // 26: kaboomproto.K_KingControl
-	(*Position)(nil),                // 27: kaboomproto.Position
-	(PieceKind)(0),                  // 28: kaboomproto.PieceKind
+	(C_KingCastle_CastleSide)(0),    // 1: kaboomproto.C_KingCastle.CastleSide
+	(*KaboomMove)(nil),              // 2: kaboomproto.KaboomMove
+	(*C_PawnMove)(nil),              // 3: kaboomproto.C_PawnMove
+	(*C_PawnCapture)(nil),           // 4: kaboomproto.C_PawnCapture
+	(*K_PawnBump)(nil),              // 5: kaboomproto.K_PawnBump
+	(*K_PawnExplosion)(nil),         // 6: kaboomproto.K_PawnExplosion
+	(*C_KnightMove)(nil),            // 7: kaboomproto.C_KnightMove
+	(*C_KnightCapture)(nil),         // 8: kaboomproto.C_KnightCapture
+	(*K_KnightBump)(nil),            // 9: kaboomproto.K_KnightBump
+	(*K_KnightStomp)(nil),           // 10: kaboomproto.K_KnightStomp
+	(*C_BishopMove)(nil),            // 11: kaboomproto.C_BishopMove
+	(*C_BishopCapture)(nil),         // 12: kaboomproto.C_BishopCapture
+	(*K_BishopBump)(nil),            // 13: kaboomproto.K_BishopBump
+	(*K_BishopSnipe)(nil),           // 14: kaboomproto.K_BishopSnipe
+	(*C_RookMove)(nil),              // 15: kaboomproto.C_RookMove
+	(*C_RookCapture)(nil),           // 16: kaboomproto.C_RookCapture
+	(*K_RookBump)(nil),              // 17: kaboomproto.K_RookBump
+	(*K_RookTackle)(nil),            // 18: kaboomproto.K_RookTackle
+	(*C_QueenMove)(nil),             // 19: kaboomproto.C_QueenMove
+	(*C_QueenCapture)(nil),          // 20: kaboomproto.C_QueenCapture
+	(*K_QueenBump)(nil),             // 21: kaboomproto.K_QueenBump
+	(*K_QueenNova)(nil),             // 22: kaboomproto.K_QueenNova
+	(*C_KingMove)(nil),              // 23: kaboomproto.C_KingMove
+	(*C_KingCapture)(nil),           // 24: kaboomproto.C_KingCapture
+	(*C_KingCastle)(nil),            // 25: kaboomproto.C_KingCastle
+	(*K_KingBump)(nil),              // 26: kaboomproto.K_KingBump
+	(*K_KingControl)(nil),           // 27: kaboomproto.K_KingControl
+	(*Position)(nil),                // 28: kaboomproto.Position
+	(PieceKind)(0),                  // 29: kaboomproto.PieceKind
 }
 var file_move_proto_depIdxs = []int32{
-	2,  // 0: kaboomproto.KaboomMove.c_pawn_move:type_name -> kaboomproto.C_PawnMove
-	3,  // 1: kaboomproto.KaboomMove.c_pawn_capture:type_name -> kaboomproto.C_PawnCapture
-	4,  // 2: kaboomproto.KaboomMove.k_pawn_bump:type_name -> kaboomproto.K_PawnBump
-	5,  // 3: kaboomproto.KaboomMove.k_pawn_explosion:type_name -> kaboomproto.K_PawnExplosion
-	6,  // 4: kaboomproto.KaboomMove.c_knight_move:type_name -> kaboomproto.C_KnightMove
-	7,  // 5: kaboomproto.KaboomMove.c_knight_capture:type_name -> kaboomproto.C_KnightCapture
-	8,  // 6: kaboomproto.KaboomMove.k_knight_bump:type_name -> kaboomproto.K_KnightBump
-	9,  // 7: kaboomproto.KaboomMove.k_knight_stomp:type_name -> kaboomproto.K_KnightStomp
-	10, // 8: kaboomproto.KaboomMove.c_bishop_move:type_name -> kaboomproto.C_BishopMove
-	11, // 9: kaboomproto.KaboomMove.c_bishop_capture:type_name -> kaboomproto.C_BishopCapture
-	12, // 10: kaboomproto.KaboomMove.k_bishop_bump:type_name -> kaboomproto.K_BishopBump
-	13, // 11: kaboomproto.KaboomMove.k_bishop_snipe:type_name -> kaboomproto.K_BishopSnipe
-	14, // 12: kaboomproto.KaboomMove.c_rook_move:type_name -> kaboomproto.C_RookMove
-	15, // 13: kaboomproto.KaboomMove.c_rook_capture:type_name -> kaboomproto.C_RookCapture
-	16, // 14: kaboomproto.KaboomMove.k_rook_bump:type_name -> kaboomproto.K_RookBump
-	17, // 15: kaboomproto.KaboomMove.k_rook_tackle:type_name -> kaboomproto.K_RookTackle
-	18, // 16: kaboomproto.KaboomMove.c_queen_move:type_name -> kaboomproto.C_QueenMove
-	19, // 17: kaboomproto.KaboomMove.c_queen_capture:type_name -> kaboomproto.C_QueenCapture
-	20, // 18: kaboomproto.KaboomMove.k_queen_bump:type_name -> kaboomproto.K_QueenBump
-	21, // 19: kaboomproto.KaboomMove.k_queen_nova:type_name -> kaboomproto.K_QueenNova
-	22, // 20: kaboomproto.KaboomMove.c_king_move:type_name -> kaboomproto.C_KingMove
-	23, // 21: kaboomproto.KaboomMove.c_king_capture:type_name -> kaboomproto.C_KingCapture
-	25, // 22: kaboomproto.KaboomMove.k_king_bump:type_name -> kaboomproto.K_KingBump
-	26, // 23: kaboomproto.KaboomMove.k_king_control:type_name -> kaboomproto.K_KingControl
-	27, // 24: kaboomproto.C_PawnMove.from:type_name -> kaboomproto.Position
-	27, // 25: kaboomproto.C_PawnMove.to:type_name -> kaboomproto.Position
-	28, // 26: kaboomproto.C_PawnMove.promotion:type_name -> kaboomproto.PieceKind
-	27, // 27: kaboomproto.C_PawnCapture.from:type_name -> kaboomproto.Position
-	27, // 28: kaboomproto.C_PawnCapture.to:type_name -> kaboomproto.Position
-	28, // 29: kaboomproto.C_PawnCapture.promotion:type_name -> kaboomproto.PieceKind
-	27, // 30: kaboomproto.K_PawnBump.from:type_name -> kaboomproto.Position
-	27, // 31: kaboomproto.K_PawnBump.to:type_name -> kaboomproto.Position
-	28, // 32: kaboomproto.K_PawnBump.promotion:type_name -> kaboomproto.PieceKind
-	27, // 33: kaboomproto.K_PawnExplosion.position:type_name -> kaboomproto.Position
-	27, // 34: kaboomproto.C_KnightMove.from:type_name -> kaboomproto.Position
-	27, // 35: kaboomproto.C_KnightMove.to:type_name -> kaboomproto.Position
-	27, // 36: kaboomproto.C_KnightCapture.from:type_name -> kaboomproto.Position
-	27, // 37: kaboomproto.C_KnightCapture.to:type_name -> kaboomproto.Position
-	27, // 38: kaboomproto.K_KnightBump.from:type_name -> kaboomproto.Position
-	27, // 39: kaboomproto.K_KnightBump.to:type_name -> kaboomproto.Position
-	0,  // 40: kaboomproto.K_KnightBump.bump_direction:type_name -> kaboomproto.K_KnightBump.BumpDirection
-	27, // 41: kaboomproto.K_KnightStomp.from:type_name -> kaboomproto.Position
-	27, // 42: kaboomproto.K_KnightStomp.to:type_name -> kaboomproto.Position
-	27, // 43: kaboomproto.C_BishopMove.from:type_name -> kaboomproto.Position
-	27, // 44: kaboomproto.C_BishopMove.to:type_name -> kaboomproto.Position
-	27, // 45: kaboomproto.C_BishopCapture.from:type_name -> kaboomproto.Position
-	27, // 46: kaboomproto.C_BishopCapture.to:type_name -> kaboomproto.Position
-	27, // 47: kaboomproto.K_BishopBump.from:type_name -> kaboomproto.Position
-	27, // 48: kaboomproto.K_BishopBump.to:type_name -> kaboomproto.Position
-	27, // 49: kaboomproto.K_BishopSnipe.from:type_name -> kaboomproto.Position
-	27, // 50: kaboomproto.K_BishopSnipe.target:type_name -> kaboomproto.Position
-	27, // 51: kaboomproto.C_RookMove.from:type_name -> kaboomproto.Position
-	27, // 52: kaboomproto.C_RookMove.to:type_name -> kaboomproto.Position
-	27, // 53: kaboomproto.C_RookCapture.from:type_name -> kaboomproto.Position
-	27, // 54: kaboomproto.C_RookCapture.to:type_name -> kaboomproto.Position
-	27, // 55: kaboomproto.K_RookBump.from:type_name -> kaboomproto.Position
-	27, // 56: kaboomproto.K_RookBump.to:type_name -> kaboomproto.Position
-	27, // 57: kaboomproto.K_RookTackle.from:type_name -> kaboomproto.Position
-	27, // 58: kaboomproto.K_RookTackle.to:type_name -> kaboomproto.Position
-	27, // 59: kaboomproto.C_QueenMove.from:type_name -> kaboomproto.Position
-	27, // 60: kaboomproto.C_QueenMove.to:type_name -> kaboomproto.Position
-	27, // 61: kaboomproto.C_QueenCapture.from:type_name -> kaboomproto.Position
-	27, // 62: kaboomproto.C_QueenCapture.to:type_name -> kaboomproto.Position
-	27, // 63: kaboomproto.K_QueenBump.from:type_name -> kaboomproto.Position
-	27, // 64: kaboomproto.K_QueenBump.to:type_name -> kaboomproto.Position
-	27, // 65: kaboomproto.K_QueenNova.position:type_name -> kaboomproto.Position
-	27, // 66: kaboomproto.C_KingMove.from:type_name -> kaboomproto.Position
-	27, // 67: kaboomproto.C_KingMove.to:type_name -> kaboomproto.Position
-	27, // 68: kaboomproto.C_KingCapture.from:type_name -> kaboomproto.Position
-	27, // 69: kaboomproto.C_KingCapture.to:type_name -> kaboomproto.Position
-	27, // 70: kaboomproto.C_KingCastle.king_from:type_name -> kaboomproto.Position
-	27, // 71: kaboomproto.C_KingCastle.king_to:type_name -> kaboomproto.Position
-	27, // 72: kaboomproto.C_KingCastle.rook_from:type_name -> kaboomproto.Position
-	27, // 73: kaboomproto.C_KingCastle.rook_to:type_name -> kaboomproto.Position
-	27, // 74: kaboomproto.K_KingBump.from:type_name -> kaboomproto.Position
-	27, // 75: kaboomproto.K_KingBump.to:type_name -> kaboomproto.Position
-	27, // 76: kaboomproto.K_KingControl.position:type_name -> kaboomproto.Position
-	1,  // 77: kaboomproto.K_KingControl.forced_move:type_name -> kaboomproto.KaboomMove
-	78, // [78:78] is the sub-list for method output_type
-	78, // [78:78] is the sub-list for method input_type
-	78, // [78:78] is the sub-list for extension type_name
-	78, // [78:78] is the sub-list for extension extendee
-	0,  // [0:78] is the sub-list for field type_name
+	3,  // 0: kaboomproto.KaboomMove.c_pawn_move:type_name -> kaboomproto.C_PawnMove
+	4,  // 1: kaboomproto.KaboomMove.c_pawn_capture:type_name -> kaboomproto.C_PawnCapture
+	5,  // 2: kaboomproto.KaboomMove.k_pawn_bump:type_name -> kaboomproto.K_PawnBump
+	6,  // 3: kaboomproto.KaboomMove.k_pawn_explosion:type_name -> kaboomproto.K_PawnExplosion
+	7,  // 4: kaboomproto.KaboomMove.c_knight_move:type_name -> kaboomproto.C_KnightMove
+	8,  // 5: kaboomproto.KaboomMove.c_knight_capture:type_name -> kaboomproto.C_KnightCapture
+	9,  // 6: kaboomproto.KaboomMove.k_knight_bump:type_name -> kaboomproto.K_KnightBump
+	10, // 7: kaboomproto.KaboomMove.k_knight_stomp:type_name -> kaboomproto.K_KnightStomp
+	11, // 8: kaboomproto.KaboomMove.c_bishop_move:type_name -> kaboomproto.C_BishopMove
+	12, // 9: kaboomproto.KaboomMove.c_bishop_capture:type_name -> kaboomproto.C_BishopCapture
+	13, // 10: kaboomproto.KaboomMove.k_bishop_bump:type_name -> kaboomproto.K_BishopBump
+	14, // 11: kaboomproto.KaboomMove.k_bishop_snipe:type_name -> kaboomproto.K_BishopSnipe
+	15, // 12: kaboomproto.KaboomMove.c_rook_move:type_name -> kaboomproto.C_RookMove
+	16, // 13: kaboomproto.KaboomMove.c_rook_capture:type_name -> kaboomproto.C_RookCapture
+	17, // 14: kaboomproto.KaboomMove.k_rook_bump:type_name -> kaboomproto.K_RookBump
+	18, // 15: kaboomproto.KaboomMove.k_rook_tackle:type_name -> kaboomproto.K_RookTackle
+	19, // 16: kaboomproto.KaboomMove.c_queen_move:type_name -> kaboomproto.C_QueenMove
+	20, // 17: kaboomproto.KaboomMove.c_queen_capture:type_name -> kaboomproto.C_QueenCapture
+	21, // 18: kaboomproto.KaboomMove.k_queen_bump:type_name -> kaboomproto.K_QueenBump
+	22, // 19: kaboomproto.KaboomMove.k_queen_nova:type_name -> kaboomproto.K_QueenNova
+	23, // 20: kaboomproto.KaboomMove.c_king_move:type_name -> kaboomproto.C_KingMove
+	24, // 21: kaboomproto.KaboomMove.c_king_capture:type_name -> kaboomproto.C_KingCapture
+	26, // 22: kaboomproto.KaboomMove.k_king_bump:type_name -> kaboomproto.K_KingBump
+	27, // 23: kaboomproto.KaboomMove.k_king_control:type_name -> kaboomproto.K_KingControl
+	25, // 24: kaboomproto.KaboomMove.c_king_castle:type_name -> kaboomproto.C_KingCastle
+	28, // 25: kaboomproto.C_PawnMove.from:type_name -> kaboomproto.Position
+	28, // 26: kaboomproto.C_PawnMove.to:type_name -> kaboomproto.Position
+	29, // 27: kaboomproto.C_PawnMove.promotion:type_name -> kaboomproto.PieceKind
+	28, // 28: kaboomproto.C_PawnCapture.from:type_name -> kaboomproto.Position
+	28, // 29: kaboomproto.C_PawnCapture.to:type_name -> kaboomproto.Position
+	29, // 30: kaboomproto.C_PawnCapture.promotion:type_name -> kaboomproto.PieceKind
+	28, // 31: kaboomproto.K_PawnBump.from:type_name -> kaboomproto.Position
+	28, // 32: kaboomproto.K_PawnBump.to:type_name -> kaboomproto.Position
+	29, // 33: kaboomproto.K_PawnBump.promotion:type_name -> kaboomproto.PieceKind
+	28, // 34: kaboomproto.K_PawnExplosion.position:type_name -> kaboomproto.Position
+	28, // 35: kaboomproto.C_KnightMove.from:type_name -> kaboomproto.Position
+	28, // 36: kaboomproto.C_KnightMove.to:type_name -> kaboomproto.Position
+	28, // 37: kaboomproto.C_KnightCapture.from:type_name -> kaboomproto.Position
+	28, // 38: kaboomproto.C_KnightCapture.to:type_name -> kaboomproto.Position
+	28, // 39: kaboomproto.K_KnightBump.from:type_name -> kaboomproto.Position
+	28, // 40: kaboomproto.K_KnightBump.to:type_name -> kaboomproto.Position
+	0,  // 41: kaboomproto.K_KnightBump.bump_direction:type_name -> kaboomproto.K_KnightBump.BumpDirection
+	28, // 42: kaboomproto.K_KnightStomp.from:type_name -> kaboomproto.Position
+	28, // 43: kaboomproto.K_KnightStomp.to:type_name -> kaboomproto.Position
+	28, // 44: kaboomproto.C_BishopMove.from:type_name -> kaboomproto.Position
+	28, // 45: kaboomproto.C_BishopMove.to:type_name -> kaboomproto.Position
+	28, // 46: kaboomproto.C_BishopCapture.from:type_name -> kaboomproto.Position
+	28, // 47: kaboomproto.C_BishopCapture.to:type_name -> kaboomproto.Position
+	28, // 48: kaboomproto.K_BishopBump.from:type_name -> kaboomproto.Position
+	28, // 49: kaboomproto.K_BishopBump.to:type_name -> kaboomproto.Position
+	28, // 50: kaboomproto.K_BishopSnipe.from:type_name -> kaboomproto.Position
+	28, // 51: kaboomproto.K_BishopSnipe.target:type_name -> kaboomproto.Position
+	28, // 52: kaboomproto.C_RookMove.from:type_name -> kaboomproto.Position
+	28, // 53: kaboomproto.C_RookMove.to:type_name -> kaboomproto.Position
+	28, // 54: kaboomproto.C_RookCapture.from:type_name -> kaboomproto.Position
+	28, // 55: kaboomproto.C_RookCapture.to:type_name -> kaboomproto.Position
+	28, // 56: kaboomproto.K_RookBump.from:type_name -> kaboomproto.Position
+	28, // 57: kaboomproto.K_RookBump.to:type_name -> kaboomproto.Position
+	28, // 58: kaboomproto.K_RookTackle.from:type_name -> kaboomproto.Position
+	28, // 59: kaboomproto.K_RookTackle.to:type_name -> kaboomproto.Position
+	28, // 60: kaboomproto.C_QueenMove.from:type_name -> kaboomproto.Position
+	28, // 61: kaboomproto.C_QueenMove.to:type_name -> kaboomproto.Position
+	28, // 62: kaboomproto.C_QueenCapture.from:type_name -> kaboomproto.Position
+	28, // 63: kaboomproto.C_QueenCapture.to:type_name -> kaboomproto.Position
+	28, // 64: kaboomproto.K_QueenBump.from:type_name -> kaboomproto.Position
+	28, // 65: kaboomproto.K_QueenBump.to:type_name -> kaboomproto.Position
+	28, // 66: kaboomproto.K_QueenNova.position:type_name -> kaboomproto.Position
+	28, // 67: kaboomproto.C_KingMove.from:type_name -> kaboomproto.Position
+	28, // 68: kaboomproto.C_KingMove.to:type_name -> kaboomproto.Position
+	28, // 69: kaboomproto.C_KingCapture.from:type_name -> kaboomproto.Position
+	28, // 70: kaboomproto.C_KingCapture.to:type_name -> kaboomproto.Position
+	28, // 71: kaboomproto.C_KingCastle.position:type_name -> kaboomproto.Position
+	1,  // 72: kaboomproto.C_KingCastle.side:type_name -> kaboomproto.C_KingCastle.CastleSide
+	28, // 73: kaboomproto.K_KingBump.from:type_name -> kaboomproto.Position
+	28, // 74: kaboomproto.K_KingBump.to:type_name -> kaboomproto.Position
+	28, // 75: kaboomproto.K_KingControl.position:type_name -> kaboomproto.Position
+	2,  // 76: kaboomproto.K_KingControl.forced_move:type_name -> kaboomproto.KaboomMove
+	77, // [77:77] is the sub-list for method output_type
+	77, // [77:77] is the sub-list for method input_type
+	77, // [77:77] is the sub-list for extension type_name
+	77, // [77:77] is the sub-list for extension extendee
+	0,  // [0:77] is the sub-list for field type_name
 }
 
 func init() { file_move_proto_init() }
@@ -2180,13 +2233,14 @@ func file_move_proto_init() {
 		(*KaboomMove_CKingCapture)(nil),
 		(*KaboomMove_KKingBump)(nil),
 		(*KaboomMove_KKingControl)(nil),
+		(*KaboomMove_CKingCastle)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_move_proto_rawDesc), len(file_move_proto_rawDesc)),
-			NumEnums:      1,
+			NumEnums:      2,
 			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   0,

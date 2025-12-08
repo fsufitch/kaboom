@@ -139,6 +139,7 @@ const (
 	MoveKind_KingCapture MoveKind = "move.king.c_capture"
 	MoveKind_KingBump    MoveKind = "move.king.k_bump"
 	MoveKind_KingControl MoveKind = "move.king.k_control"
+	MoveKind_KingCastle  MoveKind = "move.king.c_castle"
 )
 
 func (m Move) AsKingMove() *kaboomproto.C_KingMove {
@@ -152,6 +153,9 @@ func (m Move) AsKingBump() *kaboomproto.K_KingBump {
 }
 func (m Move) AsKingControl() *kaboomproto.K_KingControl {
 	return proto.CloneOf(m.proto.GetKKingControl())
+}
+func (m Move) AsKingCastle() *kaboomproto.C_KingCastle {
+	return proto.CloneOf(m.proto.GetCKingCastle())
 }
 
 func (m Move) Kind() MoveKind {
@@ -200,6 +204,8 @@ func (m Move) Kind() MoveKind {
 		return MoveKind_KingMove
 	case *kaboomproto.KaboomMove_CKingCapture:
 		return MoveKind_KingCapture
+	case *kaboomproto.KaboomMove_CKingCastle:
+		return MoveKind_KingCastle
 	case *kaboomproto.KaboomMove_KKingBump:
 		return MoveKind_KingBump
 	case *kaboomproto.KaboomMove_KKingControl:

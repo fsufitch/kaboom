@@ -27,6 +27,7 @@ export interface KaboomMove {
     cKingCapture?: CKingCapture | undefined;
     kKingBump?: KKingBump | undefined;
     kKingControl?: KKingControl | undefined;
+    cKingCastle?: CKingCastle | undefined;
 }
 /**
  * C_PawnMove is a normal pawn move in regular chess rules.
@@ -201,11 +202,19 @@ export interface CKingCapture {
 }
 /** C_KingCastle is a normal king castling move in regular chess rules. */
 export interface CKingCastle {
-    kingFrom?: Position | undefined;
-    kingTo?: Position | undefined;
-    rookFrom?: Position | undefined;
-    rookTo?: Position | undefined;
+    position?: Position | undefined;
+    side: CKingCastle_CastleSide;
 }
+export declare enum CKingCastle_CastleSide {
+    CASTLE_SIDE_UNKNOWN = 0,
+    /** CASTLE_SIDE_SHORT - Castle with the rook on the H-file */
+    CASTLE_SIDE_SHORT = 1,
+    /** CASTLE_SIDE_LONG - Castle with the rook on the A-file */
+    CASTLE_SIDE_LONG = 2,
+    UNRECOGNIZED = -1
+}
+export declare function cKingCastle_CastleSideFromJSON(object: any): CKingCastle_CastleSide;
+export declare function cKingCastle_CastleSideToJSON(object: CKingCastle_CastleSide): string;
 /**
  * K_KingBump is a Kaboom-specific move replacing the capture.
  * The king moves to its target square (as in regular capturing) but instead of removing the opponent's piece,

@@ -37,6 +37,7 @@ message KaboomMove {
         C_KingCapture c_king_capture = 61;
         K_KingBump k_king_bump = 62;
         K_KingControl k_king_control = 63;
+        C_KingCastle c_king_castle = 64;
     }
 }
 
@@ -209,10 +210,14 @@ message C_KingCapture {
 
 // C_KingCastle is a normal king castling move in regular chess rules.
 message C_KingCastle {
-    Position king_from = 1;
-    Position king_to = 2;
-    Position rook_from = 3;
-    Position rook_to = 4;
+    enum CastleSide {
+        CASTLE_SIDE_UNKNOWN = 0;
+        CASTLE_SIDE_SHORT = 1; // Castle with the rook on the H-file
+        CASTLE_SIDE_LONG = 2;  // Castle with the rook on the A-file
+    }
+
+    Position position = 1;
+    CastleSide side = 2;
 }
 
 // K_KingBump is a Kaboom-specific move replacing the capture.
