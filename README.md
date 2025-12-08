@@ -18,8 +18,39 @@ Key types:
 - **Intent** – the adjudicated meaning of a move (“this pawn moves from D2 to D4”). Every intent is tied to one acting player.
 - **Effect** – concrete state mutations (“piece moved”, “piece captured”, “win”). Effects are what mutate the immutable `Game` snapshot into the next one.
 - **Turn** – recording of intents and their resulting effects for auditing.
+- **Zones** – pieces never disappear; they move between zones. `ZONE_BOARD` is the active board, `ZONE_GRAVEYARD` holds captures, `ZONE_BENCH` covers deployable reserves, and `ZONE_TEMPORARY` can model out-of-band states.
+- **Visual Hints** – optional metadata attached to effects describing how a client might visualize them (collision, explosion, stomp, snipe, nova, mind-control beams, disintegration, yeet trajectories). They share timing metadata so a UI can sequence them.
 
 Everything is immutable: the engine returns new protos instead of mutating existing ones.
+
+A high-level “shape” of the serialized data looks like:
+
+```text
+Game {
+  rulesVariant: "classic"
+  boards: [ Board { uuid, playerColors[], ... }, ... ]
+  players: [ Player { uuid, name, ... }, ... ]
+  pieces: [ ChessPiece { uuid, kind, color, boardUuid, zone, position? }, ... ]
+  turns: [
+    Turn {
+      uuid, playerUuid
+      intents: [
+        Intent {
+          uuid, actingPlayerUuid,
+          pieceMove | pieceTransfer | resign
+        }, ...
+      ]
+      effects: [
+        Effect {
+          uuid, boardUuid, why,
+          nothingHappens | pieceMoved | pieceCaptured | ...,
+          visualHints[]
+        }, ...
+      ]
+    }, ...
+  ]
+}
+```
 
 ## Turn Pipeline
 
