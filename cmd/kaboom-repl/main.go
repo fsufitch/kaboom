@@ -51,7 +51,7 @@ func main() {
 			continue
 		}
 
-		move, err := ParseReplMove(line)
+		move, err := kaboom.ParseReplMove(line)
 		if err != nil {
 			fmt.Printf("Parse error: %v\n", err)
 			continue
