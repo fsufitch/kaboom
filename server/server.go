@@ -14,5 +14,6 @@ func NewServer() http.Handler {
 	router.HandleFunc("/move-to-intent", handleMoveToIntent).Methods(http.MethodPost)
 	router.HandleFunc("/intent-to-effect", handleIntentToEffect).Methods(http.MethodPost)
 	router.HandleFunc("/apply-effects", handleApplyEffects).Methods(http.MethodPost)
+	router.HandleFunc("/evaluate-move", handleEvaluateMove).Methods(http.MethodPost)
 	return router
 }
