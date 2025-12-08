@@ -9,14 +9,14 @@ import (
 
 func TestKnightMove(t *testing.T) {
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPiece("white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 7, 1),
+		newTestPiece("white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 0, 1),
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CKnightMove{
 			CKnightMove: &kaboomproto.C_KnightMove{
-				From: posProto(7, 1),
-				To:   posProto(5, 2),
+				From: posProto(0, 1),
+				To:   posProto(2, 2),
 			},
 		},
 	})
@@ -37,7 +37,7 @@ func TestKnightMove(t *testing.T) {
 	final := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPiece("white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 5, 2),
+		newTestPiece("white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 2, 2),
 	}, nil)
 
 	assertGameEqualsProto(t, final, expected)

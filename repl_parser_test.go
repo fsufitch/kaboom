@@ -19,18 +19,18 @@ func TestBuildPieceMoves(t *testing.T) {
 		toRow        int32
 		toCol        int32
 	}{
-		{"PawnMove", buildPawnMove, "M", kaboomstate.MoveKind_PawnMove, 6, 3, 5, 3},
-		{"PawnCapture", buildPawnMove, "C", kaboomstate.MoveKind_PawnCapture, 6, 3, 5, 4},
-		{"BishopMove", buildBishopMove, "M", kaboomstate.MoveKind_BishopMove, 7, 2, 5, 0},
-		{"BishopCapture", buildBishopMove, "C", kaboomstate.MoveKind_BishopCapture, 0, 2, 3, 5},
-		{"RookMove", buildRookMove, "M", kaboomstate.MoveKind_RookMove, 7, 0, 4, 0},
-		{"RookCapture", buildRookMove, "C", kaboomstate.MoveKind_RookCapture, 0, 7, 0, 0},
-		{"KnightMove", buildKnightMove, "M", kaboomstate.MoveKind_KnightMove, 7, 1, 5, 2},
-		{"KnightCapture", buildKnightMove, "C", kaboomstate.MoveKind_KnightCapture, 0, 6, 2, 5},
-		{"QueenMove", buildQueenMove, "M", kaboomstate.MoveKind_QueenMove, 7, 3, 3, 7},
-		{"QueenCapture", buildQueenMove, "C", kaboomstate.MoveKind_QueenCapture, 0, 3, 3, 0},
-		{"KingMove", buildKingMove, "M", kaboomstate.MoveKind_KingMove, 7, 4, 6, 4},
-		{"KingCapture", buildKingMove, "C", kaboomstate.MoveKind_KingCapture, 0, 4, 1, 3},
+		{"PawnMove", buildPawnMove, "M", kaboomstate.MoveKind_PawnMove, 1, 3, 2, 3},
+		{"PawnCapture", buildPawnMove, "C", kaboomstate.MoveKind_PawnCapture, 1, 3, 2, 4},
+		{"BishopMove", buildBishopMove, "M", kaboomstate.MoveKind_BishopMove, 0, 2, 2, 0},
+		{"BishopCapture", buildBishopMove, "C", kaboomstate.MoveKind_BishopCapture, 7, 2, 4, 5},
+		{"RookMove", buildRookMove, "M", kaboomstate.MoveKind_RookMove, 0, 0, 3, 0},
+		{"RookCapture", buildRookMove, "C", kaboomstate.MoveKind_RookCapture, 7, 7, 7, 0},
+		{"KnightMove", buildKnightMove, "M", kaboomstate.MoveKind_KnightMove, 0, 1, 2, 2},
+		{"KnightCapture", buildKnightMove, "C", kaboomstate.MoveKind_KnightCapture, 7, 6, 5, 5},
+		{"QueenMove", buildQueenMove, "M", kaboomstate.MoveKind_QueenMove, 0, 3, 4, 7},
+		{"QueenCapture", buildQueenMove, "C", kaboomstate.MoveKind_QueenCapture, 7, 3, 4, 0},
+		{"KingMove", buildKingMove, "M", kaboomstate.MoveKind_KingMove, 0, 4, 1, 4},
+		{"KingCapture", buildKingMove, "C", kaboomstate.MoveKind_KingCapture, 7, 4, 6, 3},
 	}
 
 	for _, tt := range tests {
@@ -67,12 +67,12 @@ func TestBuildPieceMovesInvalidAction(t *testing.T) {
 		toRow   int32
 		toCol   int32
 	}{
-		{"Pawn", buildPawnMove, 6, 0, 5, 0},
-		{"Bishop", buildBishopMove, 7, 2, 5, 0},
-		{"Rook", buildRookMove, 7, 0, 6, 0},
-		{"Knight", buildKnightMove, 7, 1, 5, 2},
-		{"Queen", buildQueenMove, 7, 3, 5, 3},
-		{"King", buildKingMove, 7, 4, 6, 4},
+		{"Pawn", buildPawnMove, 1, 0, 2, 0},
+		{"Bishop", buildBishopMove, 0, 2, 2, 0},
+		{"Rook", buildRookMove, 0, 0, 1, 0},
+		{"Knight", buildKnightMove, 0, 1, 2, 2},
+		{"Queen", buildQueenMove, 0, 3, 2, 3},
+		{"King", buildKingMove, 0, 4, 1, 4},
 	}
 
 	for _, tt := range tests {
@@ -87,7 +87,7 @@ func TestBuildPieceMovesInvalidAction(t *testing.T) {
 }
 
 func TestBuildKingCastleMove(t *testing.T) {
-	pos := mustPos(t, 7, 4)
+	pos := mustPos(t, 0, 4)
 	move := buildKingCastleMove(pos, kaboomproto.C_KingCastle_CASTLE_SIDE_SHORT)
 	if move.Kind() != kaboomstate.MoveKind_KingCastle {
 		t.Fatalf("expected castle move kind, got %s", move.Kind())
@@ -99,7 +99,7 @@ func TestBuildKingCastleMove(t *testing.T) {
 	if castle.GetSide() != kaboomproto.C_KingCastle_CASTLE_SIDE_SHORT {
 		t.Fatalf("expected short castle side")
 	}
-	if castle.GetPosition().GetRow() != 7 || castle.GetPosition().GetCol() != 4 {
+	if castle.GetPosition().GetRow() != 0 || castle.GetPosition().GetCol() != 4 {
 		t.Fatalf("unexpected castle origin")
 	}
 }
@@ -157,7 +157,7 @@ func TestParseReplMove_Castle(t *testing.T) {
 	if castle.GetSide() != kaboomproto.C_KingCastle_CASTLE_SIDE_SHORT {
 		t.Fatalf("expected short castle")
 	}
-	if castle.GetPosition().GetRow() != 7 || castle.GetPosition().GetCol() != 4 {
+	if castle.GetPosition().GetRow() != 0 || castle.GetPosition().GetCol() != 4 {
 		t.Fatalf("unexpected castle position")
 	}
 

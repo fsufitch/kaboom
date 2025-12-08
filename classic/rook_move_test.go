@@ -9,14 +9,14 @@ import (
 
 func TestRookMove(t *testing.T) {
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPiece("white-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 7, 0),
+		newTestPiece("white-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 0, 0),
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CRookMove{
 			CRookMove: &kaboomproto.C_RookMove{
-				From: posProto(7, 0),
-				To:   posProto(4, 0),
+				From: posProto(0, 0),
+				To:   posProto(3, 0),
 			},
 		},
 	})
@@ -37,7 +37,7 @@ func TestRookMove(t *testing.T) {
 	final := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPiece("white-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 4, 0),
+		newTestPiece("white-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 3, 0),
 	}, nil)
 
 	assertGameEqualsProto(t, final, expected)

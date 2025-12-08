@@ -78,6 +78,8 @@ func (ZoneKind) EnumDescriptor() ([]byte, []int) {
 }
 
 // Position represents a location on the chess board.
+// Rows/cols are zero-indexed using algebraic coordinates:
+//   A1 = (row=0,col=0), A8 = (row=7,col=0), H1 = (row=0,col=7), H8 = (row=7,col=7).
 type Position struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Row           int32                  `protobuf:"varint,1,opt,name=row,proto3" json:"row,omitempty"`

@@ -55,9 +55,9 @@ func newPawnContext(game kaboomstate.Game, from kaboomstate.Position) (pawnConte
 func pawnForwardDirection(color kaboomproto.Color) (int32, error) {
 	switch color {
 	case kaboomproto.Color_COLOR_WHITE:
-		return -1, nil
-	case kaboomproto.Color_COLOR_BLACK:
 		return 1, nil
+	case kaboomproto.Color_COLOR_BLACK:
+		return -1, nil
 	default:
 		return 0, fmt.Errorf("%w: unknown pawn color %s", kaboom.ErrInvalidMove, color.String())
 	}
@@ -66,9 +66,9 @@ func pawnForwardDirection(color kaboomproto.Color) (int32, error) {
 func pawnStartingRow(color kaboomproto.Color) (int32, error) {
 	switch color {
 	case kaboomproto.Color_COLOR_WHITE:
-		return 6, nil
-	case kaboomproto.Color_COLOR_BLACK:
 		return 1, nil
+	case kaboomproto.Color_COLOR_BLACK:
+		return 6, nil
 	default:
 		return -1, fmt.Errorf("%w: unknown pawn color %s", kaboom.ErrInvalidMove, color.String())
 	}
@@ -223,12 +223,12 @@ func pawnPromotionEffects(pawn kaboomstate.ChessPiece, destination kaboomstate.P
 	targetRow := destination.Row()
 	switch pawn.Color() {
 	case kaboomproto.Color_COLOR_WHITE:
-		if targetRow != 0 {
-			return nil, fmt.Errorf("%w: white pawn promotions must land on row 0", kaboom.ErrInvalidMove)
+		if targetRow != kaboomstate.MAX_ROW {
+			return nil, fmt.Errorf("%w: white pawn promotions must land on row %d", kaboom.ErrInvalidMove, kaboomstate.MAX_ROW)
 		}
 	case kaboomproto.Color_COLOR_BLACK:
-		if targetRow != kaboomstate.MAX_ROW {
-			return nil, fmt.Errorf("%w: black pawn promotions must land on row %d", kaboom.ErrInvalidMove, kaboomstate.MAX_ROW)
+		if targetRow != kaboomstate.MIN_ROW {
+			return nil, fmt.Errorf("%w: black pawn promotions must land on row %d", kaboom.ErrInvalidMove, kaboomstate.MIN_ROW)
 		}
 	default:
 		return nil, fmt.Errorf("%w: unknown pawn color %s", kaboom.ErrInvalidMove, pawn.Color().String())

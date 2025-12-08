@@ -8,17 +8,17 @@ import (
 )
 
 func TestQueenCapture(t *testing.T) {
-	target := newTestPiece("black-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_BLACK, 4, 4)
+	target := newTestPiece("black-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_BLACK, 3, 4)
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPiece("white-queen", kaboomproto.PieceKind_QUEEN, kaboomproto.Color_COLOR_WHITE, 7, 4),
+		newTestPiece("white-queen", kaboomproto.PieceKind_QUEEN, kaboomproto.Color_COLOR_WHITE, 0, 4),
 		target,
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CQueenCapture{
 			CQueenCapture: &kaboomproto.C_QueenCapture{
-				From: posProto(7, 4),
-				To:   posProto(4, 4),
+				From: posProto(0, 4),
+				To:   posProto(3, 4),
 			},
 		},
 	})
@@ -39,7 +39,7 @@ func TestQueenCapture(t *testing.T) {
 	final := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPiece("white-queen", kaboomproto.PieceKind_QUEEN, kaboomproto.Color_COLOR_WHITE, 4, 4),
+		newTestPiece("white-queen", kaboomproto.PieceKind_QUEEN, kaboomproto.Color_COLOR_WHITE, 3, 4),
 		withZone(target, kaboomproto.ZoneKind_ZONE_GRAVEYARD),
 	}, nil)
 

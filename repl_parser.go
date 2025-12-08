@@ -91,7 +91,7 @@ func parseBoardSquare(token string) (kaboomstate.Position, error) {
 	}
 
 	col := int32(colChar-'A') + kaboomstate.MIN_COL
-	row := int32(8-rank) + kaboomstate.MIN_ROW
+	row := int32(rank-1) + kaboomstate.MIN_ROW
 	pos := kaboomstate.NewPosition(row, col)
 	if err := pos.Validate(); err != nil {
 		return kaboomstate.Position{}, err

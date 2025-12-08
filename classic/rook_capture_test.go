@@ -8,17 +8,17 @@ import (
 )
 
 func TestRookCapture(t *testing.T) {
-	target := newTestPiece("black-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_BLACK, 4, 5)
+	target := newTestPiece("black-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_BLACK, 3, 5)
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPiece("white-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 4, 1),
+		newTestPiece("white-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 3, 1),
 		target,
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CRookCapture{
 			CRookCapture: &kaboomproto.C_RookCapture{
-				From: posProto(4, 1),
-				To:   posProto(4, 5),
+				From: posProto(3, 1),
+				To:   posProto(3, 5),
 			},
 		},
 	})
@@ -39,7 +39,7 @@ func TestRookCapture(t *testing.T) {
 	final := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPiece("white-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 4, 5),
+		newTestPiece("white-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_WHITE, 3, 5),
 		withZone(target, kaboomproto.ZoneKind_ZONE_GRAVEYARD),
 	}, nil)
 

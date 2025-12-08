@@ -4,6 +4,7 @@ package kaboomproto;
 option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
 // Position represents a location on the chess board.
+// Rows and columns are zero-indexed: A1 = (row=0,col=0), A8 = (7,0), H1 = (0,7), H8 = (7,7).
 message Position {
     int32 row = 1;
     int32 col = 2;

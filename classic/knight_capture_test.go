@@ -8,17 +8,17 @@ import (
 )
 
 func TestKnightCapture(t *testing.T) {
-	target := newTestPawn("black-pawn", kaboomproto.Color_COLOR_BLACK, 5, 2)
+	target := newTestPawn("black-pawn", kaboomproto.Color_COLOR_BLACK, 2, 2)
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPiece("white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 7, 1),
+		newTestPiece("white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 0, 1),
 		target,
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CKnightCapture{
 			CKnightCapture: &kaboomproto.C_KnightCapture{
-				From: posProto(7, 1),
-				To:   posProto(5, 2),
+				From: posProto(0, 1),
+				To:   posProto(2, 2),
 			},
 		},
 	})
@@ -39,7 +39,7 @@ func TestKnightCapture(t *testing.T) {
 	final := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPiece("white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 5, 2),
+		newTestPiece("white-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_WHITE, 2, 2),
 		withZone(target, kaboomproto.ZoneKind_ZONE_GRAVEYARD),
 	}, nil)
 

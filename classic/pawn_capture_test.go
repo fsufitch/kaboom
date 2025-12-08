@@ -8,17 +8,17 @@ import (
 )
 
 func TestPawnStandardCapture(t *testing.T) {
-	captured := newTestPiece("black-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_BLACK, 3, 4)
+	captured := newTestPiece("black-rook", kaboomproto.PieceKind_ROOK, kaboomproto.Color_COLOR_BLACK, 4, 4)
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 4, 3),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 3, 3),
 		captured,
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CPawnCapture{
 			CPawnCapture: &kaboomproto.C_PawnCapture{
-				From:      posProto(4, 3),
-				To:        posProto(3, 4),
+				From:      posProto(3, 3),
+				To:        posProto(4, 4),
 				Promotion: kaboomproto.PieceKind_INVALID_PIECE,
 			},
 		},
@@ -40,7 +40,7 @@ func TestPawnStandardCapture(t *testing.T) {
 	finalGame := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 3, 4),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 4, 4),
 		withZone(captured, kaboomproto.ZoneKind_ZONE_GRAVEYARD),
 	}, nil)
 
@@ -48,9 +48,9 @@ func TestPawnStandardCapture(t *testing.T) {
 }
 
 func TestPawnEnPassantCapture(t *testing.T) {
-	blackPawn := newTestPawn("black-pawn", kaboomproto.Color_COLOR_BLACK, 3, 5)
+	blackPawn := newTestPawn("black-pawn", kaboomproto.Color_COLOR_BLACK, 4, 5)
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 3, 4),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 4, 4),
 		blackPawn,
 	}, []*kaboomproto.Turn{
 		{
@@ -64,7 +64,7 @@ func TestPawnEnPassantCapture(t *testing.T) {
 						PieceMoved: &kaboomproto.Effect__PieceMoved{
 							PieceUuid: blackPawn.GetUuid(),
 							Vector: &kaboomproto.Vector{
-								DRow: 2,
+								DRow: -2,
 								DCol: 0,
 							},
 						},
@@ -77,8 +77,8 @@ func TestPawnEnPassantCapture(t *testing.T) {
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CPawnCapture{
 			CPawnCapture: &kaboomproto.C_PawnCapture{
-				From:      posProto(3, 4),
-				To:        posProto(2, 5),
+				From:      posProto(4, 4),
+				To:        posProto(5, 5),
 				Promotion: kaboomproto.PieceKind_INVALID_PIECE,
 			},
 		},
@@ -100,7 +100,7 @@ func TestPawnEnPassantCapture(t *testing.T) {
 	finalGame := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 2, 5),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 5, 5),
 		withZone(blackPawn, kaboomproto.ZoneKind_ZONE_GRAVEYARD),
 	}, []*kaboomproto.Turn{
 		{
@@ -114,7 +114,7 @@ func TestPawnEnPassantCapture(t *testing.T) {
 						PieceMoved: &kaboomproto.Effect__PieceMoved{
 							PieceUuid: blackPawn.GetUuid(),
 							Vector: &kaboomproto.Vector{
-								DRow: 2,
+								DRow: -2,
 								DCol: 0,
 							},
 						},

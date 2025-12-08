@@ -53,8 +53,8 @@ func setupClassicPieces(boardUUID string, uuidSource kaboom.UUIDSource) []*kaboo
 
 	// Place pawns
 	for col := int32(0); col < 8; col++ {
-		appendPiece(kaboomproto.PieceKind_PAWN, kaboomproto.Color_COLOR_WHITE, 6, col)
-		appendPiece(kaboomproto.PieceKind_PAWN, kaboomproto.Color_COLOR_BLACK, 1, col)
+		appendPiece(kaboomproto.PieceKind_PAWN, kaboomproto.Color_COLOR_WHITE, 1, col)
+		appendPiece(kaboomproto.PieceKind_PAWN, kaboomproto.Color_COLOR_BLACK, 6, col)
 	}
 
 	backRank := []kaboomproto.PieceKind{
@@ -69,8 +69,8 @@ func setupClassicPieces(boardUUID string, uuidSource kaboom.UUIDSource) []*kaboo
 	}
 
 	for col, kind := range backRank {
-		appendPiece(kind, kaboomproto.Color_COLOR_WHITE, 7, int32(col))
-		appendPiece(kind, kaboomproto.Color_COLOR_BLACK, 0, int32(col))
+		appendPiece(kind, kaboomproto.Color_COLOR_WHITE, 0, int32(col))
+		appendPiece(kind, kaboomproto.Color_COLOR_BLACK, 7, int32(col))
 	}
 
 	return pieces

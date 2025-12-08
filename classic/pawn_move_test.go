@@ -9,15 +9,15 @@ import (
 
 func TestPawnSingleAdvance(t *testing.T) {
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 6, 3),
-		newTestPiece("black-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_BLACK, 0, 1),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 1, 3),
+		newTestPiece("black-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_BLACK, 7, 1),
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CPawnMove{
 			CPawnMove: &kaboomproto.C_PawnMove{
-				From:      posProto(6, 3),
-				To:        posProto(5, 3),
+				From:      posProto(1, 3),
+				To:        posProto(2, 3),
 				Promotion: kaboomproto.PieceKind_INVALID_PIECE,
 			},
 		},
@@ -39,8 +39,8 @@ func TestPawnSingleAdvance(t *testing.T) {
 	finalGame := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 5, 3),
-		newTestPiece("black-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_BLACK, 0, 1),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 2, 3),
+		newTestPiece("black-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_BLACK, 7, 1),
 	}, nil)
 
 	assertGameEqualsProto(t, finalGame, expected)
@@ -48,15 +48,15 @@ func TestPawnSingleAdvance(t *testing.T) {
 
 func TestPawnDoubleAdvance(t *testing.T) {
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 6, 4),
-		newTestPiece("black-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_BLACK, 0, 5),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 1, 4),
+		newTestPiece("black-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_BLACK, 7, 5),
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CPawnMove{
 			CPawnMove: &kaboomproto.C_PawnMove{
-				From:      posProto(6, 4),
-				To:        posProto(4, 4),
+				From:      posProto(1, 4),
+				To:        posProto(3, 4),
 				Promotion: kaboomproto.PieceKind_INVALID_PIECE,
 			},
 		},
@@ -78,8 +78,8 @@ func TestPawnDoubleAdvance(t *testing.T) {
 	finalGame := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 4, 4),
-		newTestPiece("black-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_BLACK, 0, 5),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 3, 4),
+		newTestPiece("black-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_BLACK, 7, 5),
 	}, nil)
 
 	assertGameEqualsProto(t, finalGame, expected)
@@ -87,14 +87,14 @@ func TestPawnDoubleAdvance(t *testing.T) {
 
 func TestPawnPromotion(t *testing.T) {
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 1, 0),
+		newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 6, 0),
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CPawnMove{
 			CPawnMove: &kaboomproto.C_PawnMove{
-				From:      posProto(1, 0),
-				To:        posProto(0, 0),
+				From:      posProto(6, 0),
+				To:        posProto(7, 0),
 				Promotion: kaboomproto.PieceKind_QUEEN,
 			},
 		},
@@ -116,7 +116,7 @@ func TestPawnPromotion(t *testing.T) {
 	finalGame := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		withKind(newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 0, 0), kaboomproto.PieceKind_QUEEN),
+		withKind(newTestPawn("white-pawn", kaboomproto.Color_COLOR_WHITE, 7, 0), kaboomproto.PieceKind_QUEEN),
 	}, nil)
 
 	assertGameEqualsProto(t, finalGame, expected)

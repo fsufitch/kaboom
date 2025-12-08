@@ -8,17 +8,17 @@ import (
 )
 
 func TestBishopCapture(t *testing.T) {
-	target := newTestPiece("black-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_BLACK, 3, 6)
+	target := newTestPiece("black-knight", kaboomproto.PieceKind_KNIGHT, kaboomproto.Color_COLOR_BLACK, 4, 6)
 	game := newTestGame([]*kaboomproto.ChessPiece{
-		newTestPiece("white-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_WHITE, 6, 3),
+		newTestPiece("white-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_WHITE, 1, 3),
 		target,
 	}, nil)
 
 	move := kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
 		Move: &kaboomproto.KaboomMove_CBishopCapture{
 			CBishopCapture: &kaboomproto.C_BishopCapture{
-				From: posProto(6, 3),
-				To:   posProto(3, 6),
+				From: posProto(1, 3),
+				To:   posProto(4, 6),
 			},
 		},
 	})
@@ -39,7 +39,7 @@ func TestBishopCapture(t *testing.T) {
 	final := applyEffectsToGame(t, game, effects)
 
 	expected := newTestGameProto([]*kaboomproto.ChessPiece{
-		newTestPiece("white-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_WHITE, 3, 6),
+		newTestPiece("white-bishop", kaboomproto.PieceKind_BISHOP, kaboomproto.Color_COLOR_WHITE, 4, 6),
 		withZone(target, kaboomproto.ZoneKind_ZONE_GRAVEYARD),
 	}, nil)
 
