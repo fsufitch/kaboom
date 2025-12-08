@@ -74,7 +74,7 @@ func main() {
 			fmt.Printf(" - %s: %s\n", effect.Kind(), effect.Why())
 		}
 
-		nextGame, err := applyEffects(game, effects)
+		nextGame, err := kaboomstate.ApplyEffects(game, effects)
 		if err != nil {
 			fmt.Printf("Failed to apply effects: %v\n", err)
 			continue
@@ -119,49 +119,6 @@ func printBoard(game kaboomstate.Game) {
 		return
 	}
 	fmt.Println(string(data))
-}
-
-func applyEffects(game kaboomstate.Game, effects []*kaboomstate.Effect) (kaboomstate.Game, error) {
-	current := game
-	for _, effect := range effects {
-		var (
-			next *kaboomstate.Game
-			err  error
-		)
-
-		switch effect.Kind() {
-		case kaboomstate.EffectKindNothingHappens:
-			next, err = effect.NothingHappens().Apply(current)
-		case kaboomstate.EffectKindPieceCreated:
-			next, err = effect.PieceCreated().Apply(current)
-		case kaboomstate.EffectKindPieceDeleted:
-			next, err = effect.PieceDeleted().Apply(current)
-		case kaboomstate.EffectKindPieceMoved:
-			next, err = effect.PieceMoved().Apply(current)
-		case kaboomstate.EffectKindPieceCaptured:
-			next, err = effect.PieceCaptured().Apply(current)
-		case kaboomstate.EffectKindPieceBumped:
-			next, err = effect.PieceBumped().Apply(current)
-		case kaboomstate.EffectKindPiecePromoted:
-			next, err = effect.PiecePromoted().Apply(current)
-		case kaboomstate.EffectKindPieceDeployed:
-			next, err = effect.PieceDeployed().Apply(current)
-		case kaboomstate.EffectKindPieceTransfer:
-			next, err = effect.PieceTransfer().Apply(current)
-		case kaboomstate.EffectKindWin:
-			next, err = effect.Win().Apply(current)
-		default:
-			return game, fmt.Errorf("unsupported effect kind %s", effect.Kind())
-		}
-
-		if err != nil {
-			return game, err
-		}
-
-		current = *next
-	}
-
-	return current, nil
 }
 
 func appendTurn(game kaboomstate.Game, intent kaboomstate.Intent, effects []*kaboomstate.Effect) (kaboomstate.Game, error) {

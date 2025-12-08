@@ -73,7 +73,11 @@ func convertPawnCaptureIntentInternal(game kaboomstate.Game, intent kaboomstate.
 		if _, occupied := pieceAtBoardPosition(game, board.UUID(), to); occupied {
 			return nil, nil
 		}
-		ctx := pawnContext{pawn: pawn, board: board}
+		dir, err := pawnForwardDirection(pawn.Color())
+		if err != nil {
+			return nil, err
+		}
+		ctx := pawnContext{pawn: pawn, board: board, direction: dir}
 		capturedPiece, err = ensurePawnEnPassantCapture(game, ctx, from, to)
 		if err != nil {
 			return nil, err
