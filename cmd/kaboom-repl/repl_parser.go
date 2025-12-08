@@ -33,8 +33,10 @@ func ParseReplMove(input string) (kaboomstate.Move, error) {
 		return buildPawnMove(actionToken, from, to)
 	case "B":
 		return buildBishopMove(actionToken, from, to)
+	case "R":
+		return buildRookMove(actionToken, from, to)
 	default:
-		return kaboomstate.Move{}, fmt.Errorf("unsupported piece token %q (supported: P, B)", tokens[0])
+		return kaboomstate.Move{}, fmt.Errorf("unsupported piece token %q (supported: P, B, R)", tokens[0])
 	}
 }
 
@@ -115,5 +117,30 @@ func buildBishopMove(action string, from, to kaboomstate.Position) (kaboomstate.
 		}), nil
 	default:
 		return kaboomstate.Move{}, fmt.Errorf("unsupported bishop action %q (use M for move or C for capture)", action)
+	}
+}
+
+func buildRookMove(action string, from, to kaboomstate.Position) (kaboomstate.Move, error) {
+	switch action {
+	case "M":
+		return kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
+			Move: &kaboomproto.KaboomMove_CRookMove{
+				CRookMove: &kaboomproto.C_RookMove{
+					From: from.ToProto(),
+					To:   to.ToProto(),
+				},
+			},
+		}), nil
+	case "C":
+		return kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
+			Move: &kaboomproto.KaboomMove_CRookCapture{
+				CRookCapture: &kaboomproto.C_RookCapture{
+					From: from.ToProto(),
+					To:   to.ToProto(),
+				},
+			},
+		}), nil
+	default:
+		return kaboomstate.Move{}, fmt.Errorf("unsupported rook action %q (use M for move or C for capture)", action)
 	}
 }

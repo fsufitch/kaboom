@@ -13,6 +13,8 @@ var ClassicChessVariantAdjudicator = kaboom.VariantAdjudicator{
 		MoveToIntent_PawnEnPassant,
 		MoveToIntent_BishopMove,
 		MoveToIntent_BishopCapture,
+		MoveToIntent_RookMove,
+		MoveToIntent_RookCapture,
 	},
 
 	IntentToEffectRules: []kaboom.IntentToEffectRule{
@@ -22,6 +24,8 @@ var ClassicChessVariantAdjudicator = kaboom.VariantAdjudicator{
 		IntentToEffect_PawnEnPassant,
 		IntentToEffect_BishopMove,
 		IntentToEffect_BishopCapture,
+		IntentToEffect_RookMove,
+		IntentToEffect_RookCapture,
 	},
 
 	GameValidatorRules: []kaboom.GameValidatorRule{
