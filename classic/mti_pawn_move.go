@@ -23,22 +23,17 @@ func convertPawnMove(game kaboomstate.Game, move kaboomstate.Move) (*kaboomstate
 		return nil, fmt.Errorf("%w: pawn move data missing", kaboom.ErrInvalidMove)
 	}
 
-	from := kaboomstate.PositionFromProto(pawnMove.GetFrom())
-	if err := from.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid pawn origin: %v", kaboom.ErrInvalidMove, err)
+	movement, err := move.PieceMovement()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid pawn move trajectory: %v", kaboom.ErrInvalidMove, err)
 	}
 
-	to := kaboomstate.PositionFromProto(pawnMove.GetTo())
-	if err := to.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid pawn destination: %v", kaboom.ErrInvalidMove, err)
-	}
-
-	ctx, err := newPawnContext(game, from)
+	ctx, err := newPawnContext(game, movement.From)
 	if err != nil {
 		return nil, err
 	}
 
-	if err := ensurePawnSingleAdvance(game, ctx, from, to); err != nil {
+	if err := ensurePawnSingleAdvance(game, ctx, movement.From, movement.To); err != nil {
 		return nil, err
 	}
 

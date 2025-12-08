@@ -21,9 +21,15 @@ func convertBishopCaptureIntent(game kaboomstate.Game, intent kaboomstate.Intent
 		return nil, nil
 	}
 
-	move := kaboomstate.MoveFromProto(pmProto.GetMove())
+	intentPieceMove := kaboomstate.IntentPieceMoveFromProto(pmProto)
+	move := intentPieceMove.Move()
 	if move.Kind() != kaboomstate.MoveKind_BishopCapture {
 		return nil, nil
+	}
+
+	movement, err := intentPieceMove.PieceMovement()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid bishop movement: %v", kaboom.ErrInvalidMove, err)
 	}
 
 	board, ok := game.FindBoard(pmProto.GetBoardUuid())
@@ -31,20 +37,8 @@ func convertBishopCaptureIntent(game kaboomstate.Game, intent kaboomstate.Intent
 		return nil, fmt.Errorf("%w: board %s not found for bishop capture intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
 
-	bishopCapture := move.AsBishopCapture()
-	if bishopCapture == nil {
-		return nil, fmt.Errorf("%w: bishop capture data missing", kaboom.ErrInvalidMove)
-	}
-
-	from := kaboomstate.PositionFromProto(bishopCapture.GetFrom())
-	if err := from.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid bishop origin: %v", kaboom.ErrInvalidMove, err)
-	}
-
-	to := kaboomstate.PositionFromProto(bishopCapture.GetTo())
-	if err := to.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid bishop destination: %v", kaboom.ErrInvalidMove, err)
-	}
+	from := movement.From
+	to := movement.To
 
 	if err := ensureBishopMoveIsClear(game, board.UUID(), from, to); err != nil {
 		return nil, err
@@ -67,8 +61,6 @@ func convertBishopCaptureIntent(game kaboomstate.Game, intent kaboomstate.Intent
 	if targetPiece.Color() == bishopPiece.Color() {
 		return nil, fmt.Errorf("%w: capture target at %s has same color", kaboom.ErrInvalidMove, describePosition(to))
 	}
-
-	vector := kaboomstate.NewVector(to.Row()-from.Row(), to.Col()-from.Col())
 
 	captureEffectProto := &kaboomproto.Effect{
 		Uuid:      kaboom.DefaultUUIDSource.NewUUID().String(),
@@ -99,7 +91,7 @@ func convertBishopCaptureIntent(game kaboomstate.Game, intent kaboomstate.Intent
 		EffectOneof: &kaboomproto.Effect_PieceMoved{
 			PieceMoved: &kaboomproto.Effect__PieceMoved{
 				PieceUuid: bishopPiece.UUID(),
-				Vector:    vector.ToProto(),
+				Vector:    movement.Vector.ToProto(),
 			},
 		},
 	}

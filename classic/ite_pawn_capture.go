@@ -35,9 +35,15 @@ func convertPawnCaptureIntentInternal(game kaboomstate.Game, intent kaboomstate.
 		return nil, nil
 	}
 
-	move := kaboomstate.MoveFromProto(pmProto.GetMove())
+	intentPieceMove := kaboomstate.IntentPieceMoveFromProto(pmProto)
+	move := intentPieceMove.Move()
 	if move.Kind() != kaboomstate.MoveKind_PawnCapture {
 		return nil, nil
+	}
+
+	movement, err := intentPieceMove.PieceMovement()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid pawn movement: %v", kaboom.ErrInvalidMove, err)
 	}
 
 	board, ok := game.FindBoard(pmProto.GetBoardUuid())
@@ -45,20 +51,8 @@ func convertPawnCaptureIntentInternal(game kaboomstate.Game, intent kaboomstate.
 		return nil, fmt.Errorf("%w: board %s not found for pawn capture intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
 
-	pawnCapture := move.AsPawnCapture()
-	if pawnCapture == nil {
-		return nil, fmt.Errorf("%w: pawn capture data missing", kaboom.ErrInvalidMove)
-	}
-
-	from := kaboomstate.PositionFromProto(pawnCapture.GetFrom())
-	if err := from.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid pawn origin: %v", kaboom.ErrInvalidMove, err)
-	}
-
-	to := kaboomstate.PositionFromProto(pawnCapture.GetTo())
-	if err := to.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid pawn destination: %v", kaboom.ErrInvalidMove, err)
-	}
+	from := movement.From
+	to := movement.To
 
 	pawn, err := findUniqueBoardPieceAtPosition(game, board.UUID(), from)
 	if err != nil {
@@ -69,7 +63,7 @@ func convertPawnCaptureIntentInternal(game kaboomstate.Game, intent kaboomstate.
 		return nil, fmt.Errorf("%w: intent references non-pawn piece at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	vector := kaboomstate.NewVector(to.Row()-from.Row(), to.Col()-from.Col())
+	vector := movement.Vector
 	if absInt32(vector.DRow()) != 1 || absInt32(vector.DCol()) != 1 {
 		return nil, nil
 	}

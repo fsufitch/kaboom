@@ -23,27 +23,22 @@ func convertPawnEnPassant(game kaboomstate.Game, move kaboomstate.Move) (*kaboom
 		return nil, fmt.Errorf("%w: pawn capture data missing", kaboom.ErrInvalidMove)
 	}
 
-	from := kaboomstate.PositionFromProto(pawnCapture.GetFrom())
-	if err := from.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid pawn origin: %v", kaboom.ErrInvalidMove, err)
+	movement, err := move.PieceMovement()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid pawn capture trajectory: %v", kaboom.ErrInvalidMove, err)
 	}
 
-	to := kaboomstate.PositionFromProto(pawnCapture.GetTo())
-	if err := to.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid pawn destination: %v", kaboom.ErrInvalidMove, err)
-	}
-
-	ctx, err := newPawnContext(game, from)
+	ctx, err := newPawnContext(game, movement.From)
 	if err != nil {
 		return nil, err
 	}
 
-	if _, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), to); occupied {
+	if _, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), movement.To); occupied {
 		// This is a normal capture, not en passant; let other rules handle it.
 		return nil, nil
 	}
 
-	if _, err := ensurePawnEnPassantCapture(game, ctx, from, to); err != nil {
+	if _, err := ensurePawnEnPassantCapture(game, ctx, movement.From, movement.To); err != nil {
 		return nil, err
 	}
 

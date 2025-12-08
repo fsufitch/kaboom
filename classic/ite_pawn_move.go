@@ -35,9 +35,15 @@ func convertPawnMoveIntentWithDelta(game kaboomstate.Game, intent kaboomstate.In
 		return nil, nil
 	}
 
-	move := kaboomstate.MoveFromProto(pmProto.GetMove())
+	intentPieceMove := kaboomstate.IntentPieceMoveFromProto(pmProto)
+	move := intentPieceMove.Move()
 	if move.Kind() != kaboomstate.MoveKind_PawnMove {
 		return nil, nil
+	}
+
+	movement, err := intentPieceMove.PieceMovement()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid pawn movement: %v", kaboom.ErrInvalidMove, err)
 	}
 
 	board, ok := game.FindBoard(pmProto.GetBoardUuid())
@@ -45,22 +51,10 @@ func convertPawnMoveIntentWithDelta(game kaboomstate.Game, intent kaboomstate.In
 		return nil, fmt.Errorf("%w: board %s not found for pawn move intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
 
-	pawnMove := move.AsPawnMove()
-	if pawnMove == nil {
-		return nil, fmt.Errorf("%w: pawn move data missing", kaboom.ErrInvalidMove)
-	}
+	from := movement.From
+	to := movement.To
 
-	from := kaboomstate.PositionFromProto(pawnMove.GetFrom())
-	if err := from.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid pawn origin: %v", kaboom.ErrInvalidMove, err)
-	}
-
-	to := kaboomstate.PositionFromProto(pawnMove.GetTo())
-	if err := to.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid pawn destination: %v", kaboom.ErrInvalidMove, err)
-	}
-
-	if absInt32(to.Row()-from.Row()) != squares || from.Col() != to.Col() {
+	if absInt32(movement.Vector.DRow()) != squares || movement.Vector.DCol() != 0 {
 		return nil, nil
 	}
 
@@ -88,7 +82,6 @@ func convertPawnMoveIntentWithDelta(game kaboomstate.Game, intent kaboomstate.In
 		}
 	}
 
-	vector := kaboomstate.NewVector(to.Row()-from.Row(), to.Col()-from.Col())
 	moveEffectProto := &kaboomproto.Effect{
 		Uuid:      kaboom.DefaultUUIDSource.NewUUID().String(),
 		BoardUuid: board.UUID(),
@@ -96,7 +89,7 @@ func convertPawnMoveIntentWithDelta(game kaboomstate.Game, intent kaboomstate.In
 		EffectOneof: &kaboomproto.Effect_PieceMoved{
 			PieceMoved: &kaboomproto.Effect__PieceMoved{
 				PieceUuid: pawn.UUID(),
-				Vector:    vector.ToProto(),
+				Vector:    movement.Vector.ToProto(),
 			},
 		},
 	}

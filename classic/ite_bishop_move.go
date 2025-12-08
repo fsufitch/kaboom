@@ -21,9 +21,15 @@ func convertBishopMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) (
 		return nil, nil
 	}
 
-	move := kaboomstate.MoveFromProto(pmProto.GetMove())
+	intentPieceMove := kaboomstate.IntentPieceMoveFromProto(pmProto)
+	move := intentPieceMove.Move()
 	if move.Kind() != kaboomstate.MoveKind_BishopMove {
 		return nil, nil
+	}
+
+	movement, err := intentPieceMove.PieceMovement()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid bishop movement: %v", kaboom.ErrInvalidMove, err)
 	}
 
 	board, ok := game.FindBoard(pmProto.GetBoardUuid())
@@ -31,20 +37,8 @@ func convertBishopMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) (
 		return nil, fmt.Errorf("%w: board %s not found for bishop move intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
 
-	bishopMove := move.AsBishopMove()
-	if bishopMove == nil {
-		return nil, fmt.Errorf("%w: bishop move data missing", kaboom.ErrInvalidMove)
-	}
-
-	from := kaboomstate.PositionFromProto(bishopMove.GetFrom())
-	if err := from.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid bishop origin: %v", kaboom.ErrInvalidMove, err)
-	}
-
-	to := kaboomstate.PositionFromProto(bishopMove.GetTo())
-	if err := to.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid bishop destination: %v", kaboom.ErrInvalidMove, err)
-	}
+	from := movement.From
+	to := movement.To
 
 	if err := ensureBishopMoveIsClear(game, board.UUID(), from, to); err != nil {
 		return nil, err
@@ -59,8 +53,6 @@ func convertBishopMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) (
 		return nil, fmt.Errorf("%w: intent references non-bishop piece at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	vector := kaboomstate.NewVector(to.Row()-from.Row(), to.Col()-from.Col())
-
 	moveEffectProto := &kaboomproto.Effect{
 		Uuid:      kaboom.DefaultUUIDSource.NewUUID().String(),
 		BoardUuid: board.UUID(),
@@ -68,7 +60,7 @@ func convertBishopMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) (
 		EffectOneof: &kaboomproto.Effect_PieceMoved{
 			PieceMoved: &kaboomproto.Effect__PieceMoved{
 				PieceUuid: bishopPiece.UUID(),
-				Vector:    vector.ToProto(),
+				Vector:    movement.Vector.ToProto(),
 			},
 		},
 	}

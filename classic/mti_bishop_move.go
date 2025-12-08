@@ -18,10 +18,10 @@ func convertBishopMove(game kaboomstate.Game, move kaboomstate.Move) (*kaboomsta
 		return nil, nil
 	}
 
-	bishopMove := move.AsBishopMove()
-	if bishopMove == nil {
-		return nil, fmt.Errorf("%w: bishop move data missing", kaboom.ErrInvalidMove)
+	movement, err := move.PieceMovement()
+	if err != nil {
+		return nil, fmt.Errorf("%w: invalid bishop trajectory: %v", kaboom.ErrInvalidMove, err)
 	}
 
-	return convertBishopAction(game, move, bishopMove.GetFrom(), bishopMove.GetTo(), false)
+	return convertBishopAction(game, move, movement, false)
 }

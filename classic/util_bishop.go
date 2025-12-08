@@ -8,20 +8,9 @@ import (
 	kaboomproto "github.com/fsufitch/kaboom/proto/go"
 )
 
-func convertBishopAction(game kaboomstate.Game, move kaboomstate.Move, fromProto, toProto *kaboomproto.Position, requireCapture bool) (*kaboomstate.Intent, error) {
-	if fromProto == nil || toProto == nil {
-		return nil, fmt.Errorf("%w: bishop move missing positions", kaboom.ErrInvalidMove)
-	}
-
-	from := kaboomstate.PositionFromProto(fromProto)
-	if err := from.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid bishop origin: %v", kaboom.ErrInvalidMove, err)
-	}
-
-	to := kaboomstate.PositionFromProto(toProto)
-	if err := to.Validate(); err != nil {
-		return nil, fmt.Errorf("%w: invalid bishop destination: %v", kaboom.ErrInvalidMove, err)
-	}
+func convertBishopAction(game kaboomstate.Game, move kaboomstate.Move, movement kaboomstate.PieceMovement, requireCapture bool) (*kaboomstate.Intent, error) {
+	from := movement.From
+	to := movement.To
 
 	bishopPiece, err := findUniqueBoardPieceAtPosition(game, "", from)
 	if err != nil {
