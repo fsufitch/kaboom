@@ -37,8 +37,10 @@ func ParseReplMove(input string) (kaboomstate.Move, error) {
 		return buildRookMove(actionToken, from, to)
 	case "N":
 		return buildKnightMove(actionToken, from, to)
+	case "Q":
+		return buildQueenMove(actionToken, from, to)
 	default:
-		return kaboomstate.Move{}, fmt.Errorf("unsupported piece token %q (supported: P, B, R, N)", tokens[0])
+		return kaboomstate.Move{}, fmt.Errorf("unsupported piece token %q (supported: P, B, R, N, Q)", tokens[0])
 	}
 }
 
@@ -169,5 +171,30 @@ func buildKnightMove(action string, from, to kaboomstate.Position) (kaboomstate.
 		}), nil
 	default:
 		return kaboomstate.Move{}, fmt.Errorf("unsupported knight action %q (use M for move or C for capture)", action)
+	}
+}
+
+func buildQueenMove(action string, from, to kaboomstate.Position) (kaboomstate.Move, error) {
+	switch action {
+	case "M":
+		return kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
+			Move: &kaboomproto.KaboomMove_CQueenMove{
+				CQueenMove: &kaboomproto.C_QueenMove{
+					From: from.ToProto(),
+					To:   to.ToProto(),
+				},
+			},
+		}), nil
+	case "C":
+		return kaboomstate.MoveFromProto(&kaboomproto.KaboomMove{
+			Move: &kaboomproto.KaboomMove_CQueenCapture{
+				CQueenCapture: &kaboomproto.C_QueenCapture{
+					From: from.ToProto(),
+					To:   to.ToProto(),
+				},
+			},
+		}), nil
+	default:
+		return kaboomstate.Move{}, fmt.Errorf("unsupported queen action %q (use M for move or C for capture)", action)
 	}
 }

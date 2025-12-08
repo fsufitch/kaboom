@@ -17,6 +17,8 @@ var ClassicChessVariantAdjudicator = kaboom.VariantAdjudicator{
 		MoveToIntent_RookCapture,
 		MoveToIntent_KnightMove,
 		MoveToIntent_KnightCapture,
+		MoveToIntent_QueenMove,
+		MoveToIntent_QueenCapture,
 	},
 
 	IntentToEffectRules: []kaboom.IntentToEffectRule{
@@ -30,6 +32,8 @@ var ClassicChessVariantAdjudicator = kaboom.VariantAdjudicator{
 		IntentToEffect_RookCapture,
 		IntentToEffect_KnightMove,
 		IntentToEffect_KnightCapture,
+		IntentToEffect_QueenMove,
+		IntentToEffect_QueenCapture,
 	},
 
 	GameValidatorRules: []kaboom.GameValidatorRule{
