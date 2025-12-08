@@ -51,28 +51,5 @@ func (v Vector) Validate() error {
 	if v.DCol() == 0 && v.DRow() == 0 {
 		return fmt.Errorf("%w: vector cannot be zero", ErrInvalidProto)
 	}
-
-	if v.DCol() == 0 && v.DRow() != 0 {
-		// Vertical movement is OK
-		return nil
-	}
-
-	if v.DRow() == 0 && v.DCol() != 0 {
-		// Horizontal movement is OK
-		return nil
-	}
-
-	if absInt32(v.DRow()) == absInt32(v.DCol()) {
-		// Diagonal movement is OK
-		return nil
-	}
-
-	return fmt.Errorf("%w: invalid vector: dRow=%d, dCol=%d", ErrInvalidProto, v.DRow(), v.DCol())
-}
-
-func absInt32(x int32) int32 {
-	if x < 0 {
-		return -x
-	}
-	return x
+	return nil
 }
