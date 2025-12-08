@@ -1,27 +1,90 @@
-# kaboom
+# Kaboom
 
-> **Disclaimer:** This is an AI-generated summary that has not yet been vetted for accuracy.
+Kaboom is a stateless chess rules engine that runs entirely on data you provide. It understands multiple rulesets (the `classic` chess ruleset is currently implemented) and exposes a set of pure functions that turn moves into validated effects without keeping server-side session state.
 
-Kaboom Chess is an experimental chess variant that extends standard play with additional “Kaboom” abilities. Read about the new rules at [RULES.md](./RULES.md). The codebase contains:
+Read the variant-specific rules in [RULES.md](./RULES.md); this document explains how the engine itself is structured and how to use it.
 
-- Protocol Buffer definitions (`proto/`) for game state, pieces, and moves.
-- Go wrappers over the proto types providing validation, helper methods, and move construction.
-- CLI examples under `cmd/`:
-  - `kaboom-example` loads a sample in-progress game from `examples/` and validates/prints it.
-  - `kaboom-example-start` accepts a JSON chessboard description (e.g., `chessboard_start.json`) and spins up a new TwoPlayerGame for Alice vs. Bob.
-- TypeScript bindings generated via `ts-proto` in `proto/ts`.
+## Data Model
 
-### Development Workflow
+The Protobuf definitions under `proto/src/` describe all runtime data. Go-friendly wrappers live under `kaboomstate/` and add validation plus helper methods.
 
-It is recommended to work inside the provided devcontainer configuration, which comes with the correct Go toolchain, Protocol Buffers compiler/plugins, Node.js dependencies, and editor extensions preinstalled.
+Key types:
 
-1. Edit proto definitions in `proto/src/`.
-2. Regenerate Go code with `proto/protobuf_go.sh` and TypeScript stubs with `proto/protobuf_ts.sh`.
-3. Run `go test ./...` to verify validation logic and helpers.
-4. Use the CLIs under `cmd/` to inspect game states and their serialized boards.
+- **Game** – the whole snapshot: rules variant, boards, players, pieces currently in play, and historical turns.
+- **Board** – the playing surface. A game may contain multiple boards in other variants.
+- **Player** – identity plus metadata. Stored by UUID and referenced from moves/intents.
+- **ChessPiece** – kind, color, location (board, zone, position).
+- **Move** – what a player typed/selected. Moves are syntactic: they describe an action before rules interpretation.
+- **Intent** – the adjudicated meaning of a move (“this pawn moves from D2 to D4”). Every intent is tied to one acting player.
+- **Effect** – concrete state mutations (“piece moved”, “piece captured”, “win”). Effects are what mutate the immutable `Game` snapshot into the next one.
+- **Turn** – recording of intents and their resulting effects for auditing.
 
-### Features
+Everything is immutable: the engine returns new protos instead of mutating existing ones.
 
-- Move registry for both classical and Kaboom-specific moves (bumps, stomps, nova, control, etc.).
-- Validation pipeline that ensures board integrity, piece positions/colors, move history, and player references are consistent.
-- Chessboard serializer that renders the current board state with Unicode pieces and coordinate labels.
+## Turn Pipeline
+
+Each move goes through the same state machine:
+
+1. **Move ➞ Intent** – `VariantAdjudicator.MoveToIntent` runs the configured rules for the active variant until one produces an intent.
+2. **Intent ➞ Effects** – `VariantAdjudicator.IntentToEffects` expands the intent into one or more effects.
+3. **Apply Effects** – `kaboomstate.ApplyEffects` folds the effect list over the incoming `Game` to produce a new validated game snapshot.
+
+This is all pure computation. You can pause after any step, inspect the data, branch, or roll back simply by choosing which serialized state to send forward.
+
+## Code Layout
+
+- `kaboomstate/` – thin Go wrappers around the generated protobufs (validation, helpers, serialization helpers).
+- `classic/` – the “classic chess” ruleset: Move→Intent and Intent→Effect rules, plus helpers like `NewClassicChessGame`.
+- `server/` – HTTP handlers that expose the stateless API described below.
+- `cmd/` – command-line entry points (`kaboom-repl`, `kaboom-server`).
+- `proto/` – source `.proto` files plus scripts for regenerating Go and TypeScript bindings.
+- `RULES.md` – high-level description of the currently implemented variant.
+
+## Using the CLI (REPL)
+
+The REPL walks through the pipeline locally so you can test moves by hand.
+
+```bash
+go run ./cmd/kaboom-repl
+```
+
+Commands:
+
+- Enter moves like `P M D2 D4`, `N C G1 F3`, `K O E1 S` (details in `printHelp()`).
+- `board` prints the current Unicode chessboard.
+- `help` reprints the quick guide; `exit` or `quit` leaves the program.
+
+Each move is parsed, adjudicated via the classic rules, and applied to the in-memory game snapshot.
+
+## Using the HTTP API
+
+Start the API server:
+
+```bash
+go run ./cmd/kaboom-server
+# or set KABOOM_HOST / KABOOM_PORT first
+```
+
+Endpoints (all `POST` unless stated otherwise):
+
+| Path | Purpose | Request Body | Response |
+| --- | --- | --- | --- |
+| `/new-game?variant=classic` | Returns the initial `Game` proto for the chosen variant. | Empty body. | Raw JSON-serialized proto. |
+| `/parse-repl-move` | Parses a REPL string into a `KaboomMove`. | `{"replMove": "P M D2 D4"}` | `{"ok":true,"error":"","move":{...}}` |
+| `/move-to-intent?variant=classic` | Converts a move into an intent for the supplied game. | `{"game":{...proto...},"move":{...proto...}}` | `{"ok":true,"error":"","intent":{...}}` |
+| `/intent-to-effect?variant=classic` | Converts an intent into concrete effects. | `{"game":{...},"intent":{...}}` | `{"ok":true,"error":"","effects":[{...}]}` |
+| `/apply-effects` | Applies effects to the supplied game snapshot. | `{"game":{...},"effects":[{...}]}` | `{"ok":true,"error":"","game":{...}}` |
+| `/evaluate-move?variant=classic` | Full pipeline helper. | `{"game":{...},"replMove":"P M D2 D4"}` or `{"game":{...},"move":{...}}` | `{"ok":true,"error":"","game":{...}}` |
+
+Every helper returns JSON with `ok`/`error` plus a payload key (`move`, `intent`, `effects`, or `game`). Errors that stem from bad input use HTTP 400, while unexpected failures surface as HTTP 500 with `ok:false`.
+
+## Development
+
+Detailed setup instructions live in [DEVELOPMENT.md](./DEVELOPMENT.md) and cover:
+
+- Using the devcontainer for a consistent toolchain.
+- Regenerating Go/TypeScript protobuf bindings.
+- Building/running the CLIs and HTTP server.
+- Running tests.
+
+Refer to that document when working on the engine itself.
