@@ -6,7 +6,7 @@ import (
 	kaboomproto "github.com/fsufitch/kaboom/proto/go"
 )
 
-const ClassicRulesVariant = "rules.classic"
+const ClassicRulesVariant = "classic"
 
 func NewClassicChessGame(whitePlayerName string, blackPlayerName string) kaboomstate.Game {
 	uuidSource := kaboom.DefaultUUIDSource

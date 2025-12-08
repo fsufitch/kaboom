@@ -3,28 +3,25 @@ package kaboomserver
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
 
 	"google.golang.org/protobuf/encoding/protojson"
 
 	"github.com/fsufitch/kaboom/classic"
 )
 
-const variantClassic = "classic"
-
 type errorResponse struct {
 	Error string `json:"error"`
 }
 
 func handleNewGame(w http.ResponseWriter, r *http.Request) {
-	variant := strings.ToLower(r.URL.Query().Get("variant"))
-	if variant == "" {
-		writeJSONError(w, http.StatusBadRequest, "variant query parameter is required")
+	variant, err := getVariantParam(r)
+	if err != nil {
+		writeJSONError(w, http.StatusBadRequest, err.Error())
 		return
 	}
 
 	switch variant {
-	case variantClassic:
+	case classic.ClassicRulesVariant:
 		game := classic.NewClassicChessGame("White", "Black").ToProto()
 		payload, err := protojson.MarshalOptions{UseProtoNames: true}.Marshal(game)
 		if err != nil {
