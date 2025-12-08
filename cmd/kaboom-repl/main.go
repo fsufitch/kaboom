@@ -96,8 +96,8 @@ func main() {
 }
 
 func printHelp() {
-	fmt.Println("Enter moves like `P M D2 D3` or `P C D3 E4` (piece action from to).")
-	fmt.Println("Pieces: P (pawn), B (bishop). Actions: M=move, C=capture.")
+	fmt.Println("Enter moves like `P M D2 D3`, `P M D2 D4` (double move), or `P C D3 E4` (piece action from to).")
+	fmt.Println("Pieces: P (pawn), B (bishop). Actions: M=move, C=capture. Pawns detect single vs. double based on the destination square.")
 	fmt.Println("Type 'board' to show the current board, 'help' for this message, and 'exit' or 'quit' to stop.")
 }
 

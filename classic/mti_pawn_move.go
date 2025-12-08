@@ -28,6 +28,10 @@ func convertPawnMove(game kaboomstate.Game, move kaboomstate.Move) (*kaboomstate
 		return nil, fmt.Errorf("%w: invalid pawn move trajectory: %v", kaboom.ErrInvalidMove, err)
 	}
 
+	if movement.Vector.DCol() != 0 || absInt32(movement.Vector.DRow()) != 1 {
+		return nil, nil
+	}
+
 	ctx, err := newPawnContext(game, movement.From)
 	if err != nil {
 		return nil, err
