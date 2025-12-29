@@ -17,5 +17,13 @@ type ErrPieceNotFound struct {
 }
 
 func (e ErrPieceNotFound) Error() string {
-	return fmt.Sprintf("piece not found at board=%s row=%d col=%d", e.BoardUUID, e.Position.Row(), e.Position.Col())
+	return fmt.Sprintf("piece not found (board=%s row=%d col=%d)", e.BoardUUID, e.Position.Row(), e.Position.Col())
+}
+
+func AsErrPieceNotFound(err error) (*ErrPieceNotFound) {
+	var e *ErrPieceNotFound
+	if errors.As(err, &e) {
+		return e
+	}
+	return nil
 }

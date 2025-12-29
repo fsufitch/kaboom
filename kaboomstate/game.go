@@ -135,8 +135,11 @@ func (g Game) GetPiece(uuid string) (ChessPiece, bool) {
 }
 
 func (g Game) GetPieceAt(boardUUID string, position Position) (ChessPiece, error) {
-	var foundPiece ChessPiece
-	found := false
+	var foundPiece *ChessPiece
+
+	if _, ok := g.GetBoard(boardUUID); !ok {
+		return ChessPiece{}, fmt.Errorf("board not found (board=%s)", boardUUID)
+	}
 
 	for _, piece := range g.Pieces() {
 		if boardUUID != "" && piece.BoardUUID() != boardUUID {
@@ -148,20 +151,18 @@ func (g Game) GetPieceAt(boardUUID string, position Position) (ChessPiece, error
 		}
 
 		if piece.Position().Equals(position) {
-			if found {
-				return ChessPiece{}, fmt.Errorf("multiple pieces found at row=%d col=%d", position.Row(), position.Col())
+			if foundPiece != nil {
+				return ChessPiece{}, fmt.Errorf("multiple pieces found (board=%s row=%d col=%d)", boardUUID, position.Row(), position.Col())
 			}
-
-			foundPiece = piece
-			found = true
+			foundPiece = &piece
 		}
 	}
 
-	if !found {
+	if foundPiece == nil {
 		return ChessPiece{}, ErrPieceNotFound{BoardUUID: boardUUID, Position: position}
 	}
 
-	return foundPiece, nil
+	return *foundPiece, nil
 }
 
 type Turn struct {
