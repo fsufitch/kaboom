@@ -12,7 +12,7 @@ func convertKnightAction(game kaboomstate.Game, move kaboomstate.Move, movement 
 	from := movement.From
 	to := movement.To
 
-	knightPiece, err := findUniqueBoardPieceAtPosition(game, "", from)
+	knightPiece, err := game.GetPieceAt("", from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -21,7 +21,7 @@ func convertKnightAction(game kaboomstate.Game, move kaboomstate.Move, movement 
 		return nil, fmt.Errorf("%w: no knight at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	board, ok := game.FindBoard(knightPiece.BoardUUID())
+	board, ok := game.GetBoard(knightPiece.BoardUUID())
 	if !ok {
 		return nil, fmt.Errorf("%w: knight references missing board %q", kaboom.ErrInvalidMove, knightPiece.BoardUUID())
 	}
@@ -30,7 +30,11 @@ func convertKnightAction(game kaboomstate.Game, move kaboomstate.Move, movement 
 		return nil, err
 	}
 
-	targetPiece, occupied := pieceAtBoardPosition(game, board.UUID(), to)
+	targetPiece, occupied, err := getPieceAt(game, board.UUID(), to)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	}
+
 	if requireCapture {
 		if !occupied {
 			return nil, fmt.Errorf("%w: capture square %s is empty", kaboom.ErrInvalidMove, describePosition(to))

@@ -46,7 +46,7 @@ func convertPawnCaptureIntentInternal(game kaboomstate.Game, intent kaboomstate.
 		return nil, fmt.Errorf("%w: invalid pawn movement: %v", kaboom.ErrInvalidMove, err)
 	}
 
-	board, ok := game.FindBoard(pmProto.GetBoardUuid())
+	board, ok := game.GetBoard(pmProto.GetBoardUuid())
 	if !ok {
 		return nil, fmt.Errorf("%w: board %s not found for pawn capture intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
@@ -54,7 +54,7 @@ func convertPawnCaptureIntentInternal(game kaboomstate.Game, intent kaboomstate.
 	from := movement.From
 	to := movement.To
 
-	pawn, err := findUniqueBoardPieceAtPosition(game, board.UUID(), from)
+	pawn, err := game.GetPieceAt(board.UUID(), from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -70,7 +70,9 @@ func convertPawnCaptureIntentInternal(game kaboomstate.Game, intent kaboomstate.
 
 	var capturedPiece kaboomstate.ChessPiece
 	if expectEnPassant {
-		if _, occupied := pieceAtBoardPosition(game, board.UUID(), to); occupied {
+		if _, occupied, err := getPieceAt(game, board.UUID(), to); err != nil {
+			return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+		} else if occupied {
 			return nil, nil
 		}
 		dir, err := pawnForwardDirection(pawn.Color())
@@ -83,7 +85,11 @@ func convertPawnCaptureIntentInternal(game kaboomstate.Game, intent kaboomstate.
 			return nil, err
 		}
 	} else {
-		target, occupied := pieceAtBoardPosition(game, board.UUID(), to)
+		target, occupied, err := getPieceAt(game, board.UUID(), to)
+		if err != nil {
+			return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+		}
+
 		if !occupied {
 			return nil, nil
 		}

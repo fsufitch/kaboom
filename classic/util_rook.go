@@ -12,7 +12,7 @@ func convertRookAction(game kaboomstate.Game, move kaboomstate.Move, movement ka
 	from := movement.From
 	to := movement.To
 
-	rookPiece, err := findUniqueBoardPieceAtPosition(game, "", from)
+	rookPiece, err := game.GetPieceAt("", from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -21,7 +21,7 @@ func convertRookAction(game kaboomstate.Game, move kaboomstate.Move, movement ka
 		return nil, fmt.Errorf("%w: no rook at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	board, ok := game.FindBoard(rookPiece.BoardUUID())
+	board, ok := game.GetBoard(rookPiece.BoardUUID())
 	if !ok {
 		return nil, fmt.Errorf("%w: rook references missing board %q", kaboom.ErrInvalidMove, rookPiece.BoardUUID())
 	}
@@ -30,7 +30,11 @@ func convertRookAction(game kaboomstate.Game, move kaboomstate.Move, movement ka
 		return nil, err
 	}
 
-	targetPiece, occupied := pieceAtBoardPosition(game, board.UUID(), to)
+	targetPiece, occupied, err := getPieceAt(game, board.UUID(), to)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	}
+
 	if requireCapture {
 		if !occupied {
 			return nil, fmt.Errorf("%w: capture square %s is empty", kaboom.ErrInvalidMove, describePosition(to))
@@ -76,7 +80,9 @@ func ensureRookMoveIsClear(game kaboomstate.Game, boardUUID string, from, to kab
 	step := kaboomstate.NewVector(signInt32(dRow), signInt32(dCol))
 
 	for current := from.AddVector(step); !current.Equals(to); current = current.AddVector(step) {
-		if _, blocked := pieceAtBoardPosition(game, boardUUID, current); blocked {
+		if _, blocked, err := getPieceAt(game, boardUUID, current); err != nil {
+			return fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+		} else if blocked {
 			return fmt.Errorf("%w: rook path blocked at %s", kaboom.ErrInvalidMove, describePosition(current))
 		}
 	}

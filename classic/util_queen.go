@@ -12,7 +12,7 @@ func convertQueenAction(game kaboomstate.Game, move kaboomstate.Move, movement k
 	from := movement.From
 	to := movement.To
 
-	queenPiece, err := findUniqueBoardPieceAtPosition(game, "", from)
+	queenPiece, err := game.GetPieceAt("", from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -21,7 +21,7 @@ func convertQueenAction(game kaboomstate.Game, move kaboomstate.Move, movement k
 		return nil, fmt.Errorf("%w: no queen at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	board, ok := game.FindBoard(queenPiece.BoardUUID())
+	board, ok := game.GetBoard(queenPiece.BoardUUID())
 	if !ok {
 		return nil, fmt.Errorf("%w: queen references missing board %q", kaboom.ErrInvalidMove, queenPiece.BoardUUID())
 	}
@@ -30,7 +30,11 @@ func convertQueenAction(game kaboomstate.Game, move kaboomstate.Move, movement k
 		return nil, err
 	}
 
-	targetPiece, occupied := pieceAtBoardPosition(game, board.UUID(), to)
+	targetPiece, occupied, err := getPieceAt(game, board.UUID(), to)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	}
+
 	if requireCapture {
 		if !occupied {
 			return nil, fmt.Errorf("%w: capture square %s is empty", kaboom.ErrInvalidMove, describePosition(to))

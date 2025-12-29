@@ -40,7 +40,7 @@ func analyzeKingCastle(game kaboomstate.Game, move kaboomstate.Move) (kingCastle
 		return kingCastlePlan{}, fmt.Errorf("%w: unknown castle side", kaboom.ErrInvalidMove)
 	}
 
-	kingPiece, err := findUniqueBoardPieceAtPosition(game, "", kingFrom)
+	kingPiece, err := game.GetPieceAt("", kingFrom)
 	if err != nil {
 		return kingCastlePlan{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -48,7 +48,7 @@ func analyzeKingCastle(game kaboomstate.Game, move kaboomstate.Move) (kingCastle
 		return kingCastlePlan{}, fmt.Errorf("%w: no king at %s", kaboom.ErrInvalidMove, describePosition(kingFrom))
 	}
 
-	board, ok := game.FindBoard(kingPiece.BoardUUID())
+	board, ok := game.GetBoard(kingPiece.BoardUUID())
 	if !ok {
 		return kingCastlePlan{}, fmt.Errorf("%w: king references missing board %q", kaboom.ErrInvalidMove, kingPiece.BoardUUID())
 	}
@@ -58,7 +58,11 @@ func analyzeKingCastle(game kaboomstate.Game, move kaboomstate.Move) (kingCastle
 		expectedRookCol = int32(kaboomstate.MIN_COL)
 	}
 	rookFrom := kaboomstate.NewPosition(kingFrom.Row(), expectedRookCol)
-	rookPiece, occupied := pieceAtBoardPosition(game, board.UUID(), rookFrom)
+	rookPiece, occupied, err := getPieceAt(game, board.UUID(), rookFrom)
+	if err != nil {
+		return kingCastlePlan{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	}
+
 	if !occupied {
 		return kingCastlePlan{}, fmt.Errorf("%w: no rook available at %s for castling", kaboom.ErrInvalidMove, describePosition(rookFrom))
 	}
@@ -79,7 +83,9 @@ func analyzeKingCastle(game kaboomstate.Game, move kaboomstate.Move) (kingCastle
 	}
 
 	for current := kingFrom.AddVector(kaboomstate.NewVector(0, step)); !current.Equals(rookFrom); current = current.AddVector(kaboomstate.NewVector(0, step)) {
-		if _, blocked := pieceAtBoardPosition(game, board.UUID(), current); blocked {
+		if _, blocked, err := getPieceAt(game, board.UUID(), current); err != nil {
+			return kingCastlePlan{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+		} else if blocked {
 			return kingCastlePlan{}, fmt.Errorf("%w: castle path blocked at %s", kaboom.ErrInvalidMove, describePosition(current))
 		}
 	}
@@ -89,10 +95,14 @@ func analyzeKingCastle(game kaboomstate.Game, move kaboomstate.Move) (kingCastle
 		return kingCastlePlan{}, err
 	}
 
-	if _, occupied := pieceAtBoardPosition(game, board.UUID(), kingTo); occupied {
+	if _, occupied, err := getPieceAt(game, board.UUID(), kingTo); err != nil {
+		return kingCastlePlan{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	} else if occupied {
 		return kingCastlePlan{}, fmt.Errorf("%w: king destination %s is occupied", kaboom.ErrInvalidMove, describePosition(kingTo))
 	}
-	if _, occupied := pieceAtBoardPosition(game, board.UUID(), rookTo); occupied {
+	if _, occupied, err := getPieceAt(game, board.UUID(), rookTo); err != nil {
+		return kingCastlePlan{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	} else if occupied {
 		return kingCastlePlan{}, fmt.Errorf("%w: rook destination %s is occupied", kaboom.ErrInvalidMove, describePosition(rookTo))
 	}
 

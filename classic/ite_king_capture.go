@@ -36,7 +36,7 @@ func convertKingCaptureIntent(game kaboomstate.Game, intent kaboomstate.Intent) 
 		return nil, err
 	}
 
-	board, ok := game.FindBoard(pmProto.GetBoardUuid())
+	board, ok := game.GetBoard(pmProto.GetBoardUuid())
 	if !ok {
 		return nil, fmt.Errorf("%w: board %s not found for king capture intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
@@ -44,7 +44,7 @@ func convertKingCaptureIntent(game kaboomstate.Game, intent kaboomstate.Intent) 
 	from := movement.From
 	to := movement.To
 
-	kingPiece, err := findUniqueBoardPieceAtPosition(game, board.UUID(), from)
+	kingPiece, err := game.GetPieceAt(board.UUID(), from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -53,7 +53,11 @@ func convertKingCaptureIntent(game kaboomstate.Game, intent kaboomstate.Intent) 
 		return nil, fmt.Errorf("%w: intent references non-king piece at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	targetPiece, occupied := pieceAtBoardPosition(game, board.UUID(), to)
+	targetPiece, occupied, err := getPieceAt(game, board.UUID(), to)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	}
+
 	if !occupied {
 		return nil, fmt.Errorf("%w: capture square %s is empty", kaboom.ErrInvalidMove, describePosition(to))
 	}

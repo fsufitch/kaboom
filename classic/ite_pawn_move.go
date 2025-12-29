@@ -46,7 +46,7 @@ func convertPawnMoveIntentWithDelta(game kaboomstate.Game, intent kaboomstate.In
 		return nil, fmt.Errorf("%w: invalid pawn movement: %v", kaboom.ErrInvalidMove, err)
 	}
 
-	board, ok := game.FindBoard(pmProto.GetBoardUuid())
+	board, ok := game.GetBoard(pmProto.GetBoardUuid())
 	if !ok {
 		return nil, fmt.Errorf("%w: board %s not found for pawn move intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
@@ -58,7 +58,7 @@ func convertPawnMoveIntentWithDelta(game kaboomstate.Game, intent kaboomstate.In
 		return nil, nil
 	}
 
-	pawn, err := findUniqueBoardPieceAtPosition(game, board.UUID(), from)
+	pawn, err := game.GetPieceAt(board.UUID(), from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -67,7 +67,9 @@ func convertPawnMoveIntentWithDelta(game kaboomstate.Game, intent kaboomstate.In
 		return nil, fmt.Errorf("%w: intent references non-pawn piece at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	if _, occupied := pieceAtBoardPosition(game, board.UUID(), to); occupied {
+	if _, occupied, err := getPieceAt(game, board.UUID(), to); err != nil {
+		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	} else if occupied {
 		return nil, fmt.Errorf("%w: pawn destination %s is occupied", kaboom.ErrInvalidMove, describePosition(to))
 	}
 
