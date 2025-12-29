@@ -32,7 +32,7 @@ func convertRookMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) ([]
 		return nil, fmt.Errorf("%w: invalid rook movement: %v", kaboom.ErrInvalidMove, err)
 	}
 
-	board, ok := game.FindBoard(pmProto.GetBoardUuid())
+	board, ok := game.GetBoard(pmProto.GetBoardUuid())
 	if !ok {
 		return nil, fmt.Errorf("%w: board %s not found for rook move intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
@@ -44,7 +44,7 @@ func convertRookMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) ([]
 		return nil, err
 	}
 
-	rookPiece, err := findUniqueBoardPieceAtPosition(game, board.UUID(), from)
+	rookPiece, err := game.GetPieceAt(board.UUID(), from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}

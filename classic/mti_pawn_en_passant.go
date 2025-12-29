@@ -33,7 +33,9 @@ func convertPawnEnPassant(game kaboomstate.Game, move kaboomstate.Move) (*kaboom
 		return nil, err
 	}
 
-	if _, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), movement.To); occupied {
+	if _, occupied, err := getPieceAt(game, ctx.board.UUID(), movement.To); err != nil {
+		return nil, err
+	} else if occupied {
 		// This is a normal capture, not en passant; let other rules handle it.
 		return nil, nil
 	}

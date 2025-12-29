@@ -12,7 +12,7 @@ func convertBishopAction(game kaboomstate.Game, move kaboomstate.Move, movement 
 	from := movement.From
 	to := movement.To
 
-	bishopPiece, err := findUniqueBoardPieceAtPosition(game, "", from)
+	bishopPiece, err := game.GetPieceAt("", from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -21,7 +21,7 @@ func convertBishopAction(game kaboomstate.Game, move kaboomstate.Move, movement 
 		return nil, fmt.Errorf("%w: no bishop at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	board, ok := game.FindBoard(bishopPiece.BoardUUID())
+	board, ok := game.GetBoard(bishopPiece.BoardUUID())
 	if !ok {
 		return nil, fmt.Errorf("%w: bishop references missing board %q", kaboom.ErrInvalidMove, bishopPiece.BoardUUID())
 	}
@@ -30,7 +30,11 @@ func convertBishopAction(game kaboomstate.Game, move kaboomstate.Move, movement 
 		return nil, err
 	}
 
-	targetPiece, occupied := pieceAtBoardPosition(game, board.UUID(), to)
+	targetPiece, occupied, err := getPieceAt(game, board.UUID(), to)
+	if err != nil {
+		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	}
+
 	if requireCapture {
 		if !occupied {
 			return nil, fmt.Errorf("%w: capture square %s is empty", kaboom.ErrInvalidMove, describePosition(to))
@@ -76,60 +80,14 @@ func ensureBishopMoveIsClear(game kaboomstate.Game, boardUUID string, from, to k
 	step := kaboomstate.NewVector(signInt32(dRow), signInt32(dCol))
 
 	for current := from.AddVector(step); !current.Equals(to); current = current.AddVector(step) {
-		if _, blocked := pieceAtBoardPosition(game, boardUUID, current); blocked {
+		if _, blocked, err := getPieceAt(game, boardUUID, current); err != nil {
+			return fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+		} else if blocked {
 			return fmt.Errorf("%w: bishop path blocked at %s", kaboom.ErrInvalidMove, describePosition(current))
 		}
 	}
 
 	return nil
-}
-
-func findUniqueBoardPieceAtPosition(game kaboomstate.Game, boardUUID string, position kaboomstate.Position) (kaboomstate.ChessPiece, error) {
-	var foundPiece kaboomstate.ChessPiece
-	found := false
-
-	for _, piece := range game.Pieces() {
-		if boardUUID != "" && piece.BoardUUID() != boardUUID {
-			continue
-		}
-
-		if piece.Zone().Value() != kaboomproto.ZoneKind_ZONE_BOARD {
-			continue
-		}
-
-		if piece.Position().Equals(position) {
-			if found {
-				return kaboomstate.ChessPiece{}, fmt.Errorf("multiple pieces found at %s", describePosition(position))
-			}
-
-			foundPiece = piece
-			found = true
-		}
-	}
-
-	if !found {
-		return kaboomstate.ChessPiece{}, fmt.Errorf("no piece at %s", describePosition(position))
-	}
-
-	return foundPiece, nil
-}
-
-func pieceAtBoardPosition(game kaboomstate.Game, boardUUID string, position kaboomstate.Position) (kaboomstate.ChessPiece, bool) {
-	for _, piece := range game.Pieces() {
-		if piece.BoardUUID() != boardUUID {
-			continue
-		}
-
-		if piece.Zone().Value() != kaboomproto.ZoneKind_ZONE_BOARD {
-			continue
-		}
-
-		if piece.Position().Equals(position) {
-			return piece, true
-		}
-	}
-
-	return kaboomstate.ChessPiece{}, false
 }
 
 func describePosition(pos kaboomstate.Position) string {

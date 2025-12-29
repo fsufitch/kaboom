@@ -16,7 +16,7 @@ type pawnContext struct {
 }
 
 func newPawnContext(game kaboomstate.Game, from kaboomstate.Position) (pawnContext, error) {
-	pawn, err := findUniqueBoardPieceAtPosition(game, "", from)
+	pawn, err := game.GetPieceAt("", from)
 	if err != nil {
 		return pawnContext{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -25,7 +25,7 @@ func newPawnContext(game kaboomstate.Game, from kaboomstate.Position) (pawnConte
 		return pawnContext{}, fmt.Errorf("%w: no pawn at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	board, ok := game.FindBoard(pawn.BoardUUID())
+	board, ok := game.GetBoard(pawn.BoardUUID())
 	if !ok {
 		return pawnContext{}, fmt.Errorf("%w: pawn references missing board %q", kaboom.ErrInvalidMove, pawn.BoardUUID())
 	}
@@ -81,7 +81,9 @@ func ensurePawnSingleAdvance(game kaboomstate.Game, ctx pawnContext, from, to ka
 	if to.Row()-from.Row() != ctx.direction {
 		return fmt.Errorf("%w: pawn moves one square forward", kaboom.ErrInvalidMove)
 	}
-	if _, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), to); occupied {
+	if _, occupied, err := getPieceAt(game, ctx.board.UUID(), to); err != nil {
+		return fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	} else if occupied {
 		return fmt.Errorf("%w: destination %s is occupied", kaboom.ErrInvalidMove, describePosition(to))
 	}
 	return nil
@@ -105,11 +107,15 @@ func ensurePawnDoubleAdvance(game kaboomstate.Game, ctx pawnContext, from, to ka
 	}
 
 	intermediate := kaboomstate.NewPosition(from.Row()+ctx.direction, from.Col())
-	if _, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), intermediate); occupied {
+	if _, occupied, err := getPieceAt(game, ctx.board.UUID(), intermediate); err != nil {
+		return fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	} else if occupied {
 		return fmt.Errorf("%w: pawn double move blocked at %s", kaboom.ErrInvalidMove, describePosition(intermediate))
 	}
 
-	if _, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), to); occupied {
+	if _, occupied, err := getPieceAt(game, ctx.board.UUID(), to); err != nil {
+		return fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	} else if occupied {
 		return fmt.Errorf("%w: destination %s is occupied", kaboom.ErrInvalidMove, describePosition(to))
 	}
 
@@ -121,7 +127,11 @@ func ensurePawnStandardCapture(game kaboomstate.Game, ctx pawnContext, from, to 
 		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: pawn capture must move diagonally forward", kaboom.ErrInvalidMove)
 	}
 
-	targetPiece, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), to)
+	targetPiece, occupied, err := getPieceAt(game, ctx.board.UUID(), to)
+	if err != nil {
+		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	}
+
 	if !occupied {
 		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: capture square %s is empty", kaboom.ErrInvalidMove, describePosition(to))
 	}
@@ -138,7 +148,9 @@ func ensurePawnEnPassantCapture(game kaboomstate.Game, ctx pawnContext, from, to
 		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: en passant capture must move diagonally forward", kaboom.ErrInvalidMove)
 	}
 
-	if _, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), to); occupied {
+	if _, occupied, err := getPieceAt(game, ctx.board.UUID(), to); err != nil {
+		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	} else if occupied {
 		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: en passant destination %s must be empty", kaboom.ErrInvalidMove, describePosition(to))
 	}
 
@@ -147,7 +159,11 @@ func ensurePawnEnPassantCapture(game kaboomstate.Game, ctx pawnContext, from, to
 		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: en passant capture out of bounds", kaboom.ErrInvalidMove)
 	}
 
-	targetPiece, occupied := pieceAtBoardPosition(game, ctx.board.UUID(), capturePos)
+	targetPiece, occupied, err := getPieceAt(game, ctx.board.UUID(), capturePos)
+	if err != nil {
+		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	}
+
 	if !occupied {
 		return kaboomstate.ChessPiece{}, fmt.Errorf("%w: no pawn to capture en passant at %s", kaboom.ErrInvalidMove, describePosition(capturePos))
 	}

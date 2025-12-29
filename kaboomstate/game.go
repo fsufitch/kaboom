@@ -107,7 +107,7 @@ func (g Game) Turns() []Turn {
 	return result
 }
 
-func (g Game) FindBoard(uuid string) (Board, bool) {
+func (g Game) GetBoard(uuid string) (Board, bool) {
 	for _, board := range g.Boards() {
 		if board.UUID() == uuid {
 			return board, true
@@ -123,6 +123,46 @@ func (g Game) FindPlayer(uuid string) (Player, bool) {
 		}
 	}
 	return Player{}, false
+}
+
+func (g Game) GetPiece(uuid string) (ChessPiece, bool) {
+	for _, piece := range g.Pieces() {
+		if piece.UUID() == uuid {
+			return piece, true
+		}
+	}
+	return ChessPiece{}, false
+}
+
+func (g Game) GetPieceAt(boardUUID string, position Position) (ChessPiece, error) {
+	var foundPiece *ChessPiece
+
+	if _, ok := g.GetBoard(boardUUID); !ok {
+		return ChessPiece{}, fmt.Errorf("board not found (board=%s)", boardUUID)
+	}
+
+	for _, piece := range g.Pieces() {
+		if boardUUID != "" && piece.BoardUUID() != boardUUID {
+			continue
+		}
+
+		if piece.Zone().Value() != kaboomproto.ZoneKind_ZONE_BOARD {
+			continue
+		}
+
+		if piece.Position().Equals(position) {
+			if foundPiece != nil {
+				return ChessPiece{}, fmt.Errorf("multiple pieces found (board=%s row=%d col=%d)", boardUUID, position.Row(), position.Col())
+			}
+			foundPiece = &piece
+		}
+	}
+
+	if foundPiece == nil {
+		return ChessPiece{}, ErrPieceNotFound{BoardUUID: boardUUID, Position: position}
+	}
+
+	return *foundPiece, nil
 }
 
 type Turn struct {

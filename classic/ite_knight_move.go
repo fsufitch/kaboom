@@ -36,7 +36,7 @@ func convertKnightMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) (
 		return nil, err
 	}
 
-	board, ok := game.FindBoard(pmProto.GetBoardUuid())
+	board, ok := game.GetBoard(pmProto.GetBoardUuid())
 	if !ok {
 		return nil, fmt.Errorf("%w: board %s not found for knight move intent", kaboom.ErrInvalidMove, pmProto.GetBoardUuid())
 	}
@@ -44,7 +44,7 @@ func convertKnightMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) (
 	from := movement.From
 	to := movement.To
 
-	knightPiece, err := findUniqueBoardPieceAtPosition(game, board.UUID(), from)
+	knightPiece, err := game.GetPieceAt(board.UUID(), from)
 	if err != nil {
 		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
 	}
@@ -53,7 +53,9 @@ func convertKnightMoveIntent(game kaboomstate.Game, intent kaboomstate.Intent) (
 		return nil, fmt.Errorf("%w: intent references non-knight piece at %s", kaboom.ErrInvalidMove, describePosition(from))
 	}
 
-	if _, occupied := pieceAtBoardPosition(game, board.UUID(), to); occupied {
+	if _, occupied, err := getPieceAt(game, board.UUID(), to); err != nil {
+		return nil, fmt.Errorf("%w: %v", kaboom.ErrInvalidMove, err)
+	} else if occupied {
 		return nil, fmt.Errorf("%w: destination %s is occupied", kaboom.ErrInvalidMove, describePosition(to))
 	}
 
