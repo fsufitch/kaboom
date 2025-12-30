@@ -3,7 +3,7 @@ syntax = "proto3";
 package kaboomproto;
 option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
-import "position.proto";
+import "location.proto";
 
 // VisualHint provides information for the frontend to create visual effects corresponding to game events.
 message VisualHint {
@@ -33,23 +33,22 @@ message VisualHint__Collision {
 
 // VisualHint__Explosion indicates a visual effect for an explosion at a specific position (e.g. a pawn exploding).
 message VisualHint__Explosion {
-    Position position = 2;
+    Location location = 2;
 }
 
 // VisualHint__Stomp indicates a visual effect for a piece stomping on a position (e.g. knight stomp)
 message VisualHint__Stomp {
-    Position position = 1;
+    Location location = 1;
 }
 
 // VisualHint__Snipe indicates a visual effect for a piece sniping another piece from a distance (e.g. bishop snipe).
 message VisualHint__Snipe {
-    Position from = 2;
-    Position to = 3;
+    LocationVector vector = 1;
 }
 
 // VisualHint__Nova indicates a visual effect for a nova explosion at a specific position (e.g. queen nova).
 message VisualHint__Nova {
-    Position position = 2;
+    Location location = 1;
 }
 
 // VisualHint__MindControl indicates a visual effect for mind control between two pieces (e.g. king control).
@@ -67,5 +66,5 @@ message VisualHint__Disintegration {
 message VisualHint__Yeet {
     string piece_uuid = 2;
 
-    Vector yeet_vector = 3;
+    LocationVector vector = 3;
 }

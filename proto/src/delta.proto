@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package kaboomproto;
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+import "piece.proto";
+import "visual_hint.proto";
+
+message Delta {
+    oneof delta {
+        Delta_NoOp no_op = 1;
+        Delta_PieceUpdate piece_update = 10;
+        Delta_PieceCreate piece_create = 11;
+        Delta_PieceDelete piece_delete = 12;
+    }
+
+    repeated VisualHint visual_hints = 100;
+
+}
+
+message Delta_NoOp {}
+
+message Delta_PieceUpdate {
+    ChessPiece piece = 1;
+}
+
+message Delta_PieceCreate {
+    ChessPiece piece = 1;
+}
+
+message Delta_PieceDelete {
+    string piece_uuid = 1;
+}

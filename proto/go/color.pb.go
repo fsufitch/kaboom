@@ -71,11 +71,67 @@ func (Color) EnumDescriptor() ([]byte, []int) {
 	return file_color_proto_rawDescGZIP(), []int{0}
 }
 
+type PlayerColor struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	PlayerUuid    string                 `protobuf:"bytes,1,opt,name=player_uuid,json=playerUuid,proto3" json:"player_uuid,omitempty"`
+	Color         Color                  `protobuf:"varint,2,opt,name=color,proto3,enum=kaboomproto.Color" json:"color,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PlayerColor) Reset() {
+	*x = PlayerColor{}
+	mi := &file_color_proto_msgTypes[0]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PlayerColor) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PlayerColor) ProtoMessage() {}
+
+func (x *PlayerColor) ProtoReflect() protoreflect.Message {
+	mi := &file_color_proto_msgTypes[0]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PlayerColor.ProtoReflect.Descriptor instead.
+func (*PlayerColor) Descriptor() ([]byte, []int) {
+	return file_color_proto_rawDescGZIP(), []int{0}
+}
+
+func (x *PlayerColor) GetPlayerUuid() string {
+	if x != nil {
+		return x.PlayerUuid
+	}
+	return ""
+}
+
+func (x *PlayerColor) GetColor() Color {
+	if x != nil {
+		return x.Color
+	}
+	return Color_COLOR_INVALID
+}
+
 var File_color_proto protoreflect.FileDescriptor
 
 const file_color_proto_rawDesc = "" +
 	"\n" +
-	"\vcolor.proto\x12\vkaboomproto*<\n" +
+	"\vcolor.proto\x12\vkaboomproto\"X\n" +
+	"\vPlayerColor\x12\x1f\n" +
+	"\vplayer_uuid\x18\x01 \x01(\tR\n" +
+	"playerUuid\x12(\n" +
+	"\x05color\x18\x02 \x01(\x0e2\x12.kaboomproto.ColorR\x05color*<\n" +
 	"\x05Color\x12\x11\n" +
 	"\rCOLOR_INVALID\x10\x00\x12\x0f\n" +
 	"\vCOLOR_WHITE\x10\x01\x12\x0f\n" +
@@ -94,15 +150,18 @@ func file_color_proto_rawDescGZIP() []byte {
 }
 
 var file_color_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_color_proto_msgTypes = make([]protoimpl.MessageInfo, 1)
 var file_color_proto_goTypes = []any{
-	(Color)(0), // 0: kaboomproto.Color
+	(Color)(0),          // 0: kaboomproto.Color
+	(*PlayerColor)(nil), // 1: kaboomproto.PlayerColor
 }
 var file_color_proto_depIdxs = []int32{
-	0, // [0:0] is the sub-list for method output_type
-	0, // [0:0] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	0, // 0: kaboomproto.PlayerColor.color:type_name -> kaboomproto.Color
+	1, // [1:1] is the sub-list for method output_type
+	1, // [1:1] is the sub-list for method input_type
+	1, // [1:1] is the sub-list for extension type_name
+	1, // [1:1] is the sub-list for extension extendee
+	0, // [0:1] is the sub-list for field type_name
 }
 
 func init() { file_color_proto_init() }
@@ -116,13 +175,14 @@ func file_color_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_color_proto_rawDesc), len(file_color_proto_rawDesc)),
 			NumEnums:      1,
-			NumMessages:   0,
+			NumMessages:   1,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_color_proto_goTypes,
 		DependencyIndexes: file_color_proto_depIdxs,
 		EnumInfos:         file_color_proto_enumTypes,
+		MessageInfos:      file_color_proto_msgTypes,
 	}.Build()
 	File_color_proto = out.File
 	file_color_proto_goTypes = nil

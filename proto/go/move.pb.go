@@ -21,133 +21,37 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type K_KnightBump_BumpDirection int32
-
-const (
-	K_KnightBump_BUMP_DIRECTION_UNKNOWN    K_KnightBump_BumpDirection = 0
-	K_KnightBump_BUMP_DIRECTION_HORIZONTAL K_KnightBump_BumpDirection = 1 // bump horizontally
-	K_KnightBump_BUMP_DIRECTION_VERTICAL   K_KnightBump_BumpDirection = 2 // bump vertically
-)
-
-// Enum value maps for K_KnightBump_BumpDirection.
-var (
-	K_KnightBump_BumpDirection_name = map[int32]string{
-		0: "BUMP_DIRECTION_UNKNOWN",
-		1: "BUMP_DIRECTION_HORIZONTAL",
-		2: "BUMP_DIRECTION_VERTICAL",
-	}
-	K_KnightBump_BumpDirection_value = map[string]int32{
-		"BUMP_DIRECTION_UNKNOWN":    0,
-		"BUMP_DIRECTION_HORIZONTAL": 1,
-		"BUMP_DIRECTION_VERTICAL":   2,
-	}
-)
-
-func (x K_KnightBump_BumpDirection) Enum() *K_KnightBump_BumpDirection {
-	p := new(K_KnightBump_BumpDirection)
-	*p = x
-	return p
-}
-
-func (x K_KnightBump_BumpDirection) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (K_KnightBump_BumpDirection) Descriptor() protoreflect.EnumDescriptor {
-	return file_move_proto_enumTypes[0].Descriptor()
-}
-
-func (K_KnightBump_BumpDirection) Type() protoreflect.EnumType {
-	return &file_move_proto_enumTypes[0]
-}
-
-func (x K_KnightBump_BumpDirection) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use K_KnightBump_BumpDirection.Descriptor instead.
-func (K_KnightBump_BumpDirection) EnumDescriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{7, 0}
-}
-
-type C_KingCastle_CastleSide int32
-
-const (
-	C_KingCastle_CASTLE_SIDE_UNKNOWN C_KingCastle_CastleSide = 0
-	C_KingCastle_CASTLE_SIDE_SHORT   C_KingCastle_CastleSide = 1 // Castle with the rook on the H-file
-	C_KingCastle_CASTLE_SIDE_LONG    C_KingCastle_CastleSide = 2 // Castle with the rook on the A-file
-)
-
-// Enum value maps for C_KingCastle_CastleSide.
-var (
-	C_KingCastle_CastleSide_name = map[int32]string{
-		0: "CASTLE_SIDE_UNKNOWN",
-		1: "CASTLE_SIDE_SHORT",
-		2: "CASTLE_SIDE_LONG",
-	}
-	C_KingCastle_CastleSide_value = map[string]int32{
-		"CASTLE_SIDE_UNKNOWN": 0,
-		"CASTLE_SIDE_SHORT":   1,
-		"CASTLE_SIDE_LONG":    2,
-	}
-)
-
-func (x C_KingCastle_CastleSide) Enum() *C_KingCastle_CastleSide {
-	p := new(C_KingCastle_CastleSide)
-	*p = x
-	return p
-}
-
-func (x C_KingCastle_CastleSide) String() string {
-	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
-}
-
-func (C_KingCastle_CastleSide) Descriptor() protoreflect.EnumDescriptor {
-	return file_move_proto_enumTypes[1].Descriptor()
-}
-
-func (C_KingCastle_CastleSide) Type() protoreflect.EnumType {
-	return &file_move_proto_enumTypes[1]
-}
-
-func (x C_KingCastle_CastleSide) Number() protoreflect.EnumNumber {
-	return protoreflect.EnumNumber(x)
-}
-
-// Deprecated: Use C_KingCastle_CastleSide.Descriptor instead.
-func (C_KingCastle_CastleSide) EnumDescriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{23, 0}
-}
-
 type KaboomMove struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Move:
 	//
-	//	*KaboomMove_CPawnMove
-	//	*KaboomMove_CPawnCapture
-	//	*KaboomMove_KPawnBump
-	//	*KaboomMove_KPawnExplosion
-	//	*KaboomMove_CKnightMove
-	//	*KaboomMove_CKnightCapture
-	//	*KaboomMove_KKnightBump
-	//	*KaboomMove_KKnightStomp
-	//	*KaboomMove_CBishopMove
-	//	*KaboomMove_CBishopCapture
-	//	*KaboomMove_KBishopBump
-	//	*KaboomMove_KBishopSnipe
-	//	*KaboomMove_CRookMove
-	//	*KaboomMove_CRookCapture
-	//	*KaboomMove_KRookBump
-	//	*KaboomMove_KRookTackle
-	//	*KaboomMove_CQueenMove
-	//	*KaboomMove_CQueenCapture
-	//	*KaboomMove_KQueenBump
-	//	*KaboomMove_KQueenNova
-	//	*KaboomMove_CKingMove
-	//	*KaboomMove_CKingCapture
-	//	*KaboomMove_KKingBump
-	//	*KaboomMove_KKingControl
-	//	*KaboomMove_CKingCastle
+	//	*KaboomMove_PawnMove
+	//	*KaboomMove_PawnCapture
+	//	*KaboomMove_PawnBump
+	//	*KaboomMove_PawnExplosion
+	//	*KaboomMove_KnightMove
+	//	*KaboomMove_KnightCapture
+	//	*KaboomMove_KnightBump
+	//	*KaboomMove_KnightStomp
+	//	*KaboomMove_BishopMove
+	//	*KaboomMove_BishopCapture
+	//	*KaboomMove_BishopBump
+	//	*KaboomMove_BishopSnipe
+	//	*KaboomMove_Roomove
+	//	*KaboomMove_Roocapture
+	//	*KaboomMove_Roobump
+	//	*KaboomMove_Rootackle
+	//	*KaboomMove_QueenMove
+	//	*KaboomMove_QueenCapture
+	//	*KaboomMove_QueenBump
+	//	*KaboomMove_QueenNova
+	//	*KaboomMove_KingMove
+	//	*KaboomMove_KingCapture
+	//	*KaboomMove_KingBump
+	//	*KaboomMove_KingControl
+	//	*KaboomMove_KingCastle
+	//	*KaboomMove_Resign
+	//	*KaboomMove_DeployPiece
 	Move          isKaboomMove_Move `protobuf_oneof:"move"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -190,226 +94,244 @@ func (x *KaboomMove) GetMove() isKaboomMove_Move {
 	return nil
 }
 
-func (x *KaboomMove) GetCPawnMove() *C_PawnMove {
+func (x *KaboomMove) GetPawnMove() *PawnMove {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CPawnMove); ok {
-			return x.CPawnMove
+		if x, ok := x.Move.(*KaboomMove_PawnMove); ok {
+			return x.PawnMove
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCPawnCapture() *C_PawnCapture {
+func (x *KaboomMove) GetPawnCapture() *PawnCapture {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CPawnCapture); ok {
-			return x.CPawnCapture
+		if x, ok := x.Move.(*KaboomMove_PawnCapture); ok {
+			return x.PawnCapture
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKPawnBump() *K_PawnBump {
+func (x *KaboomMove) GetPawnBump() *PawnBump {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KPawnBump); ok {
-			return x.KPawnBump
+		if x, ok := x.Move.(*KaboomMove_PawnBump); ok {
+			return x.PawnBump
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKPawnExplosion() *K_PawnExplosion {
+func (x *KaboomMove) GetPawnExplosion() *PawnExplosion {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KPawnExplosion); ok {
-			return x.KPawnExplosion
+		if x, ok := x.Move.(*KaboomMove_PawnExplosion); ok {
+			return x.PawnExplosion
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCKnightMove() *C_KnightMove {
+func (x *KaboomMove) GetKnightMove() *KnightMove {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CKnightMove); ok {
-			return x.CKnightMove
+		if x, ok := x.Move.(*KaboomMove_KnightMove); ok {
+			return x.KnightMove
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCKnightCapture() *C_KnightCapture {
+func (x *KaboomMove) GetKnightCapture() *KnightCapture {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CKnightCapture); ok {
-			return x.CKnightCapture
+		if x, ok := x.Move.(*KaboomMove_KnightCapture); ok {
+			return x.KnightCapture
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKKnightBump() *K_KnightBump {
+func (x *KaboomMove) GetKnightBump() *KnightBump {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KKnightBump); ok {
-			return x.KKnightBump
+		if x, ok := x.Move.(*KaboomMove_KnightBump); ok {
+			return x.KnightBump
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKKnightStomp() *K_KnightStomp {
+func (x *KaboomMove) GetKnightStomp() *KnightStomp {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KKnightStomp); ok {
-			return x.KKnightStomp
+		if x, ok := x.Move.(*KaboomMove_KnightStomp); ok {
+			return x.KnightStomp
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCBishopMove() *C_BishopMove {
+func (x *KaboomMove) GetBishopMove() *BishopMove {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CBishopMove); ok {
-			return x.CBishopMove
+		if x, ok := x.Move.(*KaboomMove_BishopMove); ok {
+			return x.BishopMove
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCBishopCapture() *C_BishopCapture {
+func (x *KaboomMove) GetBishopCapture() *BishopCapture {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CBishopCapture); ok {
-			return x.CBishopCapture
+		if x, ok := x.Move.(*KaboomMove_BishopCapture); ok {
+			return x.BishopCapture
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKBishopBump() *K_BishopBump {
+func (x *KaboomMove) GetBishopBump() *BishopBump {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KBishopBump); ok {
-			return x.KBishopBump
+		if x, ok := x.Move.(*KaboomMove_BishopBump); ok {
+			return x.BishopBump
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKBishopSnipe() *K_BishopSnipe {
+func (x *KaboomMove) GetBishopSnipe() *BishopSnipe {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KBishopSnipe); ok {
-			return x.KBishopSnipe
+		if x, ok := x.Move.(*KaboomMove_BishopSnipe); ok {
+			return x.BishopSnipe
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCRookMove() *C_RookMove {
+func (x *KaboomMove) GetRoomove() *RookMove {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CRookMove); ok {
-			return x.CRookMove
+		if x, ok := x.Move.(*KaboomMove_Roomove); ok {
+			return x.Roomove
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCRookCapture() *C_RookCapture {
+func (x *KaboomMove) GetRoocapture() *RookCapture {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CRookCapture); ok {
-			return x.CRookCapture
+		if x, ok := x.Move.(*KaboomMove_Roocapture); ok {
+			return x.Roocapture
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKRookBump() *K_RookBump {
+func (x *KaboomMove) GetRoobump() *RookBump {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KRookBump); ok {
-			return x.KRookBump
+		if x, ok := x.Move.(*KaboomMove_Roobump); ok {
+			return x.Roobump
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKRookTackle() *K_RookTackle {
+func (x *KaboomMove) GetRootackle() *RookTackle {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KRookTackle); ok {
-			return x.KRookTackle
+		if x, ok := x.Move.(*KaboomMove_Rootackle); ok {
+			return x.Rootackle
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCQueenMove() *C_QueenMove {
+func (x *KaboomMove) GetQueenMove() *QueenMove {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CQueenMove); ok {
-			return x.CQueenMove
+		if x, ok := x.Move.(*KaboomMove_QueenMove); ok {
+			return x.QueenMove
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCQueenCapture() *C_QueenCapture {
+func (x *KaboomMove) GetQueenCapture() *QueenCapture {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CQueenCapture); ok {
-			return x.CQueenCapture
+		if x, ok := x.Move.(*KaboomMove_QueenCapture); ok {
+			return x.QueenCapture
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKQueenBump() *K_QueenBump {
+func (x *KaboomMove) GetQueenBump() *QueenBump {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KQueenBump); ok {
-			return x.KQueenBump
+		if x, ok := x.Move.(*KaboomMove_QueenBump); ok {
+			return x.QueenBump
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKQueenNova() *K_QueenNova {
+func (x *KaboomMove) GetQueenNova() *QueenNova {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KQueenNova); ok {
-			return x.KQueenNova
+		if x, ok := x.Move.(*KaboomMove_QueenNova); ok {
+			return x.QueenNova
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCKingMove() *C_KingMove {
+func (x *KaboomMove) GetKingMove() *KingMove {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CKingMove); ok {
-			return x.CKingMove
+		if x, ok := x.Move.(*KaboomMove_KingMove); ok {
+			return x.KingMove
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCKingCapture() *C_KingCapture {
+func (x *KaboomMove) GetKingCapture() *KingCapture {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CKingCapture); ok {
-			return x.CKingCapture
+		if x, ok := x.Move.(*KaboomMove_KingCapture); ok {
+			return x.KingCapture
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKKingBump() *K_KingBump {
+func (x *KaboomMove) GetKingBump() *KingBump {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KKingBump); ok {
-			return x.KKingBump
+		if x, ok := x.Move.(*KaboomMove_KingBump); ok {
+			return x.KingBump
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetKKingControl() *K_KingControl {
+func (x *KaboomMove) GetKingControl() *KingControl {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_KKingControl); ok {
-			return x.KKingControl
+		if x, ok := x.Move.(*KaboomMove_KingControl); ok {
+			return x.KingControl
 		}
 	}
 	return nil
 }
 
-func (x *KaboomMove) GetCKingCastle() *C_KingCastle {
+func (x *KaboomMove) GetKingCastle() *KingCastle {
 	if x != nil {
-		if x, ok := x.Move.(*KaboomMove_CKingCastle); ok {
-			return x.CKingCastle
+		if x, ok := x.Move.(*KaboomMove_KingCastle); ok {
+			return x.KingCastle
+		}
+	}
+	return nil
+}
+
+func (x *KaboomMove) GetResign() *Resign {
+	if x != nil {
+		if x, ok := x.Move.(*KaboomMove_Resign); ok {
+			return x.Resign
+		}
+	}
+	return nil
+}
+
+func (x *KaboomMove) GetDeployPiece() *DeployPiece {
+	if x != nil {
+		if x, ok := x.Move.(*KaboomMove_DeployPiece); ok {
+			return x.DeployPiece
 		}
 	}
 	return nil
@@ -419,181 +341,194 @@ type isKaboomMove_Move interface {
 	isKaboomMove_Move()
 }
 
-type KaboomMove_CPawnMove struct {
-	CPawnMove *C_PawnMove `protobuf:"bytes,10,opt,name=c_pawn_move,json=cPawnMove,proto3,oneof"`
+type KaboomMove_PawnMove struct {
+	PawnMove *PawnMove `protobuf:"bytes,10,opt,name=pawn_move,json=pawnMove,proto3,oneof"`
 }
 
-type KaboomMove_CPawnCapture struct {
-	CPawnCapture *C_PawnCapture `protobuf:"bytes,11,opt,name=c_pawn_capture,json=cPawnCapture,proto3,oneof"`
+type KaboomMove_PawnCapture struct {
+	PawnCapture *PawnCapture `protobuf:"bytes,11,opt,name=pawn_capture,json=pawnCapture,proto3,oneof"`
 }
 
-type KaboomMove_KPawnBump struct {
-	KPawnBump *K_PawnBump `protobuf:"bytes,12,opt,name=k_pawn_bump,json=kPawnBump,proto3,oneof"`
+type KaboomMove_PawnBump struct {
+	PawnBump *PawnBump `protobuf:"bytes,12,opt,name=pawn_bump,json=pawnBump,proto3,oneof"`
 }
 
-type KaboomMove_KPawnExplosion struct {
-	KPawnExplosion *K_PawnExplosion `protobuf:"bytes,13,opt,name=k_pawn_explosion,json=kPawnExplosion,proto3,oneof"`
+type KaboomMove_PawnExplosion struct {
+	PawnExplosion *PawnExplosion `protobuf:"bytes,13,opt,name=pawn_explosion,json=pawnExplosion,proto3,oneof"`
 }
 
-type KaboomMove_CKnightMove struct {
-	CKnightMove *C_KnightMove `protobuf:"bytes,20,opt,name=c_knight_move,json=cKnightMove,proto3,oneof"`
+type KaboomMove_KnightMove struct {
+	KnightMove *KnightMove `protobuf:"bytes,20,opt,name=knight_move,json=knightMove,proto3,oneof"`
 }
 
-type KaboomMove_CKnightCapture struct {
-	CKnightCapture *C_KnightCapture `protobuf:"bytes,21,opt,name=c_knight_capture,json=cKnightCapture,proto3,oneof"`
+type KaboomMove_KnightCapture struct {
+	KnightCapture *KnightCapture `protobuf:"bytes,21,opt,name=knight_capture,json=knightCapture,proto3,oneof"`
 }
 
-type KaboomMove_KKnightBump struct {
-	KKnightBump *K_KnightBump `protobuf:"bytes,22,opt,name=k_knight_bump,json=kKnightBump,proto3,oneof"`
+type KaboomMove_KnightBump struct {
+	KnightBump *KnightBump `protobuf:"bytes,22,opt,name=knight_bump,json=knightBump,proto3,oneof"`
 }
 
-type KaboomMove_KKnightStomp struct {
-	KKnightStomp *K_KnightStomp `protobuf:"bytes,23,opt,name=k_knight_stomp,json=kKnightStomp,proto3,oneof"`
+type KaboomMove_KnightStomp struct {
+	KnightStomp *KnightStomp `protobuf:"bytes,23,opt,name=knight_stomp,json=knightStomp,proto3,oneof"`
 }
 
-type KaboomMove_CBishopMove struct {
-	CBishopMove *C_BishopMove `protobuf:"bytes,30,opt,name=c_bishop_move,json=cBishopMove,proto3,oneof"`
+type KaboomMove_BishopMove struct {
+	BishopMove *BishopMove `protobuf:"bytes,30,opt,name=bishop_move,json=bishopMove,proto3,oneof"`
 }
 
-type KaboomMove_CBishopCapture struct {
-	CBishopCapture *C_BishopCapture `protobuf:"bytes,31,opt,name=c_bishop_capture,json=cBishopCapture,proto3,oneof"`
+type KaboomMove_BishopCapture struct {
+	BishopCapture *BishopCapture `protobuf:"bytes,31,opt,name=bishop_capture,json=bishopCapture,proto3,oneof"`
 }
 
-type KaboomMove_KBishopBump struct {
-	KBishopBump *K_BishopBump `protobuf:"bytes,32,opt,name=k_bishop_bump,json=kBishopBump,proto3,oneof"`
+type KaboomMove_BishopBump struct {
+	BishopBump *BishopBump `protobuf:"bytes,32,opt,name=bishop_bump,json=bishopBump,proto3,oneof"`
 }
 
-type KaboomMove_KBishopSnipe struct {
-	KBishopSnipe *K_BishopSnipe `protobuf:"bytes,33,opt,name=k_bishop_snipe,json=kBishopSnipe,proto3,oneof"`
+type KaboomMove_BishopSnipe struct {
+	BishopSnipe *BishopSnipe `protobuf:"bytes,33,opt,name=bishop_snipe,json=bishopSnipe,proto3,oneof"`
 }
 
-type KaboomMove_CRookMove struct {
-	CRookMove *C_RookMove `protobuf:"bytes,40,opt,name=c_rook_move,json=cRookMove,proto3,oneof"`
+type KaboomMove_Roomove struct {
+	Roomove *RookMove `protobuf:"bytes,40,opt,name=roomove,proto3,oneof"`
 }
 
-type KaboomMove_CRookCapture struct {
-	CRookCapture *C_RookCapture `protobuf:"bytes,41,opt,name=c_rook_capture,json=cRookCapture,proto3,oneof"`
+type KaboomMove_Roocapture struct {
+	Roocapture *RookCapture `protobuf:"bytes,41,opt,name=roocapture,proto3,oneof"`
 }
 
-type KaboomMove_KRookBump struct {
-	KRookBump *K_RookBump `protobuf:"bytes,42,opt,name=k_rook_bump,json=kRookBump,proto3,oneof"`
+type KaboomMove_Roobump struct {
+	Roobump *RookBump `protobuf:"bytes,42,opt,name=roobump,proto3,oneof"`
 }
 
-type KaboomMove_KRookTackle struct {
-	KRookTackle *K_RookTackle `protobuf:"bytes,43,opt,name=k_rook_tackle,json=kRookTackle,proto3,oneof"`
+type KaboomMove_Rootackle struct {
+	Rootackle *RookTackle `protobuf:"bytes,43,opt,name=rootackle,proto3,oneof"`
 }
 
-type KaboomMove_CQueenMove struct {
-	CQueenMove *C_QueenMove `protobuf:"bytes,50,opt,name=c_queen_move,json=cQueenMove,proto3,oneof"`
+type KaboomMove_QueenMove struct {
+	QueenMove *QueenMove `protobuf:"bytes,50,opt,name=queen_move,json=queenMove,proto3,oneof"`
 }
 
-type KaboomMove_CQueenCapture struct {
-	CQueenCapture *C_QueenCapture `protobuf:"bytes,51,opt,name=c_queen_capture,json=cQueenCapture,proto3,oneof"`
+type KaboomMove_QueenCapture struct {
+	QueenCapture *QueenCapture `protobuf:"bytes,51,opt,name=queen_capture,json=queenCapture,proto3,oneof"`
 }
 
-type KaboomMove_KQueenBump struct {
-	KQueenBump *K_QueenBump `protobuf:"bytes,52,opt,name=k_queen_bump,json=kQueenBump,proto3,oneof"`
+type KaboomMove_QueenBump struct {
+	QueenBump *QueenBump `protobuf:"bytes,52,opt,name=queen_bump,json=queenBump,proto3,oneof"`
 }
 
-type KaboomMove_KQueenNova struct {
-	KQueenNova *K_QueenNova `protobuf:"bytes,53,opt,name=k_queen_nova,json=kQueenNova,proto3,oneof"`
+type KaboomMove_QueenNova struct {
+	QueenNova *QueenNova `protobuf:"bytes,53,opt,name=queen_nova,json=queenNova,proto3,oneof"`
 }
 
-type KaboomMove_CKingMove struct {
-	CKingMove *C_KingMove `protobuf:"bytes,60,opt,name=c_king_move,json=cKingMove,proto3,oneof"`
+type KaboomMove_KingMove struct {
+	KingMove *KingMove `protobuf:"bytes,60,opt,name=king_move,json=kingMove,proto3,oneof"`
 }
 
-type KaboomMove_CKingCapture struct {
-	CKingCapture *C_KingCapture `protobuf:"bytes,61,opt,name=c_king_capture,json=cKingCapture,proto3,oneof"`
+type KaboomMove_KingCapture struct {
+	KingCapture *KingCapture `protobuf:"bytes,61,opt,name=king_capture,json=kingCapture,proto3,oneof"`
 }
 
-type KaboomMove_KKingBump struct {
-	KKingBump *K_KingBump `protobuf:"bytes,62,opt,name=k_king_bump,json=kKingBump,proto3,oneof"`
+type KaboomMove_KingBump struct {
+	KingBump *KingBump `protobuf:"bytes,62,opt,name=king_bump,json=kingBump,proto3,oneof"`
 }
 
-type KaboomMove_KKingControl struct {
-	KKingControl *K_KingControl `protobuf:"bytes,63,opt,name=k_king_control,json=kKingControl,proto3,oneof"`
+type KaboomMove_KingControl struct {
+	KingControl *KingControl `protobuf:"bytes,63,opt,name=king_control,json=kingControl,proto3,oneof"`
 }
 
-type KaboomMove_CKingCastle struct {
-	CKingCastle *C_KingCastle `protobuf:"bytes,64,opt,name=c_king_castle,json=cKingCastle,proto3,oneof"`
+type KaboomMove_KingCastle struct {
+	KingCastle *KingCastle `protobuf:"bytes,64,opt,name=king_castle,json=kingCastle,proto3,oneof"`
 }
 
-func (*KaboomMove_CPawnMove) isKaboomMove_Move() {}
+type KaboomMove_Resign struct {
+	Resign *Resign `protobuf:"bytes,70,opt,name=resign,proto3,oneof"`
+}
 
-func (*KaboomMove_CPawnCapture) isKaboomMove_Move() {}
+type KaboomMove_DeployPiece struct {
+	DeployPiece *DeployPiece `protobuf:"bytes,80,opt,name=deploy_piece,json=deployPiece,proto3,oneof"`
+}
 
-func (*KaboomMove_KPawnBump) isKaboomMove_Move() {}
+func (*KaboomMove_PawnMove) isKaboomMove_Move() {}
 
-func (*KaboomMove_KPawnExplosion) isKaboomMove_Move() {}
+func (*KaboomMove_PawnCapture) isKaboomMove_Move() {}
 
-func (*KaboomMove_CKnightMove) isKaboomMove_Move() {}
+func (*KaboomMove_PawnBump) isKaboomMove_Move() {}
 
-func (*KaboomMove_CKnightCapture) isKaboomMove_Move() {}
+func (*KaboomMove_PawnExplosion) isKaboomMove_Move() {}
 
-func (*KaboomMove_KKnightBump) isKaboomMove_Move() {}
+func (*KaboomMove_KnightMove) isKaboomMove_Move() {}
 
-func (*KaboomMove_KKnightStomp) isKaboomMove_Move() {}
+func (*KaboomMove_KnightCapture) isKaboomMove_Move() {}
 
-func (*KaboomMove_CBishopMove) isKaboomMove_Move() {}
+func (*KaboomMove_KnightBump) isKaboomMove_Move() {}
 
-func (*KaboomMove_CBishopCapture) isKaboomMove_Move() {}
+func (*KaboomMove_KnightStomp) isKaboomMove_Move() {}
 
-func (*KaboomMove_KBishopBump) isKaboomMove_Move() {}
+func (*KaboomMove_BishopMove) isKaboomMove_Move() {}
 
-func (*KaboomMove_KBishopSnipe) isKaboomMove_Move() {}
+func (*KaboomMove_BishopCapture) isKaboomMove_Move() {}
 
-func (*KaboomMove_CRookMove) isKaboomMove_Move() {}
+func (*KaboomMove_BishopBump) isKaboomMove_Move() {}
 
-func (*KaboomMove_CRookCapture) isKaboomMove_Move() {}
+func (*KaboomMove_BishopSnipe) isKaboomMove_Move() {}
 
-func (*KaboomMove_KRookBump) isKaboomMove_Move() {}
+func (*KaboomMove_Roomove) isKaboomMove_Move() {}
 
-func (*KaboomMove_KRookTackle) isKaboomMove_Move() {}
+func (*KaboomMove_Roocapture) isKaboomMove_Move() {}
 
-func (*KaboomMove_CQueenMove) isKaboomMove_Move() {}
+func (*KaboomMove_Roobump) isKaboomMove_Move() {}
 
-func (*KaboomMove_CQueenCapture) isKaboomMove_Move() {}
+func (*KaboomMove_Rootackle) isKaboomMove_Move() {}
 
-func (*KaboomMove_KQueenBump) isKaboomMove_Move() {}
+func (*KaboomMove_QueenMove) isKaboomMove_Move() {}
 
-func (*KaboomMove_KQueenNova) isKaboomMove_Move() {}
+func (*KaboomMove_QueenCapture) isKaboomMove_Move() {}
 
-func (*KaboomMove_CKingMove) isKaboomMove_Move() {}
+func (*KaboomMove_QueenBump) isKaboomMove_Move() {}
 
-func (*KaboomMove_CKingCapture) isKaboomMove_Move() {}
+func (*KaboomMove_QueenNova) isKaboomMove_Move() {}
 
-func (*KaboomMove_KKingBump) isKaboomMove_Move() {}
+func (*KaboomMove_KingMove) isKaboomMove_Move() {}
 
-func (*KaboomMove_KKingControl) isKaboomMove_Move() {}
+func (*KaboomMove_KingCapture) isKaboomMove_Move() {}
 
-func (*KaboomMove_CKingCastle) isKaboomMove_Move() {}
+func (*KaboomMove_KingBump) isKaboomMove_Move() {}
 
-// C_PawnMove is a normal pawn move in regular chess rules.
-// It encompasses single and double square advances.
-type C_PawnMove struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	Promotion     PieceKind              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceKind" json:"promotion,omitempty"` // optional promotion piece type
+func (*KaboomMove_KingControl) isKaboomMove_Move() {}
+
+func (*KaboomMove_KingCastle) isKaboomMove_Move() {}
+
+func (*KaboomMove_Resign) isKaboomMove_Move() {}
+
+func (*KaboomMove_DeployPiece) isKaboomMove_Move() {}
+
+// KingControl is a Kaboom-specific move where the king "mind-controls" a piece located within a distance of 2 squares
+// (New York distance) from its current position, forcing the target piece to perform any of its valid moves.
+// This can affect both friendly and opponent pieces. Queens are immune to mind control.
+type KingControl struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	King  *Location              `protobuf:"bytes,1,opt,name=king,proto3" json:"king,omitempty"` // king's current position
+	// The move that the target piece will perform as a result of mind control.
+	ControlMove   *KaboomMove `protobuf:"bytes,3,opt,name=control_move,json=controlMove,proto3" json:"control_move,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *C_PawnMove) Reset() {
-	*x = C_PawnMove{}
+func (x *KingControl) Reset() {
+	*x = KingControl{}
 	mi := &file_move_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *C_PawnMove) String() string {
+func (x *KingControl) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*C_PawnMove) ProtoMessage() {}
+func (*KingControl) ProtoMessage() {}
 
-func (x *C_PawnMove) ProtoReflect() protoreflect.Message {
+func (x *KingControl) ProtoReflect() protoreflect.Message {
 	mi := &file_move_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -605,1332 +540,21 @@ func (x *C_PawnMove) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use C_PawnMove.ProtoReflect.Descriptor instead.
-func (*C_PawnMove) Descriptor() ([]byte, []int) {
+// Deprecated: Use KingControl.ProtoReflect.Descriptor instead.
+func (*KingControl) Descriptor() ([]byte, []int) {
 	return file_move_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *C_PawnMove) GetFrom() *Position {
+func (x *KingControl) GetKing() *Location {
 	if x != nil {
-		return x.From
+		return x.King
 	}
 	return nil
 }
 
-func (x *C_PawnMove) GetTo() *Position {
+func (x *KingControl) GetControlMove() *KaboomMove {
 	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-func (x *C_PawnMove) GetPromotion() PieceKind {
-	if x != nil {
-		return x.Promotion
-	}
-	return PieceKind_INVALID_PIECE
-}
-
-// C_PawnCapture is a normal pawn capture move in regular chess rules.
-// It encompasses regular and en passant captures.
-type C_PawnCapture struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	Promotion     PieceKind              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceKind" json:"promotion,omitempty"` // optional promotion piece type
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_PawnCapture) Reset() {
-	*x = C_PawnCapture{}
-	mi := &file_move_proto_msgTypes[2]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_PawnCapture) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_PawnCapture) ProtoMessage() {}
-
-func (x *C_PawnCapture) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[2]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_PawnCapture.ProtoReflect.Descriptor instead.
-func (*C_PawnCapture) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{2}
-}
-
-func (x *C_PawnCapture) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_PawnCapture) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-func (x *C_PawnCapture) GetPromotion() PieceKind {
-	if x != nil {
-		return x.Promotion
-	}
-	return PieceKind_INVALID_PIECE
-}
-
-// K_PawnBump is a Kaboom-specific move replacing the capture.
-// The pawn moves diagonally (as in regular capturing) but instead of removing the opponent's piece,
-// it "bumps" it to the square directly behind it (in the same direction as the pawn's movement).
-type K_PawnBump struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	Promotion     PieceKind              `protobuf:"varint,10,opt,name=promotion,proto3,enum=kaboomproto.PieceKind" json:"promotion,omitempty"` // optional promotion piece type
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_PawnBump) Reset() {
-	*x = K_PawnBump{}
-	mi := &file_move_proto_msgTypes[3]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_PawnBump) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_PawnBump) ProtoMessage() {}
-
-func (x *K_PawnBump) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[3]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_PawnBump.ProtoReflect.Descriptor instead.
-func (*K_PawnBump) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{3}
-}
-
-func (x *K_PawnBump) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_PawnBump) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-func (x *K_PawnBump) GetPromotion() PieceKind {
-	if x != nil {
-		return x.Promotion
-	}
-	return PieceKind_INVALID_PIECE
-}
-
-// K_PawnExplosion is a Kaboom-specific move where the pawn detonates itself on its current position,
-// removing itself and bumping all adjacent pieces (horizontally, vertically, and diagonally).
-type K_PawnExplosion struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *Position              `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_PawnExplosion) Reset() {
-	*x = K_PawnExplosion{}
-	mi := &file_move_proto_msgTypes[4]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_PawnExplosion) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_PawnExplosion) ProtoMessage() {}
-
-func (x *K_PawnExplosion) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[4]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_PawnExplosion.ProtoReflect.Descriptor instead.
-func (*K_PawnExplosion) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{4}
-}
-
-func (x *K_PawnExplosion) GetPosition() *Position {
-	if x != nil {
-		return x.Position
-	}
-	return nil
-}
-
-// C_KnightMove is a normal knight move in regular chess rules.
-type C_KnightMove struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_KnightMove) Reset() {
-	*x = C_KnightMove{}
-	mi := &file_move_proto_msgTypes[5]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_KnightMove) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_KnightMove) ProtoMessage() {}
-
-func (x *C_KnightMove) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[5]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_KnightMove.ProtoReflect.Descriptor instead.
-func (*C_KnightMove) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{5}
-}
-
-func (x *C_KnightMove) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_KnightMove) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// C_KnightCapture is a normal knight capture move in regular chess rules.
-type C_KnightCapture struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_KnightCapture) Reset() {
-	*x = C_KnightCapture{}
-	mi := &file_move_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_KnightCapture) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_KnightCapture) ProtoMessage() {}
-
-func (x *C_KnightCapture) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[6]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_KnightCapture.ProtoReflect.Descriptor instead.
-func (*C_KnightCapture) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *C_KnightCapture) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_KnightCapture) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// K_KnightBump is a Kaboom-specific move replacing the capture.
-// The knight moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
-// it "bumps" it. The direction of the bump may be vertical or horizontal, depending on whether the knight's
-// "right angle" move is vertical-first or horizontal-first.
-type K_KnightBump struct {
-	state         protoimpl.MessageState     `protogen:"open.v1"`
-	From          *Position                  `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position                  `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	BumpDirection K_KnightBump_BumpDirection `protobuf:"varint,3,opt,name=bump_direction,json=bumpDirection,proto3,enum=kaboomproto.K_KnightBump_BumpDirection" json:"bump_direction,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_KnightBump) Reset() {
-	*x = K_KnightBump{}
-	mi := &file_move_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_KnightBump) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_KnightBump) ProtoMessage() {}
-
-func (x *K_KnightBump) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_KnightBump.ProtoReflect.Descriptor instead.
-func (*K_KnightBump) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{7}
-}
-
-func (x *K_KnightBump) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_KnightBump) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-func (x *K_KnightBump) GetBumpDirection() K_KnightBump_BumpDirection {
-	if x != nil {
-		return x.BumpDirection
-	}
-	return K_KnightBump_BUMP_DIRECTION_UNKNOWN
-}
-
-// K_KnightStomp is a Kaboom-specific move where the knight moves to an *empty* target square, and bumps all adjacent pieces
-// (horizontally, vertically, and diagonally) away from the target square.
-type K_KnightStomp struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_KnightStomp) Reset() {
-	*x = K_KnightStomp{}
-	mi := &file_move_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_KnightStomp) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_KnightStomp) ProtoMessage() {}
-
-func (x *K_KnightStomp) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_KnightStomp.ProtoReflect.Descriptor instead.
-func (*K_KnightStomp) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *K_KnightStomp) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_KnightStomp) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// C_BishopMove is a normal bishop move in regular chess rules.
-type C_BishopMove struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_BishopMove) Reset() {
-	*x = C_BishopMove{}
-	mi := &file_move_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_BishopMove) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_BishopMove) ProtoMessage() {}
-
-func (x *C_BishopMove) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[9]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_BishopMove.ProtoReflect.Descriptor instead.
-func (*C_BishopMove) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{9}
-}
-
-func (x *C_BishopMove) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_BishopMove) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// C_BishopCapture is a normal bishop capture move in regular chess rules.
-type C_BishopCapture struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_BishopCapture) Reset() {
-	*x = C_BishopCapture{}
-	mi := &file_move_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_BishopCapture) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_BishopCapture) ProtoMessage() {}
-
-func (x *C_BishopCapture) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_BishopCapture.ProtoReflect.Descriptor instead.
-func (*C_BishopCapture) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *C_BishopCapture) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_BishopCapture) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// K_BishopBump is a Kaboom-specific move replacing the capture.
-// The bishop moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
-// it "bumps" it along the same diagonal direction to the next square.
-type K_BishopBump struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_BishopBump) Reset() {
-	*x = K_BishopBump{}
-	mi := &file_move_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_BishopBump) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_BishopBump) ProtoMessage() {}
-
-func (x *K_BishopBump) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_BishopBump.ProtoReflect.Descriptor instead.
-func (*K_BishopBump) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{11}
-}
-
-func (x *K_BishopBump) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_BishopBump) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// K_BishopSnipe is a Kaboom-specific move. The bishop does not move from its current position,
-// but instead "snipes" an opponent's piece located anywhere along its diagonal lines of movement,
-// bumping the target piece to the next square along the same diagonal direction.
-type K_BishopSnipe struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`     // bishop's current position
-	Target        *Position              `protobuf:"bytes,2,opt,name=target,proto3" json:"target,omitempty"` // position of the opponent's piece to be sniped
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_BishopSnipe) Reset() {
-	*x = K_BishopSnipe{}
-	mi := &file_move_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_BishopSnipe) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_BishopSnipe) ProtoMessage() {}
-
-func (x *K_BishopSnipe) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_BishopSnipe.ProtoReflect.Descriptor instead.
-func (*K_BishopSnipe) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *K_BishopSnipe) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_BishopSnipe) GetTarget() *Position {
-	if x != nil {
-		return x.Target
-	}
-	return nil
-}
-
-// C_RookMove is a normal rook move in regular chess rules.
-type C_RookMove struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_RookMove) Reset() {
-	*x = C_RookMove{}
-	mi := &file_move_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_RookMove) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_RookMove) ProtoMessage() {}
-
-func (x *C_RookMove) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_RookMove.ProtoReflect.Descriptor instead.
-func (*C_RookMove) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *C_RookMove) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_RookMove) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// C_RookCapture is a normal rook capture move in regular chess rules.
-type C_RookCapture struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_RookCapture) Reset() {
-	*x = C_RookCapture{}
-	mi := &file_move_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_RookCapture) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_RookCapture) ProtoMessage() {}
-
-func (x *C_RookCapture) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_RookCapture.ProtoReflect.Descriptor instead.
-func (*C_RookCapture) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *C_RookCapture) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_RookCapture) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// K_RookBump is a Kaboom-specific move replacing the capture.
-// The rook moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
-// it "bumps" it along the same rank or file to the next square.
-type K_RookBump struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_RookBump) Reset() {
-	*x = K_RookBump{}
-	mi := &file_move_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_RookBump) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_RookBump) ProtoMessage() {}
-
-func (x *K_RookBump) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_RookBump.ProtoReflect.Descriptor instead.
-func (*K_RookBump) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{15}
-}
-
-func (x *K_RookBump) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_RookBump) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// K_RookTackle is a Kaboom-specific move variant of K_RookBump.
-// The rook moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
-// it "tackles" it along the same rank or file, moving the bumped piece two squares away instead of one.
-type K_RookTackle struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_RookTackle) Reset() {
-	*x = K_RookTackle{}
-	mi := &file_move_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_RookTackle) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_RookTackle) ProtoMessage() {}
-
-func (x *K_RookTackle) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_RookTackle.ProtoReflect.Descriptor instead.
-func (*K_RookTackle) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{16}
-}
-
-func (x *K_RookTackle) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_RookTackle) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// C_QueenMove is a normal queen move in regular chess rules.
-type C_QueenMove struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_QueenMove) Reset() {
-	*x = C_QueenMove{}
-	mi := &file_move_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_QueenMove) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_QueenMove) ProtoMessage() {}
-
-func (x *C_QueenMove) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_QueenMove.ProtoReflect.Descriptor instead.
-func (*C_QueenMove) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{17}
-}
-
-func (x *C_QueenMove) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_QueenMove) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// C_QueenCapture is a normal queen capture move in regular chess rules.
-type C_QueenCapture struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_QueenCapture) Reset() {
-	*x = C_QueenCapture{}
-	mi := &file_move_proto_msgTypes[18]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_QueenCapture) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_QueenCapture) ProtoMessage() {}
-
-func (x *C_QueenCapture) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[18]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_QueenCapture.ProtoReflect.Descriptor instead.
-func (*C_QueenCapture) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{18}
-}
-
-func (x *C_QueenCapture) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_QueenCapture) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// K_QueenBump is a Kaboom-specific move replacing the capture.
-// The queen moves to its target square (as in regular capturing) but instead of removing the
-// opponent's piece, it "bumps" it along the same rank, file, or diagonal to the next square.
-type K_QueenBump struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_QueenBump) Reset() {
-	*x = K_QueenBump{}
-	mi := &file_move_proto_msgTypes[19]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_QueenBump) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_QueenBump) ProtoMessage() {}
-
-func (x *K_QueenBump) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[19]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_QueenBump.ProtoReflect.Descriptor instead.
-func (*K_QueenBump) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{19}
-}
-
-func (x *K_QueenBump) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_QueenBump) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// K_QueenNova is a Kaboom-specific move where the queen detonates itself on its current position,
-// removing itself and all pieces (both friendly and opponent) located on the same rank, file, and diagonals.
-type K_QueenNova struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *Position              `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_QueenNova) Reset() {
-	*x = K_QueenNova{}
-	mi := &file_move_proto_msgTypes[20]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_QueenNova) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_QueenNova) ProtoMessage() {}
-
-func (x *K_QueenNova) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[20]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_QueenNova.ProtoReflect.Descriptor instead.
-func (*K_QueenNova) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{20}
-}
-
-func (x *K_QueenNova) GetPosition() *Position {
-	if x != nil {
-		return x.Position
-	}
-	return nil
-}
-
-// C_KingMove is a normal king move in regular chess rules.
-type C_KingMove struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_KingMove) Reset() {
-	*x = C_KingMove{}
-	mi := &file_move_proto_msgTypes[21]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_KingMove) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_KingMove) ProtoMessage() {}
-
-func (x *C_KingMove) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[21]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_KingMove.ProtoReflect.Descriptor instead.
-func (*C_KingMove) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{21}
-}
-
-func (x *C_KingMove) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_KingMove) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// C_KingCapture is a normal king capture move in regular chess rules.
-type C_KingCapture struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_KingCapture) Reset() {
-	*x = C_KingCapture{}
-	mi := &file_move_proto_msgTypes[22]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_KingCapture) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_KingCapture) ProtoMessage() {}
-
-func (x *C_KingCapture) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[22]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_KingCapture.ProtoReflect.Descriptor instead.
-func (*C_KingCapture) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{22}
-}
-
-func (x *C_KingCapture) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *C_KingCapture) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// C_KingCastle is a normal king castling move in regular chess rules.
-type C_KingCastle struct {
-	state         protoimpl.MessageState  `protogen:"open.v1"`
-	Position      *Position               `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
-	Side          C_KingCastle_CastleSide `protobuf:"varint,2,opt,name=side,proto3,enum=kaboomproto.C_KingCastle_CastleSide" json:"side,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *C_KingCastle) Reset() {
-	*x = C_KingCastle{}
-	mi := &file_move_proto_msgTypes[23]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *C_KingCastle) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*C_KingCastle) ProtoMessage() {}
-
-func (x *C_KingCastle) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[23]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use C_KingCastle.ProtoReflect.Descriptor instead.
-func (*C_KingCastle) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{23}
-}
-
-func (x *C_KingCastle) GetPosition() *Position {
-	if x != nil {
-		return x.Position
-	}
-	return nil
-}
-
-func (x *C_KingCastle) GetSide() C_KingCastle_CastleSide {
-	if x != nil {
-		return x.Side
-	}
-	return C_KingCastle_CASTLE_SIDE_UNKNOWN
-}
-
-// K_KingBump is a Kaboom-specific move replacing the capture.
-// The king moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
-// it "bumps" it to an adjacent square in any direction (horizontally, vertically, or diagonally).
-type K_KingBump struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,1,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,2,opt,name=to,proto3" json:"to,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_KingBump) Reset() {
-	*x = K_KingBump{}
-	mi := &file_move_proto_msgTypes[24]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_KingBump) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_KingBump) ProtoMessage() {}
-
-func (x *K_KingBump) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[24]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_KingBump.ProtoReflect.Descriptor instead.
-func (*K_KingBump) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{24}
-}
-
-func (x *K_KingBump) GetFrom() *Position {
-	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *K_KingBump) GetTo() *Position {
-	if x != nil {
-		return x.To
-	}
-	return nil
-}
-
-// K_KingControl is a Kaboom-specific move where the king "mind-controls" a piece located within a distance of 2 squares
-// (New York distance) from its current position, forcing the target piece to perform any of its valid moves.
-// This can affect both friendly and opponent pieces. Queens are immune to mind control.
-type K_KingControl struct {
-	state    protoimpl.MessageState `protogen:"open.v1"`
-	Position *Position              `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"` // king's current position
-	// The move that the target piece will perform as a result of mind control.
-	ForcedMove    *KaboomMove `protobuf:"bytes,3,opt,name=forced_move,json=forcedMove,proto3" json:"forced_move,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *K_KingControl) Reset() {
-	*x = K_KingControl{}
-	mi := &file_move_proto_msgTypes[25]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *K_KingControl) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*K_KingControl) ProtoMessage() {}
-
-func (x *K_KingControl) ProtoReflect() protoreflect.Message {
-	mi := &file_move_proto_msgTypes[25]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use K_KingControl.ProtoReflect.Descriptor instead.
-func (*K_KingControl) Descriptor() ([]byte, []int) {
-	return file_move_proto_rawDescGZIP(), []int{25}
-}
-
-func (x *K_KingControl) GetPosition() *Position {
-	if x != nil {
-		return x.Position
-	}
-	return nil
-}
-
-func (x *K_KingControl) GetForcedMove() *KaboomMove {
-	if x != nil {
-		return x.ForcedMove
+		return x.ControlMove
 	}
 	return nil
 }
@@ -1940,135 +564,51 @@ var File_move_proto protoreflect.FileDescriptor
 const file_move_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"move.proto\x12\vkaboomproto\x1a\x0eposition.proto\x1a\vpiece.proto\"\xf3\f\n" +
+	"move.proto\x12\vkaboomproto\x1a\x0elocation.proto\x1a\x12move_classic.proto\x1a\x11move_kaboom.proto\"\xd8\f\n" +
 	"\n" +
-	"KaboomMove\x129\n" +
-	"\vc_pawn_move\x18\n" +
-	" \x01(\v2\x17.kaboomproto.C_PawnMoveH\x00R\tcPawnMove\x12B\n" +
-	"\x0ec_pawn_capture\x18\v \x01(\v2\x1a.kaboomproto.C_PawnCaptureH\x00R\fcPawnCapture\x129\n" +
-	"\vk_pawn_bump\x18\f \x01(\v2\x17.kaboomproto.K_PawnBumpH\x00R\tkPawnBump\x12H\n" +
-	"\x10k_pawn_explosion\x18\r \x01(\v2\x1c.kaboomproto.K_PawnExplosionH\x00R\x0ekPawnExplosion\x12?\n" +
-	"\rc_knight_move\x18\x14 \x01(\v2\x19.kaboomproto.C_KnightMoveH\x00R\vcKnightMove\x12H\n" +
-	"\x10c_knight_capture\x18\x15 \x01(\v2\x1c.kaboomproto.C_KnightCaptureH\x00R\x0ecKnightCapture\x12?\n" +
-	"\rk_knight_bump\x18\x16 \x01(\v2\x19.kaboomproto.K_KnightBumpH\x00R\vkKnightBump\x12B\n" +
-	"\x0ek_knight_stomp\x18\x17 \x01(\v2\x1a.kaboomproto.K_KnightStompH\x00R\fkKnightStomp\x12?\n" +
-	"\rc_bishop_move\x18\x1e \x01(\v2\x19.kaboomproto.C_BishopMoveH\x00R\vcBishopMove\x12H\n" +
-	"\x10c_bishop_capture\x18\x1f \x01(\v2\x1c.kaboomproto.C_BishopCaptureH\x00R\x0ecBishopCapture\x12?\n" +
-	"\rk_bishop_bump\x18  \x01(\v2\x19.kaboomproto.K_BishopBumpH\x00R\vkBishopBump\x12B\n" +
-	"\x0ek_bishop_snipe\x18! \x01(\v2\x1a.kaboomproto.K_BishopSnipeH\x00R\fkBishopSnipe\x129\n" +
-	"\vc_rook_move\x18( \x01(\v2\x17.kaboomproto.C_RookMoveH\x00R\tcRookMove\x12B\n" +
-	"\x0ec_rook_capture\x18) \x01(\v2\x1a.kaboomproto.C_RookCaptureH\x00R\fcRookCapture\x129\n" +
-	"\vk_rook_bump\x18* \x01(\v2\x17.kaboomproto.K_RookBumpH\x00R\tkRookBump\x12?\n" +
-	"\rk_rook_tackle\x18+ \x01(\v2\x19.kaboomproto.K_RookTackleH\x00R\vkRookTackle\x12<\n" +
-	"\fc_queen_move\x182 \x01(\v2\x18.kaboomproto.C_QueenMoveH\x00R\n" +
-	"cQueenMove\x12E\n" +
-	"\x0fc_queen_capture\x183 \x01(\v2\x1b.kaboomproto.C_QueenCaptureH\x00R\rcQueenCapture\x12<\n" +
-	"\fk_queen_bump\x184 \x01(\v2\x18.kaboomproto.K_QueenBumpH\x00R\n" +
-	"kQueenBump\x12<\n" +
-	"\fk_queen_nova\x185 \x01(\v2\x18.kaboomproto.K_QueenNovaH\x00R\n" +
-	"kQueenNova\x129\n" +
-	"\vc_king_move\x18< \x01(\v2\x17.kaboomproto.C_KingMoveH\x00R\tcKingMove\x12B\n" +
-	"\x0ec_king_capture\x18= \x01(\v2\x1a.kaboomproto.C_KingCaptureH\x00R\fcKingCapture\x129\n" +
-	"\vk_king_bump\x18> \x01(\v2\x17.kaboomproto.K_KingBumpH\x00R\tkKingBump\x12B\n" +
-	"\x0ek_king_control\x18? \x01(\v2\x1a.kaboomproto.K_KingControlH\x00R\fkKingControl\x12?\n" +
-	"\rc_king_castle\x18@ \x01(\v2\x19.kaboomproto.C_KingCastleH\x00R\vcKingCastleB\x06\n" +
-	"\x04move\"\x94\x01\n" +
+	"KaboomMove\x124\n" +
+	"\tpawn_move\x18\n" +
+	" \x01(\v2\x15.kaboomproto.PawnMoveH\x00R\bpawnMove\x12=\n" +
+	"\fpawn_capture\x18\v \x01(\v2\x18.kaboomproto.PawnCaptureH\x00R\vpawnCapture\x124\n" +
+	"\tpawn_bump\x18\f \x01(\v2\x15.kaboomproto.PawnBumpH\x00R\bpawnBump\x12C\n" +
+	"\x0epawn_explosion\x18\r \x01(\v2\x1a.kaboomproto.PawnExplosionH\x00R\rpawnExplosion\x12:\n" +
+	"\vknight_move\x18\x14 \x01(\v2\x17.kaboomproto.KnightMoveH\x00R\n" +
+	"knightMove\x12C\n" +
+	"\x0eknight_capture\x18\x15 \x01(\v2\x1a.kaboomproto.KnightCaptureH\x00R\rknightCapture\x12:\n" +
+	"\vknight_bump\x18\x16 \x01(\v2\x17.kaboomproto.KnightBumpH\x00R\n" +
+	"knightBump\x12=\n" +
+	"\fknight_stomp\x18\x17 \x01(\v2\x18.kaboomproto.KnightStompH\x00R\vknightStomp\x12:\n" +
+	"\vbishop_move\x18\x1e \x01(\v2\x17.kaboomproto.BishopMoveH\x00R\n" +
+	"bishopMove\x12C\n" +
+	"\x0ebishop_capture\x18\x1f \x01(\v2\x1a.kaboomproto.BishopCaptureH\x00R\rbishopCapture\x12:\n" +
+	"\vbishop_bump\x18  \x01(\v2\x17.kaboomproto.BishopBumpH\x00R\n" +
+	"bishopBump\x12=\n" +
+	"\fbishop_snipe\x18! \x01(\v2\x18.kaboomproto.BishopSnipeH\x00R\vbishopSnipe\x121\n" +
+	"\aroomove\x18( \x01(\v2\x15.kaboomproto.RookMoveH\x00R\aroomove\x12:\n" +
 	"\n" +
-	"C_PawnMove\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\x124\n" +
-	"\tpromotion\x18\n" +
-	" \x01(\x0e2\x16.kaboomproto.PieceKindR\tpromotion\"\x97\x01\n" +
-	"\rC_PawnCapture\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\x124\n" +
-	"\tpromotion\x18\n" +
-	" \x01(\x0e2\x16.kaboomproto.PieceKindR\tpromotion\"\x94\x01\n" +
+	"roocapture\x18) \x01(\v2\x18.kaboomproto.RookCaptureH\x00R\n" +
+	"roocapture\x121\n" +
+	"\aroobump\x18* \x01(\v2\x15.kaboomproto.RookBumpH\x00R\aroobump\x127\n" +
+	"\trootackle\x18+ \x01(\v2\x17.kaboomproto.RookTackleH\x00R\trootackle\x127\n" +
 	"\n" +
-	"K_PawnBump\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\x124\n" +
-	"\tpromotion\x18\n" +
-	" \x01(\x0e2\x16.kaboomproto.PieceKindR\tpromotion\"D\n" +
-	"\x0fK_PawnExplosion\x121\n" +
-	"\bposition\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\bposition\"`\n" +
-	"\fC_KnightMove\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"c\n" +
-	"\x0fC_KnightCapture\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"\x99\x02\n" +
-	"\fK_KnightBump\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\x12N\n" +
-	"\x0ebump_direction\x18\x03 \x01(\x0e2'.kaboomproto.K_KnightBump.BumpDirectionR\rbumpDirection\"g\n" +
-	"\rBumpDirection\x12\x1a\n" +
-	"\x16BUMP_DIRECTION_UNKNOWN\x10\x00\x12\x1d\n" +
-	"\x19BUMP_DIRECTION_HORIZONTAL\x10\x01\x12\x1b\n" +
-	"\x17BUMP_DIRECTION_VERTICAL\x10\x02\"a\n" +
-	"\rK_KnightStomp\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"`\n" +
-	"\fC_BishopMove\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"c\n" +
-	"\x0fC_BishopCapture\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"`\n" +
-	"\fK_BishopBump\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"i\n" +
-	"\rK_BishopSnipe\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12-\n" +
-	"\x06target\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x06target\"^\n" +
+	"queen_move\x182 \x01(\v2\x16.kaboomproto.QueenMoveH\x00R\tqueenMove\x12@\n" +
+	"\rqueen_capture\x183 \x01(\v2\x19.kaboomproto.QueenCaptureH\x00R\fqueenCapture\x127\n" +
 	"\n" +
-	"C_RookMove\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"a\n" +
-	"\rC_RookCapture\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"^\n" +
+	"queen_bump\x184 \x01(\v2\x16.kaboomproto.QueenBumpH\x00R\tqueenBump\x127\n" +
 	"\n" +
-	"K_RookBump\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"`\n" +
-	"\fK_RookTackle\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"_\n" +
-	"\vC_QueenMove\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"b\n" +
-	"\x0eC_QueenCapture\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"_\n" +
-	"\vK_QueenBump\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"@\n" +
-	"\vK_QueenNova\x121\n" +
-	"\bposition\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\bposition\"^\n" +
-	"\n" +
-	"C_KingMove\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"a\n" +
-	"\rC_KingCapture\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"\xcf\x01\n" +
-	"\fC_KingCastle\x121\n" +
-	"\bposition\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\bposition\x128\n" +
-	"\x04side\x18\x02 \x01(\x0e2$.kaboomproto.C_KingCastle.CastleSideR\x04side\"R\n" +
-	"\n" +
-	"CastleSide\x12\x17\n" +
-	"\x13CASTLE_SIDE_UNKNOWN\x10\x00\x12\x15\n" +
-	"\x11CASTLE_SIDE_SHORT\x10\x01\x12\x14\n" +
-	"\x10CASTLE_SIDE_LONG\x10\x02\"^\n" +
-	"\n" +
-	"K_KingBump\x12)\n" +
-	"\x04from\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x02to\"|\n" +
-	"\rK_KingControl\x121\n" +
-	"\bposition\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\bposition\x128\n" +
-	"\vforced_move\x18\x03 \x01(\v2\x17.kaboomproto.KaboomMoveR\n" +
-	"forcedMoveB1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"
+	"queen_nova\x185 \x01(\v2\x16.kaboomproto.QueenNovaH\x00R\tqueenNova\x124\n" +
+	"\tking_move\x18< \x01(\v2\x15.kaboomproto.KingMoveH\x00R\bkingMove\x12=\n" +
+	"\fking_capture\x18= \x01(\v2\x18.kaboomproto.KingCaptureH\x00R\vkingCapture\x124\n" +
+	"\tking_bump\x18> \x01(\v2\x15.kaboomproto.KingBumpH\x00R\bkingBump\x12=\n" +
+	"\fking_control\x18? \x01(\v2\x18.kaboomproto.KingControlH\x00R\vkingControl\x12:\n" +
+	"\vking_castle\x18@ \x01(\v2\x17.kaboomproto.KingCastleH\x00R\n" +
+	"kingCastle\x12-\n" +
+	"\x06resign\x18F \x01(\v2\x13.kaboomproto.ResignH\x00R\x06resign\x12=\n" +
+	"\fdeploy_piece\x18P \x01(\v2\x18.kaboomproto.DeployPieceH\x00R\vdeployPieceB\x06\n" +
+	"\x04move\"t\n" +
+	"\vKingControl\x12)\n" +
+	"\x04king\x18\x01 \x01(\v2\x15.kaboomproto.LocationR\x04king\x12:\n" +
+	"\fcontrol_move\x18\x03 \x01(\v2\x17.kaboomproto.KaboomMoveR\vcontrolMoveB1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"
 
 var (
 	file_move_proto_rawDescOnce sync.Once
@@ -2082,123 +622,73 @@ func file_move_proto_rawDescGZIP() []byte {
 	return file_move_proto_rawDescData
 }
 
-var file_move_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_move_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
+var file_move_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
 var file_move_proto_goTypes = []any{
-	(K_KnightBump_BumpDirection)(0), // 0: kaboomproto.K_KnightBump.BumpDirection
-	(C_KingCastle_CastleSide)(0),    // 1: kaboomproto.C_KingCastle.CastleSide
-	(*KaboomMove)(nil),              // 2: kaboomproto.KaboomMove
-	(*C_PawnMove)(nil),              // 3: kaboomproto.C_PawnMove
-	(*C_PawnCapture)(nil),           // 4: kaboomproto.C_PawnCapture
-	(*K_PawnBump)(nil),              // 5: kaboomproto.K_PawnBump
-	(*K_PawnExplosion)(nil),         // 6: kaboomproto.K_PawnExplosion
-	(*C_KnightMove)(nil),            // 7: kaboomproto.C_KnightMove
-	(*C_KnightCapture)(nil),         // 8: kaboomproto.C_KnightCapture
-	(*K_KnightBump)(nil),            // 9: kaboomproto.K_KnightBump
-	(*K_KnightStomp)(nil),           // 10: kaboomproto.K_KnightStomp
-	(*C_BishopMove)(nil),            // 11: kaboomproto.C_BishopMove
-	(*C_BishopCapture)(nil),         // 12: kaboomproto.C_BishopCapture
-	(*K_BishopBump)(nil),            // 13: kaboomproto.K_BishopBump
-	(*K_BishopSnipe)(nil),           // 14: kaboomproto.K_BishopSnipe
-	(*C_RookMove)(nil),              // 15: kaboomproto.C_RookMove
-	(*C_RookCapture)(nil),           // 16: kaboomproto.C_RookCapture
-	(*K_RookBump)(nil),              // 17: kaboomproto.K_RookBump
-	(*K_RookTackle)(nil),            // 18: kaboomproto.K_RookTackle
-	(*C_QueenMove)(nil),             // 19: kaboomproto.C_QueenMove
-	(*C_QueenCapture)(nil),          // 20: kaboomproto.C_QueenCapture
-	(*K_QueenBump)(nil),             // 21: kaboomproto.K_QueenBump
-	(*K_QueenNova)(nil),             // 22: kaboomproto.K_QueenNova
-	(*C_KingMove)(nil),              // 23: kaboomproto.C_KingMove
-	(*C_KingCapture)(nil),           // 24: kaboomproto.C_KingCapture
-	(*C_KingCastle)(nil),            // 25: kaboomproto.C_KingCastle
-	(*K_KingBump)(nil),              // 26: kaboomproto.K_KingBump
-	(*K_KingControl)(nil),           // 27: kaboomproto.K_KingControl
-	(*Position)(nil),                // 28: kaboomproto.Position
-	(PieceKind)(0),                  // 29: kaboomproto.PieceKind
+	(*KaboomMove)(nil),    // 0: kaboomproto.KaboomMove
+	(*KingControl)(nil),   // 1: kaboomproto.KingControl
+	(*PawnMove)(nil),      // 2: kaboomproto.PawnMove
+	(*PawnCapture)(nil),   // 3: kaboomproto.PawnCapture
+	(*PawnBump)(nil),      // 4: kaboomproto.PawnBump
+	(*PawnExplosion)(nil), // 5: kaboomproto.PawnExplosion
+	(*KnightMove)(nil),    // 6: kaboomproto.KnightMove
+	(*KnightCapture)(nil), // 7: kaboomproto.KnightCapture
+	(*KnightBump)(nil),    // 8: kaboomproto.KnightBump
+	(*KnightStomp)(nil),   // 9: kaboomproto.KnightStomp
+	(*BishopMove)(nil),    // 10: kaboomproto.BishopMove
+	(*BishopCapture)(nil), // 11: kaboomproto.BishopCapture
+	(*BishopBump)(nil),    // 12: kaboomproto.BishopBump
+	(*BishopSnipe)(nil),   // 13: kaboomproto.BishopSnipe
+	(*RookMove)(nil),      // 14: kaboomproto.RookMove
+	(*RookCapture)(nil),   // 15: kaboomproto.RookCapture
+	(*RookBump)(nil),      // 16: kaboomproto.RookBump
+	(*RookTackle)(nil),    // 17: kaboomproto.RookTackle
+	(*QueenMove)(nil),     // 18: kaboomproto.QueenMove
+	(*QueenCapture)(nil),  // 19: kaboomproto.QueenCapture
+	(*QueenBump)(nil),     // 20: kaboomproto.QueenBump
+	(*QueenNova)(nil),     // 21: kaboomproto.QueenNova
+	(*KingMove)(nil),      // 22: kaboomproto.KingMove
+	(*KingCapture)(nil),   // 23: kaboomproto.KingCapture
+	(*KingBump)(nil),      // 24: kaboomproto.KingBump
+	(*KingCastle)(nil),    // 25: kaboomproto.KingCastle
+	(*Resign)(nil),        // 26: kaboomproto.Resign
+	(*DeployPiece)(nil),   // 27: kaboomproto.DeployPiece
+	(*Location)(nil),      // 28: kaboomproto.Location
 }
 var file_move_proto_depIdxs = []int32{
-	3,  // 0: kaboomproto.KaboomMove.c_pawn_move:type_name -> kaboomproto.C_PawnMove
-	4,  // 1: kaboomproto.KaboomMove.c_pawn_capture:type_name -> kaboomproto.C_PawnCapture
-	5,  // 2: kaboomproto.KaboomMove.k_pawn_bump:type_name -> kaboomproto.K_PawnBump
-	6,  // 3: kaboomproto.KaboomMove.k_pawn_explosion:type_name -> kaboomproto.K_PawnExplosion
-	7,  // 4: kaboomproto.KaboomMove.c_knight_move:type_name -> kaboomproto.C_KnightMove
-	8,  // 5: kaboomproto.KaboomMove.c_knight_capture:type_name -> kaboomproto.C_KnightCapture
-	9,  // 6: kaboomproto.KaboomMove.k_knight_bump:type_name -> kaboomproto.K_KnightBump
-	10, // 7: kaboomproto.KaboomMove.k_knight_stomp:type_name -> kaboomproto.K_KnightStomp
-	11, // 8: kaboomproto.KaboomMove.c_bishop_move:type_name -> kaboomproto.C_BishopMove
-	12, // 9: kaboomproto.KaboomMove.c_bishop_capture:type_name -> kaboomproto.C_BishopCapture
-	13, // 10: kaboomproto.KaboomMove.k_bishop_bump:type_name -> kaboomproto.K_BishopBump
-	14, // 11: kaboomproto.KaboomMove.k_bishop_snipe:type_name -> kaboomproto.K_BishopSnipe
-	15, // 12: kaboomproto.KaboomMove.c_rook_move:type_name -> kaboomproto.C_RookMove
-	16, // 13: kaboomproto.KaboomMove.c_rook_capture:type_name -> kaboomproto.C_RookCapture
-	17, // 14: kaboomproto.KaboomMove.k_rook_bump:type_name -> kaboomproto.K_RookBump
-	18, // 15: kaboomproto.KaboomMove.k_rook_tackle:type_name -> kaboomproto.K_RookTackle
-	19, // 16: kaboomproto.KaboomMove.c_queen_move:type_name -> kaboomproto.C_QueenMove
-	20, // 17: kaboomproto.KaboomMove.c_queen_capture:type_name -> kaboomproto.C_QueenCapture
-	21, // 18: kaboomproto.KaboomMove.k_queen_bump:type_name -> kaboomproto.K_QueenBump
-	22, // 19: kaboomproto.KaboomMove.k_queen_nova:type_name -> kaboomproto.K_QueenNova
-	23, // 20: kaboomproto.KaboomMove.c_king_move:type_name -> kaboomproto.C_KingMove
-	24, // 21: kaboomproto.KaboomMove.c_king_capture:type_name -> kaboomproto.C_KingCapture
-	26, // 22: kaboomproto.KaboomMove.k_king_bump:type_name -> kaboomproto.K_KingBump
-	27, // 23: kaboomproto.KaboomMove.k_king_control:type_name -> kaboomproto.K_KingControl
-	25, // 24: kaboomproto.KaboomMove.c_king_castle:type_name -> kaboomproto.C_KingCastle
-	28, // 25: kaboomproto.C_PawnMove.from:type_name -> kaboomproto.Position
-	28, // 26: kaboomproto.C_PawnMove.to:type_name -> kaboomproto.Position
-	29, // 27: kaboomproto.C_PawnMove.promotion:type_name -> kaboomproto.PieceKind
-	28, // 28: kaboomproto.C_PawnCapture.from:type_name -> kaboomproto.Position
-	28, // 29: kaboomproto.C_PawnCapture.to:type_name -> kaboomproto.Position
-	29, // 30: kaboomproto.C_PawnCapture.promotion:type_name -> kaboomproto.PieceKind
-	28, // 31: kaboomproto.K_PawnBump.from:type_name -> kaboomproto.Position
-	28, // 32: kaboomproto.K_PawnBump.to:type_name -> kaboomproto.Position
-	29, // 33: kaboomproto.K_PawnBump.promotion:type_name -> kaboomproto.PieceKind
-	28, // 34: kaboomproto.K_PawnExplosion.position:type_name -> kaboomproto.Position
-	28, // 35: kaboomproto.C_KnightMove.from:type_name -> kaboomproto.Position
-	28, // 36: kaboomproto.C_KnightMove.to:type_name -> kaboomproto.Position
-	28, // 37: kaboomproto.C_KnightCapture.from:type_name -> kaboomproto.Position
-	28, // 38: kaboomproto.C_KnightCapture.to:type_name -> kaboomproto.Position
-	28, // 39: kaboomproto.K_KnightBump.from:type_name -> kaboomproto.Position
-	28, // 40: kaboomproto.K_KnightBump.to:type_name -> kaboomproto.Position
-	0,  // 41: kaboomproto.K_KnightBump.bump_direction:type_name -> kaboomproto.K_KnightBump.BumpDirection
-	28, // 42: kaboomproto.K_KnightStomp.from:type_name -> kaboomproto.Position
-	28, // 43: kaboomproto.K_KnightStomp.to:type_name -> kaboomproto.Position
-	28, // 44: kaboomproto.C_BishopMove.from:type_name -> kaboomproto.Position
-	28, // 45: kaboomproto.C_BishopMove.to:type_name -> kaboomproto.Position
-	28, // 46: kaboomproto.C_BishopCapture.from:type_name -> kaboomproto.Position
-	28, // 47: kaboomproto.C_BishopCapture.to:type_name -> kaboomproto.Position
-	28, // 48: kaboomproto.K_BishopBump.from:type_name -> kaboomproto.Position
-	28, // 49: kaboomproto.K_BishopBump.to:type_name -> kaboomproto.Position
-	28, // 50: kaboomproto.K_BishopSnipe.from:type_name -> kaboomproto.Position
-	28, // 51: kaboomproto.K_BishopSnipe.target:type_name -> kaboomproto.Position
-	28, // 52: kaboomproto.C_RookMove.from:type_name -> kaboomproto.Position
-	28, // 53: kaboomproto.C_RookMove.to:type_name -> kaboomproto.Position
-	28, // 54: kaboomproto.C_RookCapture.from:type_name -> kaboomproto.Position
-	28, // 55: kaboomproto.C_RookCapture.to:type_name -> kaboomproto.Position
-	28, // 56: kaboomproto.K_RookBump.from:type_name -> kaboomproto.Position
-	28, // 57: kaboomproto.K_RookBump.to:type_name -> kaboomproto.Position
-	28, // 58: kaboomproto.K_RookTackle.from:type_name -> kaboomproto.Position
-	28, // 59: kaboomproto.K_RookTackle.to:type_name -> kaboomproto.Position
-	28, // 60: kaboomproto.C_QueenMove.from:type_name -> kaboomproto.Position
-	28, // 61: kaboomproto.C_QueenMove.to:type_name -> kaboomproto.Position
-	28, // 62: kaboomproto.C_QueenCapture.from:type_name -> kaboomproto.Position
-	28, // 63: kaboomproto.C_QueenCapture.to:type_name -> kaboomproto.Position
-	28, // 64: kaboomproto.K_QueenBump.from:type_name -> kaboomproto.Position
-	28, // 65: kaboomproto.K_QueenBump.to:type_name -> kaboomproto.Position
-	28, // 66: kaboomproto.K_QueenNova.position:type_name -> kaboomproto.Position
-	28, // 67: kaboomproto.C_KingMove.from:type_name -> kaboomproto.Position
-	28, // 68: kaboomproto.C_KingMove.to:type_name -> kaboomproto.Position
-	28, // 69: kaboomproto.C_KingCapture.from:type_name -> kaboomproto.Position
-	28, // 70: kaboomproto.C_KingCapture.to:type_name -> kaboomproto.Position
-	28, // 71: kaboomproto.C_KingCastle.position:type_name -> kaboomproto.Position
-	1,  // 72: kaboomproto.C_KingCastle.side:type_name -> kaboomproto.C_KingCastle.CastleSide
-	28, // 73: kaboomproto.K_KingBump.from:type_name -> kaboomproto.Position
-	28, // 74: kaboomproto.K_KingBump.to:type_name -> kaboomproto.Position
-	28, // 75: kaboomproto.K_KingControl.position:type_name -> kaboomproto.Position
-	2,  // 76: kaboomproto.K_KingControl.forced_move:type_name -> kaboomproto.KaboomMove
-	77, // [77:77] is the sub-list for method output_type
-	77, // [77:77] is the sub-list for method input_type
-	77, // [77:77] is the sub-list for extension type_name
-	77, // [77:77] is the sub-list for extension extendee
-	0,  // [0:77] is the sub-list for field type_name
+	2,  // 0: kaboomproto.KaboomMove.pawn_move:type_name -> kaboomproto.PawnMove
+	3,  // 1: kaboomproto.KaboomMove.pawn_capture:type_name -> kaboomproto.PawnCapture
+	4,  // 2: kaboomproto.KaboomMove.pawn_bump:type_name -> kaboomproto.PawnBump
+	5,  // 3: kaboomproto.KaboomMove.pawn_explosion:type_name -> kaboomproto.PawnExplosion
+	6,  // 4: kaboomproto.KaboomMove.knight_move:type_name -> kaboomproto.KnightMove
+	7,  // 5: kaboomproto.KaboomMove.knight_capture:type_name -> kaboomproto.KnightCapture
+	8,  // 6: kaboomproto.KaboomMove.knight_bump:type_name -> kaboomproto.KnightBump
+	9,  // 7: kaboomproto.KaboomMove.knight_stomp:type_name -> kaboomproto.KnightStomp
+	10, // 8: kaboomproto.KaboomMove.bishop_move:type_name -> kaboomproto.BishopMove
+	11, // 9: kaboomproto.KaboomMove.bishop_capture:type_name -> kaboomproto.BishopCapture
+	12, // 10: kaboomproto.KaboomMove.bishop_bump:type_name -> kaboomproto.BishopBump
+	13, // 11: kaboomproto.KaboomMove.bishop_snipe:type_name -> kaboomproto.BishopSnipe
+	14, // 12: kaboomproto.KaboomMove.roomove:type_name -> kaboomproto.RookMove
+	15, // 13: kaboomproto.KaboomMove.roocapture:type_name -> kaboomproto.RookCapture
+	16, // 14: kaboomproto.KaboomMove.roobump:type_name -> kaboomproto.RookBump
+	17, // 15: kaboomproto.KaboomMove.rootackle:type_name -> kaboomproto.RookTackle
+	18, // 16: kaboomproto.KaboomMove.queen_move:type_name -> kaboomproto.QueenMove
+	19, // 17: kaboomproto.KaboomMove.queen_capture:type_name -> kaboomproto.QueenCapture
+	20, // 18: kaboomproto.KaboomMove.queen_bump:type_name -> kaboomproto.QueenBump
+	21, // 19: kaboomproto.KaboomMove.queen_nova:type_name -> kaboomproto.QueenNova
+	22, // 20: kaboomproto.KaboomMove.king_move:type_name -> kaboomproto.KingMove
+	23, // 21: kaboomproto.KaboomMove.king_capture:type_name -> kaboomproto.KingCapture
+	24, // 22: kaboomproto.KaboomMove.king_bump:type_name -> kaboomproto.KingBump
+	1,  // 23: kaboomproto.KaboomMove.king_control:type_name -> kaboomproto.KingControl
+	25, // 24: kaboomproto.KaboomMove.king_castle:type_name -> kaboomproto.KingCastle
+	26, // 25: kaboomproto.KaboomMove.resign:type_name -> kaboomproto.Resign
+	27, // 26: kaboomproto.KaboomMove.deploy_piece:type_name -> kaboomproto.DeployPiece
+	28, // 27: kaboomproto.KingControl.king:type_name -> kaboomproto.Location
+	0,  // 28: kaboomproto.KingControl.control_move:type_name -> kaboomproto.KaboomMove
+	29, // [29:29] is the sub-list for method output_type
+	29, // [29:29] is the sub-list for method input_type
+	29, // [29:29] is the sub-list for extension type_name
+	29, // [29:29] is the sub-list for extension extendee
+	0,  // [0:29] is the sub-list for field type_name
 }
 
 func init() { file_move_proto_init() }
@@ -2206,48 +696,50 @@ func file_move_proto_init() {
 	if File_move_proto != nil {
 		return
 	}
-	file_position_proto_init()
-	file_piece_proto_init()
+	file_location_proto_init()
+	file_move_classic_proto_init()
+	file_move_kaboom_proto_init()
 	file_move_proto_msgTypes[0].OneofWrappers = []any{
-		(*KaboomMove_CPawnMove)(nil),
-		(*KaboomMove_CPawnCapture)(nil),
-		(*KaboomMove_KPawnBump)(nil),
-		(*KaboomMove_KPawnExplosion)(nil),
-		(*KaboomMove_CKnightMove)(nil),
-		(*KaboomMove_CKnightCapture)(nil),
-		(*KaboomMove_KKnightBump)(nil),
-		(*KaboomMove_KKnightStomp)(nil),
-		(*KaboomMove_CBishopMove)(nil),
-		(*KaboomMove_CBishopCapture)(nil),
-		(*KaboomMove_KBishopBump)(nil),
-		(*KaboomMove_KBishopSnipe)(nil),
-		(*KaboomMove_CRookMove)(nil),
-		(*KaboomMove_CRookCapture)(nil),
-		(*KaboomMove_KRookBump)(nil),
-		(*KaboomMove_KRookTackle)(nil),
-		(*KaboomMove_CQueenMove)(nil),
-		(*KaboomMove_CQueenCapture)(nil),
-		(*KaboomMove_KQueenBump)(nil),
-		(*KaboomMove_KQueenNova)(nil),
-		(*KaboomMove_CKingMove)(nil),
-		(*KaboomMove_CKingCapture)(nil),
-		(*KaboomMove_KKingBump)(nil),
-		(*KaboomMove_KKingControl)(nil),
-		(*KaboomMove_CKingCastle)(nil),
+		(*KaboomMove_PawnMove)(nil),
+		(*KaboomMove_PawnCapture)(nil),
+		(*KaboomMove_PawnBump)(nil),
+		(*KaboomMove_PawnExplosion)(nil),
+		(*KaboomMove_KnightMove)(nil),
+		(*KaboomMove_KnightCapture)(nil),
+		(*KaboomMove_KnightBump)(nil),
+		(*KaboomMove_KnightStomp)(nil),
+		(*KaboomMove_BishopMove)(nil),
+		(*KaboomMove_BishopCapture)(nil),
+		(*KaboomMove_BishopBump)(nil),
+		(*KaboomMove_BishopSnipe)(nil),
+		(*KaboomMove_Roomove)(nil),
+		(*KaboomMove_Roocapture)(nil),
+		(*KaboomMove_Roobump)(nil),
+		(*KaboomMove_Rootackle)(nil),
+		(*KaboomMove_QueenMove)(nil),
+		(*KaboomMove_QueenCapture)(nil),
+		(*KaboomMove_QueenBump)(nil),
+		(*KaboomMove_QueenNova)(nil),
+		(*KaboomMove_KingMove)(nil),
+		(*KaboomMove_KingCapture)(nil),
+		(*KaboomMove_KingBump)(nil),
+		(*KaboomMove_KingControl)(nil),
+		(*KaboomMove_KingCastle)(nil),
+		(*KaboomMove_Resign)(nil),
+		(*KaboomMove_DeployPiece)(nil),
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_move_proto_rawDesc), len(file_move_proto_rawDesc)),
-			NumEnums:      2,
-			NumMessages:   26,
+			NumEnums:      0,
+			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
 		GoTypes:           file_move_proto_goTypes,
 		DependencyIndexes: file_move_proto_depIdxs,
-		EnumInfos:         file_move_proto_enumTypes,
 		MessageInfos:      file_move_proto_msgTypes,
 	}.Build()
 	File_move_proto = out.File

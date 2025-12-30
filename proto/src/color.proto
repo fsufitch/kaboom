@@ -10,3 +10,8 @@ enum Color {
     COLOR_WHITE = 1;
     COLOR_BLACK = 2;
 }
+
+message PlayerColor {
+    string player_uuid = 1;
+    Color color = 2;
+}

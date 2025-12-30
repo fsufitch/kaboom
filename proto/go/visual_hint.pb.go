@@ -281,7 +281,7 @@ func (x *VisualHint__Collision) GetPieceBUuid() string {
 // VisualHint__Explosion indicates a visual effect for an explosion at a specific position (e.g. a pawn exploding).
 type VisualHint__Explosion struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *Position              `protobuf:"bytes,2,opt,name=position,proto3" json:"position,omitempty"`
+	Location      *Location              `protobuf:"bytes,2,opt,name=location,proto3" json:"location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -316,9 +316,9 @@ func (*VisualHint__Explosion) Descriptor() ([]byte, []int) {
 	return file_visual_hint_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *VisualHint__Explosion) GetPosition() *Position {
+func (x *VisualHint__Explosion) GetLocation() *Location {
 	if x != nil {
-		return x.Position
+		return x.Location
 	}
 	return nil
 }
@@ -326,7 +326,7 @@ func (x *VisualHint__Explosion) GetPosition() *Position {
 // VisualHint__Stomp indicates a visual effect for a piece stomping on a position (e.g. knight stomp)
 type VisualHint__Stomp struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *Position              `protobuf:"bytes,1,opt,name=position,proto3" json:"position,omitempty"`
+	Location      *Location              `protobuf:"bytes,1,opt,name=location,proto3" json:"location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -361,9 +361,9 @@ func (*VisualHint__Stomp) Descriptor() ([]byte, []int) {
 	return file_visual_hint_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *VisualHint__Stomp) GetPosition() *Position {
+func (x *VisualHint__Stomp) GetLocation() *Location {
 	if x != nil {
-		return x.Position
+		return x.Location
 	}
 	return nil
 }
@@ -371,8 +371,7 @@ func (x *VisualHint__Stomp) GetPosition() *Position {
 // VisualHint__Snipe indicates a visual effect for a piece sniping another piece from a distance (e.g. bishop snipe).
 type VisualHint__Snipe struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	From          *Position              `protobuf:"bytes,2,opt,name=from,proto3" json:"from,omitempty"`
-	To            *Position              `protobuf:"bytes,3,opt,name=to,proto3" json:"to,omitempty"`
+	Vector        *LocationVector        `protobuf:"bytes,1,opt,name=vector,proto3" json:"vector,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -407,16 +406,9 @@ func (*VisualHint__Snipe) Descriptor() ([]byte, []int) {
 	return file_visual_hint_proto_rawDescGZIP(), []int{4}
 }
 
-func (x *VisualHint__Snipe) GetFrom() *Position {
+func (x *VisualHint__Snipe) GetVector() *LocationVector {
 	if x != nil {
-		return x.From
-	}
-	return nil
-}
-
-func (x *VisualHint__Snipe) GetTo() *Position {
-	if x != nil {
-		return x.To
+		return x.Vector
 	}
 	return nil
 }
@@ -424,7 +416,7 @@ func (x *VisualHint__Snipe) GetTo() *Position {
 // VisualHint__Nova indicates a visual effect for a nova explosion at a specific position (e.g. queen nova).
 type VisualHint__Nova struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Position      *Position              `protobuf:"bytes,2,opt,name=position,proto3" json:"position,omitempty"`
+	Location      *Location              `protobuf:"bytes,1,opt,name=location,proto3" json:"location,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -459,9 +451,9 @@ func (*VisualHint__Nova) Descriptor() ([]byte, []int) {
 	return file_visual_hint_proto_rawDescGZIP(), []int{5}
 }
 
-func (x *VisualHint__Nova) GetPosition() *Position {
+func (x *VisualHint__Nova) GetLocation() *Location {
 	if x != nil {
-		return x.Position
+		return x.Location
 	}
 	return nil
 }
@@ -568,7 +560,7 @@ func (x *VisualHint__Disintegration) GetPieceUuid() string {
 type VisualHint__Yeet struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	PieceUuid     string                 `protobuf:"bytes,2,opt,name=piece_uuid,json=pieceUuid,proto3" json:"piece_uuid,omitempty"`
-	YeetVector    *Vector                `protobuf:"bytes,3,opt,name=yeet_vector,json=yeetVector,proto3" json:"yeet_vector,omitempty"`
+	Vector        *LocationVector        `protobuf:"bytes,3,opt,name=vector,proto3" json:"vector,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -610,9 +602,9 @@ func (x *VisualHint__Yeet) GetPieceUuid() string {
 	return ""
 }
 
-func (x *VisualHint__Yeet) GetYeetVector() *Vector {
+func (x *VisualHint__Yeet) GetVector() *LocationVector {
 	if x != nil {
-		return x.YeetVector
+		return x.Vector
 	}
 	return nil
 }
@@ -621,7 +613,7 @@ var File_visual_hint_proto protoreflect.FileDescriptor
 
 const file_visual_hint_proto_rawDesc = "" +
 	"\n" +
-	"\x11visual_hint.proto\x12\vkaboomproto\x1a\x0eposition.proto\"\xdf\x04\n" +
+	"\x11visual_hint.proto\x12\vkaboomproto\x1a\x0elocation.proto\"\xdf\x04\n" +
 	"\n" +
 	"VisualHint\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x1d\n" +
@@ -644,14 +636,13 @@ const file_visual_hint_proto_rawDesc = "" +
 	"\fpiece_b_uuid\x18\x03 \x01(\tR\n" +
 	"pieceBUuid\"J\n" +
 	"\x15VisualHint__Explosion\x121\n" +
-	"\bposition\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\bposition\"F\n" +
+	"\blocation\x18\x02 \x01(\v2\x15.kaboomproto.LocationR\blocation\"F\n" +
 	"\x11VisualHint__Stomp\x121\n" +
-	"\bposition\x18\x01 \x01(\v2\x15.kaboomproto.PositionR\bposition\"e\n" +
-	"\x11VisualHint__Snipe\x12)\n" +
-	"\x04from\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\x04from\x12%\n" +
-	"\x02to\x18\x03 \x01(\v2\x15.kaboomproto.PositionR\x02to\"E\n" +
+	"\blocation\x18\x01 \x01(\v2\x15.kaboomproto.LocationR\blocation\"H\n" +
+	"\x11VisualHint__Snipe\x123\n" +
+	"\x06vector\x18\x01 \x01(\v2\x1b.kaboomproto.LocationVectorR\x06vector\"E\n" +
 	"\x10VisualHint__Nova\x121\n" +
-	"\bposition\x18\x02 \x01(\v2\x15.kaboomproto.PositionR\bposition\"]\n" +
+	"\blocation\x18\x01 \x01(\v2\x15.kaboomproto.LocationR\blocation\"]\n" +
 	"\x17VisualHint__MindControl\x12 \n" +
 	"\fpiece_a_uuid\x18\x02 \x01(\tR\n" +
 	"pieceAUuid\x12 \n" +
@@ -659,12 +650,11 @@ const file_visual_hint_proto_rawDesc = "" +
 	"pieceBUuid\";\n" +
 	"\x1aVisualHint__Disintegration\x12\x1d\n" +
 	"\n" +
-	"piece_uuid\x18\x02 \x01(\tR\tpieceUuid\"g\n" +
+	"piece_uuid\x18\x02 \x01(\tR\tpieceUuid\"f\n" +
 	"\x10VisualHint__Yeet\x12\x1d\n" +
 	"\n" +
-	"piece_uuid\x18\x02 \x01(\tR\tpieceUuid\x124\n" +
-	"\vyeet_vector\x18\x03 \x01(\v2\x13.kaboomproto.VectorR\n" +
-	"yeetVectorB1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"
+	"piece_uuid\x18\x02 \x01(\tR\tpieceUuid\x123\n" +
+	"\x06vector\x18\x03 \x01(\v2\x1b.kaboomproto.LocationVectorR\x06vectorB1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"
 
 var (
 	file_visual_hint_proto_rawDescOnce sync.Once
@@ -689,8 +679,8 @@ var file_visual_hint_proto_goTypes = []any{
 	(*VisualHint__MindControl)(nil),    // 6: kaboomproto.VisualHint__MindControl
 	(*VisualHint__Disintegration)(nil), // 7: kaboomproto.VisualHint__Disintegration
 	(*VisualHint__Yeet)(nil),           // 8: kaboomproto.VisualHint__Yeet
-	(*Position)(nil),                   // 9: kaboomproto.Position
-	(*Vector)(nil),                     // 10: kaboomproto.Vector
+	(*Location)(nil),                   // 9: kaboomproto.Location
+	(*LocationVector)(nil),             // 10: kaboomproto.LocationVector
 }
 var file_visual_hint_proto_depIdxs = []int32{
 	1,  // 0: kaboomproto.VisualHint.collision:type_name -> kaboomproto.VisualHint__Collision
@@ -701,17 +691,16 @@ var file_visual_hint_proto_depIdxs = []int32{
 	6,  // 5: kaboomproto.VisualHint.mind_control:type_name -> kaboomproto.VisualHint__MindControl
 	7,  // 6: kaboomproto.VisualHint.disintegration:type_name -> kaboomproto.VisualHint__Disintegration
 	8,  // 7: kaboomproto.VisualHint.yeet:type_name -> kaboomproto.VisualHint__Yeet
-	9,  // 8: kaboomproto.VisualHint__Explosion.position:type_name -> kaboomproto.Position
-	9,  // 9: kaboomproto.VisualHint__Stomp.position:type_name -> kaboomproto.Position
-	9,  // 10: kaboomproto.VisualHint__Snipe.from:type_name -> kaboomproto.Position
-	9,  // 11: kaboomproto.VisualHint__Snipe.to:type_name -> kaboomproto.Position
-	9,  // 12: kaboomproto.VisualHint__Nova.position:type_name -> kaboomproto.Position
-	10, // 13: kaboomproto.VisualHint__Yeet.yeet_vector:type_name -> kaboomproto.Vector
-	14, // [14:14] is the sub-list for method output_type
-	14, // [14:14] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	9,  // 8: kaboomproto.VisualHint__Explosion.location:type_name -> kaboomproto.Location
+	9,  // 9: kaboomproto.VisualHint__Stomp.location:type_name -> kaboomproto.Location
+	10, // 10: kaboomproto.VisualHint__Snipe.vector:type_name -> kaboomproto.LocationVector
+	9,  // 11: kaboomproto.VisualHint__Nova.location:type_name -> kaboomproto.Location
+	10, // 12: kaboomproto.VisualHint__Yeet.vector:type_name -> kaboomproto.LocationVector
+	13, // [13:13] is the sub-list for method output_type
+	13, // [13:13] is the sub-list for method input_type
+	13, // [13:13] is the sub-list for extension type_name
+	13, // [13:13] is the sub-list for extension extendee
+	0,  // [0:13] is the sub-list for field type_name
 }
 
 func init() { file_visual_hint_proto_init() }
@@ -719,7 +708,7 @@ func file_visual_hint_proto_init() {
 	if File_visual_hint_proto != nil {
 		return
 	}
-	file_position_proto_init()
+	file_location_proto_init()
 	file_visual_hint_proto_msgTypes[0].OneofWrappers = []any{
 		(*VisualHint_Collision)(nil),
 		(*VisualHint_Explosion)(nil),

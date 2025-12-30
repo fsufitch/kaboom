@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package kaboomproto;
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+
+import "move.proto";
+import "delta.proto";
+
+// Turn represents a single turn taken by a player in the game. It is a container for "a player did something".
+// Note: this may include multiple moves, affecting multiple boards.
+message Turn {
+    string uuid = 1;
+    string player_uuid = 2;
+
+    repeated KaboomMove moves = 10; 
+    repeated Delta deltas = 20;
+}

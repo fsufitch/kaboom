@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package kaboomproto;
+option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+
+import "location.proto";
+import "piece.proto";
+
+
+
+// PawnBump is a Kaboom-specific move replacing the capture.
+// The pawn moves diagonally (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it to the square directly behind it (in the same direction as the pawn's movement).
+message PawnBump {
+    LocationVector vector = 1;
+    PieceKind promotion = 10; // optional promotion piece type
+}
+
+// PawnExplosion is a Kaboom-specific move where the pawn detonates itself on its current position,
+// removing itself and bumping all adjacent pieces (horizontally, vertically, and diagonally).
+message PawnExplosion {
+    Location pawn = 1;
+}
+
+// KnightBump is a Kaboom-specific move replacing the capture.
+// The knight moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it. The direction of the bump may be vertical or horizontal, depending on whether the knight's
+// "right angle" move is vertical-first or horizontal-first.
+message KnightBump {
+    LocationVector move_vector = 1;
+    LocationVector bump_vector = 2;
+}
+
+// KnightStomp is a Kaboom-specific move where the knight moves to an *empty* target square, and bumps all adjacent pieces
+// (horizontally, vertically, and diagonally) away from the target square.
+message KnightStomp {
+    LocationVector vector = 1;
+}
+
+// BishopBump is a Kaboom-specific move replacing the capture.
+// The bishop moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it along the same diagonal direction to the next square.
+message BishopBump {
+    LocationVector vector = 1;
+}
+
+// BishopSnipe is a Kaboom-specific move. The bishop does not move from its current position,
+// but instead "snipes" an opponent's piece located anywhere along its diagonal lines of movement,
+// bumping the target piece to the next square along the same diagonal direction.
+message BishopSnipe {
+    Location bishop = 1; // bishop's current position
+    Location target = 2; // position of the opponent's piece to be sniped
+}
+
+// RookBump is a Kaboom-specific move replacing the capture.
+// The rook moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it along the same rank or file to the next square.
+message RookBump {
+    LocationVector vector = 1;
+}
+
+// RookTackle is a Kaboom-specific move variant of RookBump.
+// The rook moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "tackles" it along the same rank or file, moving the bumped piece two squares away instead of one.
+message RookTackle {
+    LocationVector vector = 1;
+}
+
+// QueenBump is a Kaboom-specific move replacing the capture.
+// The queen moves to its target square (as in regular capturing) but instead of removing the
+// opponent's piece, it "bumps" it along the same rank, file, or diagonal to the next square.
+message QueenBump {
+    LocationVector vector = 1;
+}
+
+// QueenNova is a Kaboom-specific move where the queen detonates itself on its current position,
+// removing itself and all pieces (both friendly and opponent) located on the same rank, file, and diagonals.
+message QueenNova {
+    Location queen = 1;
+}
+
+// KingBump is a Kaboom-specific move replacing the capture.
+// The king moves to its target square (as in regular capturing) but instead of removing the opponent's piece,
+// it "bumps" it to an adjacent square in any direction (horizontally, vertically, or diagonally).
+message KingBump {
+    LocationVector vector = 1;
+}
+
+// DeployPiece is a Kaboom-specific move where a piece is deployed from the player's bench onto the board.
+message DeployPiece {
+    LocationVector vector = 1;
+}
+
+
+// PromotePiece is a Kaboom-specific move for handling the edge case of promoting a pawn that got bumped into the last rank.
+message PromotePawn {
+    Location pawn = 1;
+    PieceKind to_kind = 2;
+}
