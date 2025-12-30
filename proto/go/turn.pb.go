@@ -27,6 +27,7 @@ type Turn struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Uuid          string                 `protobuf:"bytes,1,opt,name=uuid,proto3" json:"uuid,omitempty"`
 	PlayerUuid    string                 `protobuf:"bytes,2,opt,name=player_uuid,json=playerUuid,proto3" json:"player_uuid,omitempty"`
+	System        bool                   `protobuf:"varint,3,opt,name=system,proto3" json:"system,omitempty"` // true if this is a system turn (e.g., game start, game end, etc.)
 	Moves         []*KaboomMove          `protobuf:"bytes,10,rep,name=moves,proto3" json:"moves,omitempty"`
 	Deltas        []*Delta               `protobuf:"bytes,20,rep,name=deltas,proto3" json:"deltas,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -77,6 +78,13 @@ func (x *Turn) GetPlayerUuid() string {
 	return ""
 }
 
+func (x *Turn) GetSystem() bool {
+	if x != nil {
+		return x.System
+	}
+	return false
+}
+
 func (x *Turn) GetMoves() []*KaboomMove {
 	if x != nil {
 		return x.Moves
@@ -97,11 +105,12 @@ const file_turn_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
 	"turn.proto\x12\vkaboomproto\x1a\n" +
-	"move.proto\x1a\vdelta.proto\"\x96\x01\n" +
+	"move.proto\x1a\vdelta.proto\"\xae\x01\n" +
 	"\x04Turn\x12\x12\n" +
 	"\x04uuid\x18\x01 \x01(\tR\x04uuid\x12\x1f\n" +
 	"\vplayer_uuid\x18\x02 \x01(\tR\n" +
-	"playerUuid\x12-\n" +
+	"playerUuid\x12\x16\n" +
+	"\x06system\x18\x03 \x01(\bR\x06system\x12-\n" +
 	"\x05moves\x18\n" +
 	" \x03(\v2\x17.kaboomproto.KaboomMoveR\x05moves\x12*\n" +
 	"\x06deltas\x18\x14 \x03(\v2\x12.kaboomproto.DeltaR\x06deltasB1Z/github.com/fsufitch/kaboom/proto/go;kaboomprotob\x06proto3"

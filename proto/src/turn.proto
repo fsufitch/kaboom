@@ -12,6 +12,7 @@ import "delta.proto";
 message Turn {
     string uuid = 1;
     string player_uuid = 2;
+    bool system = 3; // true if this is a system turn (e.g., game start, game end, etc.)
 
     repeated KaboomMove moves = 10; 
     repeated Delta deltas = 20;
