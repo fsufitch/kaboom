@@ -3,14 +3,13 @@ syntax = "proto3";
 package kaboomproto;
 option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
-import "color.proto";
-
+import "./color.proto";
 
 message Board {
-    string uuid = 1;
+  string uuid = 1;
 
-    int64 width = 2;
-    int64 height = 3;
+  int64 width  = 2;
+  int64 height = 3;
 
-    repeated PlayerColor player_colors = 10;
+  repeated PlayerColor player_colors = 10;
 }
