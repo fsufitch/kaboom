@@ -1,0 +1,15 @@
+load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@protobuf//bazel:proto_library.bzl", "proto_library")
+
+proto_library(
+    name = "kaboom_proto",
+    srcs = glob(["*.proto"]),
+    strip_import_prefix = "/src/proto",
+    visibility = ["//visibility:public"],
+)
+
+cc_proto_library(
+    name = "kaboom_cc_proto",
+    visibility = ["//visibility:public"],
+    deps = [":kaboom_proto"],
+)

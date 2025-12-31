@@ -1,80 +1,78 @@
 syntax = "proto3";
 
 package kaboomproto;
-option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
-import "location.proto";
-import "piece.proto";
+import "kaboomproto/location.proto";
+import "kaboomproto/piece.proto";
 
 // PawnMove is a normal pawn move in regular chess rules.
 // It encompasses single and double square advances.
 message PawnMove {
-    LocationVector vector = 1;
-    PieceKind promotion = 10; // optional promotion piece type
+  LocationVector vector    = 1;
+  PieceKind      promotion = 10; // optional promotion piece type
 }
 
 // PawnCapture is a normal pawn capture move in regular chess rules.
 // It encompasses regular and en passant captures.
 message PawnCapture {
-    LocationVector vector = 1;
-    PieceKind promotion = 10; // optional promotion piece type
+  LocationVector vector    = 1;
+  PieceKind      promotion = 10; // optional promotion piece type
 }
 
 // KnightMove is a normal knight move in regular chess rules.
 message KnightMove {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // KnightCapture is a normal knight capture move in regular chess rules.
 message KnightCapture {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
-
 
 // BishopMove is a normal bishop move in regular chess rules.
 message BishopMove {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // BishopCapture is a normal bishop capture move in regular chess rules.
 message BishopCapture {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // RookMove is a normal rook move in regular chess rules.
 message RookMove {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // RookCapture is a normal rook capture move in regular chess rules.
 message RookCapture {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // QueenMove is a normal queen move in regular chess rules.
 message QueenMove {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // QueenCapture is a normal queen capture move in regular chess rules.
 message QueenCapture {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // KingMove is a normal king move in regular chess rules.
 message KingMove {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // KingCapture is a normal king capture move in regular chess rules.
 message KingCapture {
-    LocationVector vector = 1;
+  LocationVector vector = 1;
 }
 
 // KingCastle is a normal king castling move in regular chess rules.
 message KingCastle {
-    LocationVector king_vector = 1;
-    LocationVector rook_vector = 2;
+  LocationVector king_vector = 1;
+  LocationVector rook_vector = 2;
 }
 
 // Resign is a "move" indicating that the player resigns the game.

@@ -1,31 +1,30 @@
 syntax = "proto3";
 
 package kaboomproto;
-option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
-import "color.proto";
-import "location.proto";
+import "kaboomproto/color.proto";
+import "kaboomproto/location.proto";
 
 // PieceKind represents the different kinds of chess pieces.
 enum PieceKind {
-    INVALID_PIECE = 0;
-    PAWN = 1;
-    KNIGHT = 2;
-    BISHOP = 3;
-    ROOK = 4;
-    QUEEN = 5;
-    KING = 6;
+  INVALID_PIECE = 0;
+  PAWN          = 1;
+  KNIGHT        = 2;
+  BISHOP        = 3;
+  ROOK          = 4;
+  QUEEN         = 5;
+  KING          = 6;
 }
 
 // ChessPiece represents a specific chess piece in the game.
 // It is "location-aware" and knows which board it is on, its position, and its zone.
 message ChessPiece {
-    string uuid = 1;
+  string uuid = 1;
 
-    PieceKind kind = 2;
-    PieceKind promoted_kind = 3; // If the piece has been promoted, this indicates the new kind. Otherwise, INVALID_PIECE.
+  PieceKind kind          = 2;
+  PieceKind promoted_kind = 3; // If the piece has been promoted, this indicates the new kind. Otherwise, INVALID_PIECE.
 
-    Color color = 4;
+  Color color = 4;
 
-    Location location = 10;
+  Location location = 10;
 }

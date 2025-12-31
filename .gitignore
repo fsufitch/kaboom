@@ -3,6 +3,9 @@ bazel-*
 **/bazel-*
 .bazelrc.user
 .bazelrc.local
+external
+.bazel_cache
+.bazel_repo_cache
 
 # If you use Bazelisk but don't want to commit version pins in some contexts:
 # (You probably *do* want to commit .bazelversion for reproducibility.)

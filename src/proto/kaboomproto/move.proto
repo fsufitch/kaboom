@@ -1,59 +1,56 @@
 syntax = "proto3";
 
 package kaboomproto;
-option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
-import "location.proto";
-import "move_classic.proto";
-import "move_kaboom.proto";
+import "kaboomproto/location.proto";
+import "kaboomproto/move_classic.proto";
+import "kaboomproto/move_kaboom.proto";
 
 message KaboomMove {
-    oneof move {
-        PawnMove pawn_move = 10;
-        PawnCapture pawn_capture = 11;
-        PawnBump pawn_bump = 12;
-        PawnExplosion pawn_explosion = 13;
+  oneof move {
+    PawnMove      pawn_move      = 10;
+    PawnCapture   pawn_capture   = 11;
+    PawnBump      pawn_bump      = 12;
+    PawnExplosion pawn_explosion = 13;
 
-        KnightMove knight_move = 20;
-        KnightCapture knight_capture = 21;
-        KnightBump knight_bump = 22;
-        KnightStomp knight_stomp = 23;
+    KnightMove    knight_move    = 20;
+    KnightCapture knight_capture = 21;
+    KnightBump    knight_bump    = 22;
+    KnightStomp   knight_stomp   = 23;
 
-        BishopMove bishop_move = 30;
-        BishopCapture bishop_capture = 31;
-        BishopBump bishop_bump = 32;
-        BishopSnipe bishop_snipe = 33;
+    BishopMove    bishop_move    = 30;
+    BishopCapture bishop_capture = 31;
+    BishopBump    bishop_bump    = 32;
+    BishopSnipe   bishop_snipe   = 33;
 
-        RookMove roomove = 40;
-        RookCapture roocapture = 41;
-        RookBump roobump = 42;
-        RookTackle rootackle = 43;
+    RookMove    roomove    = 40;
+    RookCapture roocapture = 41;
+    RookBump    roobump    = 42;
+    RookTackle  rootackle  = 43;
 
-        QueenMove queen_move = 50;
-        QueenCapture queen_capture = 51;
-        QueenBump queen_bump = 52;
-        QueenNova queen_nova = 53;
+    QueenMove    queen_move    = 50;
+    QueenCapture queen_capture = 51;
+    QueenBump    queen_bump    = 52;
+    QueenNova    queen_nova    = 53;
 
-        KingMove king_move = 60;
-        KingCapture king_capture = 61;
-        KingBump king_bump = 62;
-        KingControl king_control = 63;
-        KingCastle king_castle = 64;
+    KingMove    king_move    = 60;
+    KingCapture king_capture = 61;
+    KingBump    king_bump    = 62;
+    KingControl king_control = 63;
+    KingCastle  king_castle  = 64;
 
-        Resign resign = 70;
+    Resign resign = 70;
 
-        DeployPiece deploy_piece = 80;
-    }
+    DeployPiece deploy_piece = 80;
+  }
 }
-
-
 
 // KingControl is a Kaboom-specific move where the king "mind-controls" a piece located within a distance of 2 squares
 // (New York distance) from its current position, forcing the target piece to perform any of its valid moves.
 // This can affect both friendly and opponent pieces. Queens are immune to mind control.
 message KingControl {
-    Location king = 1; // king's current position
+  Location king = 1; // king's current position
 
     // The move that the target piece will perform as a result of mind control.
-    KaboomMove control_move = 3;
+  KaboomMove control_move = 3;
 }

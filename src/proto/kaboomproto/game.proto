@@ -1,21 +1,19 @@
 syntax = "proto3";
 
 package kaboomproto;
-option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
-import "board.proto";
-import "piece.proto";
-import "player.proto";
-import "turn.proto";
+import "kaboomproto/board.proto";
+import "kaboomproto/piece.proto";
+import "kaboomproto/player.proto";
+import "kaboomproto/turn.proto";
 
 message GameSnapshot {
-    string uuid = 1;
-    string rules_variant = 2;
+  string uuid          = 1;
+  string rules_variant = 2;
 
-    repeated Board boards = 20;
-    repeated Player players = 30;
-    repeated ChessPiece pieces = 40;
+  repeated Board      boards  = 20;
+  repeated Player     players = 30;
+  repeated ChessPiece pieces  = 40;
 
-    repeated Turn turns = 50;
+  repeated Turn turns = 50;
 }
-

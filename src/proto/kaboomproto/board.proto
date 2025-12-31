@@ -1,9 +1,8 @@
 syntax = "proto3";
 
 package kaboomproto;
-option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
-import "./color.proto";
+import "kaboomproto/color.proto";
 
 message Board {
   string uuid = 1;

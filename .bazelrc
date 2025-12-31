@@ -1,0 +1,2 @@
+# Import local-specific settings; these are generated during devcontainer setup.
+try-import .bazelrc.local

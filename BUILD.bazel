@@ -1,0 +1,66 @@
+load("@buildifier_prebuilt//:rules.bzl", "buildifier", "buildifier_test")
+load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
+
+# -------------------------
+# Bazel/Starlark formatting
+# -------------------------
+
+# Fix-in-place (bazel run //:buildifier)
+buildifier(
+    name = "buildifier.fix",
+    # Avoid formatting Bazel output trees and VCS metadata.
+    exclude_patterns = [
+        "./.git/*",
+        "./bazel-*/*",
+        "./**/bazel-*/*",
+    ],
+    lint_mode = "fix",
+    mode = "fix",
+    # Optional: keep it broad; buildifier will pick up BUILD(.bazel), *.bzl, MODULE.bazel, etc.
+    visibility = ["//visibility:public"],
+)
+
+# Check only (bazel test //:buildifier.check)
+buildifier_test(
+    name = "buildifier.check",
+    exclude_patterns = [
+        "./.git/*",
+        "./bazel-*/*",
+        "./**/bazel-*/*",
+    ],
+    lint_mode = "warn",
+    mode = "diff",
+    # Avoid sandbox issues around repo mapping/runfiles on some setups.
+    no_sandbox = True,
+    # buildifier_test wants a "workspace file" label; MODULE.bazel is fine.
+    workspace = "//:MODULE.bazel",
+)
+
+alias(
+    name = "buildifier",
+    actual = ":buildifier.fix",
+)
+
+# -------------------------
+# C++ formatting and linting
+# -------------------------
+
+sh_binary(
+    name = "format",
+    srcs = ["tools/format.sh"],
+    visibility = ["//visibility:public"],
+)
+
+sh_binary(
+    name = "tidy",
+    srcs = ["tools/tidy.sh"],
+    visibility = ["//visibility:public"],
+)
+
+# -------------------------
+# compile_commands.json generation
+# -------------------------
+alias(
+    name = "compdb",
+    actual = "@wolfd_bazel_compile_commands//:generate_compile_commands",
+)

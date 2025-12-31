@@ -31,5 +31,6 @@
                 "llvm-vs-code-extensions.vscode-clangd"
             ]
         }
-    }
+    },
+    "updateContentCommand": "bash .devcontainer/init-bazel.sh ."
 }

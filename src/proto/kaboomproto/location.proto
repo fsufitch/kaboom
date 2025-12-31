@@ -1,29 +1,26 @@
 syntax = "proto3";
 
 package kaboomproto;
-option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
-
 
 // ZoneKind represents different zones on a board a piece can be in.
 enum ZoneKind {
-    ZONE_INVALID = 0;
-    ZONE_BOARD = 1;  // On the main chess board
-    ZONE_GRAVEYARD = 2; // Captured 
-    ZONE_BENCH = 3; // Ready to be deployed
-    ZONE_TEMPORARY = 4; // For transient states
+  ZONE_INVALID    = 0;
+  ZONE_BOARD      = 1; // On the main chess board
+  ZZONE_GRAVEYARD = 2; // Captured
+  ZONE_BENCH      = 3; // Ready to be deployed
+  ZONE_TEMPORARY  = 4; // For transient states
 }
-
 
 // Location fully describes a specific location in a game, including board, zone, and position.
 message Location {
-    string board_uuid = 1;
-    ZoneKind zone = 2;
-    int64 row = 3;
-    int64 col = 4;
+  string   board_uuid = 1;
+  ZoneKind zone       = 2;
+  int64    row        = 3;
+  int64    col        = 4;
 }
 
 // LocationVector represents a movement from one Location to another.
 message LocationVector {
-    Location from = 1;
-    Location to = 2;
+  Location from = 1;
+  Location to   = 2;
 }

@@ -1,67 +1,67 @@
 syntax = "proto3";
 
 package kaboomproto;
-option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
 
-import "board.proto";
-import "piece.proto";
-import "player.proto";
-import "visual_hint.proto";
+import "kaboomproto/board.proto";
+import "kaboomproto/piece.proto";
+import "kaboomproto/player.proto";
+import "kaboomproto/visual_hint.proto";
 
 message Delta {
-    oneof delta {
-        Delta_NoOp no_op = 1;
+  oneof delta {
+    Delta_NoOp no_op = 1;
 
-        Delta_PieceUpdate piece_update = 10;
-        Delta_PieceCreate piece_create = 11;
-        Delta_PieceDelete piece_delete = 12;
+    Delta_PieceUpdate piece_update = 10;
+    Delta_PieceCreate piece_create = 11;
+    Delta_PieceDelete piece_delete = 12;
 
-        Delta_PlayerUpdate player_update = 20;
-        Delta_PlayerCreate player_create = 21;
-        Delta_PlayerDelete player_delete = 22;
+    Delta_PlayerUpdate player_update = 20;
+    Delta_PlayerCreate player_create = 21;
+    Delta_PlayerDelete player_delete = 22;
 
-        Delta_BoardUpdate board_update = 30;
-        Delta_BoardCreate board_create = 31;
-        Delta_BoardDelete board_delete = 32;
-    }
+    Delta_BoardUpdate board_update = 30;
+    Delta_BoardCreate board_create = 31;
+    Delta_BoardDelete board_delete = 32;
+  }
 
-    repeated VisualHint visual_hints = 100;
+  repeated VisualHint visual_hints = 100;
 
 }
 
 message Delta_NoOp {}
 
 message Delta_PieceUpdate {
-    ChessPiece piece = 1;
+  ChessPiece piece = 1;
 }
 
 message Delta_PieceCreate {
-    ChessPiece piece = 1;
+  ChessPiece piece = 1;
 }
 
 message Delta_PieceDelete {
-    string piece_uuid = 1;
+  string piece_uuid = 1;
 }
 
 message Delta_PlayerUpdate {
-    Player player = 1;
+  Player player = 1;
 }
+
 message Delta_PlayerCreate {
-    Player player = 1;
+  Player player = 1;
 }
 
 message Delta_PlayerDelete {
-    string player_uuid = 1;
+  string player_uuid = 1;
 }
 
 message Delta_BoardUpdate {
-    Board board = 1;
+  Board board = 1;
 }
 
 message Delta_BoardCreate {
-    Board board = 1;
+  Board board = 1;
 }
 
 message Delta_BoardDelete {
-    string board_uuid = 1;
+  string board_uuid = 1;
 }
