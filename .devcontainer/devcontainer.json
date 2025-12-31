@@ -12,6 +12,10 @@
     "containerUser": "${localEnv:USER}",
     // On Linux, adjust UID/GID to match your host user
     "updateRemoteUserUID": true,
+    "mounts": [
+        // Mount the bazel cache to a volume to speed up builds
+        "source=kaboom-bazel-cache,target=/bazel-cache,type=volume"
+    ],
     "customizations": {
         "vscode": {
             "settings": {
