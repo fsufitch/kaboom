@@ -13,31 +13,37 @@ Kaboom Chess is a variant that starts from the usual chess opening position and 
 ## Piece Abilities
 
 ### Pawns
+
 - **Move:** Standard pawn advance (one square, or two squares from the starting rank) with normal promotions on the far rank. No en passant.
 - **Pawn Bump:** Moves diagonally forward like a capture and bumps the target one additional square along that diagonal.
 - **Pawn Explosion:** The pawn sacrifices itself, bumping every adjacent square (8 directions) one step away.
 
 ### Knights
+
 - **Move:** Standard L-shaped movement that must land on an empty square.
 - **Knight Bump:** Lands on the target square and bumps the occupant either horizontally or vertically, matching whether the L-move started with a horizontal or vertical component.
 - **Knight Stomp:** Lands on an empty square and bumps all adjacent pieces one step away.
 
 ### Bishops
+
 - **Move:** Normal diagonal movement to an empty square.
 - **Bishop Bump:** Lands diagonally on an occupied square and bumps the piece one more square along that diagonal.
 - **Bishop Snipe:** Stays on its current square and targets any piece along a diagonal ray, bumping it one square further down that ray.
 
 ### Rooks
+
 - **Move:** Normal horizontal or vertical movement to an empty square.
 - **Rook Bump:** Lands on an occupied target square and bumps that piece one more square along the same file or rank.
 - **Rook Tackle:** Similar to the bump, but pushes the target two squares instead of one.
 
 ### Queens
+
 - **Move:** Standard move combining rook and bishop movement, landing on an empty square.
 - **Queen Bump:** Lands on an occupied square and bumps the piece one square in the direction the queen moved.
 - **Queen Nova:** The queen detonates, removing itself and every piece along the same rank, file, and diagonals.
 
 ### Kings
+
 - **Move:** One square in any direction to an empty square.
 - **King Bump:** Lands on an occupied square and bumps the piece to any adjacent square (up to eight choices). The king chooses the direction.
 - **King Control:** If an opposing (or friendly) piece other than a queen is within Manhattan distance 2, the king may stay put and compel that piece to take any move it would normally be allowed to make, including Kaboom abilities. Queens are immune.

@@ -98,14 +98,14 @@ go run ./cmd/kaboom-server
 
 Endpoints (all `POST` unless stated otherwise):
 
-| Path | Purpose | Request Body | Response |
-| --- | --- | --- | --- |
-| `/new-game?variant=classic` | Returns the initial `Game` proto for the chosen variant. | Empty body. | Raw JSON-serialized proto. |
-| `/parse-repl-move` | Parses a REPL string into a `KaboomMove`. | `{"replMove": "P M D2 D4"}` | `{"ok":true,"error":"","move":{...}}` |
-| `/move-to-intent?variant=classic` | Converts a move into an intent for the supplied game. | `{"game":{...proto...},"move":{...proto...}}` | `{"ok":true,"error":"","intent":{...}}` |
-| `/intent-to-effect?variant=classic` | Converts an intent into concrete effects. | `{"game":{...},"intent":{...}}` | `{"ok":true,"error":"","effects":[{...}]}` |
-| `/apply-effects` | Applies effects to the supplied game snapshot. | `{"game":{...},"effects":[{...}]}` | `{"ok":true,"error":"","game":{...}}` |
-| `/evaluate-move?variant=classic` | Full pipeline helper. | `{"game":{...},"replMove":"P M D2 D4"}` or `{"game":{...},"move":{...}}` | `{"ok":true,"error":"","game":{...}}` |
+| Path                                | Purpose                                                  | Request Body                                                             | Response                                   |
+| ----------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------ | ------------------------------------------ |
+| `/new-game?variant=classic`         | Returns the initial `Game` proto for the chosen variant. | Empty body.                                                              | Raw JSON-serialized proto.                 |
+| `/parse-repl-move`                  | Parses a REPL string into a `KaboomMove`.                | `{"replMove": "P M D2 D4"}`                                              | `{"ok":true,"error":"","move":{...}}`      |
+| `/move-to-intent?variant=classic`   | Converts a move into an intent for the supplied game.    | `{"game":{...proto...},"move":{...proto...}}`                            | `{"ok":true,"error":"","intent":{...}}`    |
+| `/intent-to-effect?variant=classic` | Converts an intent into concrete effects.                | `{"game":{...},"intent":{...}}`                                          | `{"ok":true,"error":"","effects":[{...}]}` |
+| `/apply-effects`                    | Applies effects to the supplied game snapshot.           | `{"game":{...},"effects":[{...}]}`                                       | `{"ok":true,"error":"","game":{...}}`      |
+| `/evaluate-move?variant=classic`    | Full pipeline helper.                                    | `{"game":{...},"replMove":"P M D2 D4"}` or `{"game":{...},"move":{...}}` | `{"ok":true,"error":"","game":{...}}`      |
 
 Every helper returns JSON with `ok`/`error` plus a payload key (`move`, `intent`, `effects`, or `game`). Errors that stem from bad input use HTTP 400, while unexpected failures surface as HTTP 500 with `ok:false`.
 

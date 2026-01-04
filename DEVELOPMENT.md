@@ -8,7 +8,7 @@ The repo ships with a `.devcontainer/` setup. Using it is the fastest way to get
 
 1. Install [Visual Studio Code](https://code.visualstudio.com/) plus the **Dev Containers** extension.
 2. Open the repository folder in VS Code.
-3. When prompted, select **Reopen in Container** (or run the *Dev Containers: Reopen in Container* command manually). The container installs the dependencies declared in `devcontainer.json`.
+3. When prompted, select **Reopen in Container** (or run the _Dev Containers: Reopen in Container_ command manually). The container installs the dependencies declared in `devcontainer.json`.
 4. Work inside the container; terminals and editors now share the preconfigured Go toolchain.
 
 ### Local setup (optional)
