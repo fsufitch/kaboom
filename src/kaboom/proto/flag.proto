@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package proto;
+
+
+// Flag represents a game flag or setting, with various properties.
+message Flag {
+  string id = 1;
+
+  oneof flag {
+    Classic classic = 2;
+  }
+
+  message Classic {
+    oneof name {
+      KingChecked     king_checked     = 1;
+      KingCheckMated  king_check_mated = 2;
+      Stalemate       stalemate        = 3;
+      Resignation     resignation      = 4;
+    }
+
+    message KingChecked {
+      string king_id = 1;
+    }
+
+    message KingCheckMated {
+      string king_id = 1;
+    }
+
+    message Stalemate {
+      string player_id = 1;
+    }
+
+    message Resignation {
+      string player_id = 1;
+    }
+  }
+}
+
+
+
+

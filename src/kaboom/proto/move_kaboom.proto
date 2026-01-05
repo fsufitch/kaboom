@@ -28,6 +28,11 @@ message KaboomChessMove {
       ClassicChessMove.Pawn.TwoStep   two_step  = 2;
       Bump                            bump      = 3;
       Explode                         explode   = 4;
+
+      // As in classic chess, promotions are handled as a separate move.
+      // Exception: if a pawn ends up in the final rank due to a bump, it does NOT promote automatically.
+      // On a player's turn, they may promote any pawns that started the turn in the final rank, in addition to making their normal move.
+      // Any newly-promoted pawns may only move on subsequent turns.
       ClassicChessMove.Pawn.Promotion promotion = 5;
     }
 
@@ -121,12 +126,12 @@ message KaboomChessMove {
   message King {
     oneof type {
       ClassicChessMove.King.Move    move         = 1;
-      ClassicChessMove.King.Capture capture      = 2;
-      Bump                          bump         = 3;
-      MindControl                   mind_control = 4;
+      Bump                          bump         = 2;
+      MindControl                   mind_control = 3;
     }
 
-    // Bump represents a king bumping another piece to an adjacent square.
+    // Bump represents a king moving into an adjacent square and
+    // bumping the piece already there in the same direction.
     message Bump {
       Place from = 1;
       Place to   = 2;

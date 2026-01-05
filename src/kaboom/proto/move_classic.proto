@@ -28,9 +28,11 @@ message ClassicChessMove {
 
     message OneStep {
       Place from = 1;
+      Place to = 2;
     }
     message TwoStep {
       Place from = 1;
+      Place to = 2;
     }
     message Capture {
       Place from = 1;
@@ -40,6 +42,12 @@ message ClassicChessMove {
       Place from = 1;
       Place to = 2;
     }
+
+    // Promotion represents a pawn promotion. It is handled as a standalone separate "Move".
+    // That is, a turn in which a pawn moves into the final rank and promotes will consist of two Moves:
+    // 1) A ClassicChessMove.Pawn.OneStep move into the final rank.
+    // 2) A ClassicChessMove.Pawn.Promotion move specifying the promotion.
+    // Same applies for a pawn entering the final rank with a capture, etc.
     message Promotion {
       Place from = 1;
       ChessPieceKind promote_to = 2;

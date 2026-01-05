@@ -3,6 +3,7 @@ syntax = "proto3";
 package proto;
 
 import "board.proto";
+import "flag.proto";
 
 // Effect represents a set of changes to the game state and visual hints.
 // These changes and visual hints should be considered to occur simultaneously.
@@ -38,6 +39,16 @@ message Effect {
     message PieceDeployed {
       string piece_id = 1;
       Vector to = 2;
+    }
+
+    // CreateFlag represents the creation of a new game flag, attached to the game state.
+    message CreateFlag {
+      Flag flag = 1;
+    }
+
+    // DeleteFlag represents the deletion of an existing game flag from the game state.
+    message DeleteFlag {
+      string flag_id = 1;
     }
   }
 
