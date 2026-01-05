@@ -2,9 +2,10 @@
 set -eo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-PROTO_DIR="$SCRIPT_DIR/src/kaboom/proto"
+PROTO_SRC_DIR="$SCRIPT_DIR/src/kaboom/proto"
+PROTO_GEN_DIR="$SCRIPT_DIR/src/kaboom/proto/gen"
 
-if [ -z "$PROTOC" ]; then 
+if [ -z "$PROTOC" ]; then
     PROTOC=$(type -p protoc || true)
 else
     echo "Using PROTOC from environment: $PROTOC"
@@ -15,7 +16,7 @@ if [ -z "$PROTOC" ]; then
 fi
 
 PROTOC_GEN_TS_PROTO_GUESS="$SCRIPT_DIR/node_modules/.bin/protoc-gen-ts_proto"
-if [ -z "$PROTOC_GEN_TS_PROTO" ]; then 
+if [ -z "$PROTOC_GEN_TS_PROTO" ]; then
     if [ -x "$PROTOC_GEN_TS_PROTO_GUESS" ]; then
         PROTOC_GEN_TS_PROTO="$PROTOC_GEN_TS_PROTO_GUESS"
     else
@@ -36,19 +37,36 @@ echo "  Using ts-proto: $PROTOC_GEN_TS_PROTO"
 
 build() {
     echo "Generating TypeScript stubs from .proto files..."
+
+    TS_PROTO_OPT="" # See: https://github.com/stephenh/ts-proto?tab=readme-ov-file#supported-options
+    TS_PROTO_OPT+="esModuleInterop=true," # Enable ES module interoperability
+    TS_PROTO_OPT+="env=both,"              # Generate code for both Node.js and browser environments
+    # TS_PROTO_OPT+="exportCommonSymbols=false," # Do not export common symbols multiple times, to help with barreling
+    TS_PROTO_OPT+="oneof=unions-values,"  # Use union types for oneof fields
+    TS_PROTO_OPT+="stringEnums=true"     # Use string enums instead of numeric enums
+    TS_PROTO_OPT+="outputSchema=const,"   # Output JSON schema as a const object
+    # TS_PROTO_OPT+="outputTypeAnnotations=true" # Output type annotations for better type safety
+    TS_PROTO_OPT+="useReadonlyTypes=true," # Use readonly types where applicable
+    TS_PROTO_OPT+="comments=true,"        # Preserve comments from .proto files
+    TS_PROTO_OPT+="outputIndex=true,"    # Output an index.ts file for easier imports
+    TS_PROTO_OPT+="useDate=true,"
+    TS_PROTO_OPT="${TS_PROTO_OPT%,}" # Remove trailing comma
+
     set -ex
     $PROTOC \
         --plugin=protoc-gen-ts_proto="$PROTOC_GEN_TS_PROTO" \
-        --ts_proto_out="$PROTO_DIR" \
-        --ts_proto_opt=esModuleInterop=true,outputServices=generic-definitions,useOptionals=messages,env=node \
-        --proto_path="$PROTO_DIR" \
-        "$PROTO_DIR"/*.proto
+        --ts_proto_out="$PROTO_GEN_DIR" \
+        --ts_proto_opt="$TS_PROTO_OPT" \
+        --proto_path="$PROTO_SRC_DIR" \
+        "$PROTO_SRC_DIR"/*.proto
 }
 
 clean() {
     echo "Cleaning generated TypeScript files..."
     set -ex
-    rm -rf "$PROTO_DIR"/*.ts
+    rm -rf "$PROTO_GEN_DIR"/*
+    mkdir -p "$PROTO_GEN_DIR"
+    touch "$PROTO_GEN_DIR/.gitkeep"
 }
 
 

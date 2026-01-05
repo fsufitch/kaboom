@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package proto;
+
+import "board.proto";
+import "move_classic.proto";
+
+message KaboomChessMove {
+  oneof piece {
+    Pawn pawn = 1;
+    Rook rook = 2;
+    Knight knight = 3;
+    Bishop bishop = 4;
+    Queen queen = 5;
+    King king = 6;
+  }
+
+  message Pawn {
+    oneof type {
+      ClassicChessMove.Pawn.OneStep   one_step  = 1;
+      ClassicChessMove.Pawn.TwoStep   two_step  = 2;
+      Bump                            bump      = 3;
+      Explode                         explode   = 4;
+      ClassicChessMove.Pawn.Promotion promotion = 5;
+    }
+
+    message Bump {
+      Place from = 1;
+      Place to   = 2;
+    }
+
+    message Explode {
+      Place from = 1;
+    }
+  }
+
+  message Knight {
+    oneof type {
+      ClassicChessMove.Knight.Move move          = 1;
+      JumpAndBump                  jump_and_bump = 2;
+    }
+
+    message JumpAndBump {
+      Place  from           = 1;
+      Place  to             = 2;
+      Vector bump_direction = 3;
+    }
+  }
+
+  message Bishop {
+    oneof type {
+      ClassicChessMove.Bishop.Move move  = 1;
+      Bump                         bump  = 2;
+      Snipe                        snipe = 3;
+    }
+
+    message Bump {
+      Place from = 1;
+      Place to   = 2;
+    }
+
+    message Snipe {
+      Place from = 1;
+      Place to   = 2;
+    }
+  }
+
+  message Rook {
+    oneof type {
+      ClassicChessMove.Rook.Move move  = 1;
+      Bump                        bump = 2;
+    }
+
+    message Bump {
+      Place from = 1;
+      Place to   = 2;
+      bool double_bump = 3;
+    }
+  }
+
+  message Queen {
+    oneof type {
+      ClassicChessMove.Queen.Move move  = 1;
+      Bump                         bump  = 2;
+      Nova                         nova  = 3;
+    }
+
+    message Bump {
+      Place from = 1;
+      Place to   = 2;
+    }
+
+    message Nova {
+      Place from = 1;
+    }
+  }
+
+  message King {
+    oneof type {
+      ClassicChessMove.King.Move move  = 1;
+      ClassicChessMove.King.Capture capture = 2;
+      Bump                        bump = 3;
+    }
+
+    message Bump {
+      Place from = 1;
+      Place to   = 2;
+    }
+
+    message MindControl {
+      Place from = 1;
+      Place target_piece = 2;
+      KaboomChessMove target_move = 3;
+    }
+  }
+}

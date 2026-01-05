@@ -1,12 +1,9 @@
 syntax = "proto3";
 
-package kaboomproto;
-option go_package = "github.com/fsufitch/kaboom/proto/go;kaboomproto";
+package proto;
 
-
-// Color represents the color of a chess piece or player.
-enum Color {
-    COLOR_INVALID = 0;
-    COLOR_WHITE = 1;
-    COLOR_BLACK = 2;
+enum ChessColor {
+  COLOR_UNKNOWN = 0;
+  WHITE = 1;
+  BLACK = 2;
 }
