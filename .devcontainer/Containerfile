@@ -24,6 +24,7 @@ RUN dnf install -y \
   xz \
   zip
 
+RUN npm i -g pnpm
 
 # Extra bashrc, paths, etc
 COPY ./bashrc-load-dir.sh /etc/bashrc-load-dir.sh

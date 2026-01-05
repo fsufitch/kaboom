@@ -1,0 +1,25 @@
+{
+  "name": "cli",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc -b",
+    "start": "node dist/main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.27.0",
+  "dependencies": {
+    "@kaboom/proto": "workspace:^"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3"
+  },
+  "references": [
+    {
+      "path": "../proto/tsconfig.json"
+    }
+  ]
+}

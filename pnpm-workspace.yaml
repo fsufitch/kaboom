@@ -1,0 +1,7 @@
+hoist: true
+lockfile: true
+
+linkWorkspacePackages: true
+
+packages:
+  - packages/*

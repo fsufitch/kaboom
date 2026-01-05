@@ -2,8 +2,8 @@
 set -eo pipefail
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
-PROTO_SRC_DIR="$SCRIPT_DIR/src/kaboom/proto"
-PROTO_GEN_DIR="$SCRIPT_DIR/src/kaboom/proto/gen"
+PROTO_SRC_DIR="$SCRIPT_DIR/src"
+PROTO_GEN_DIR="$SCRIPT_DIR/gen"
 
 if [ -z "$PROTOC" ]; then
     PROTOC=$(type -p protoc || true)
@@ -39,14 +39,16 @@ build() {
     echo "Generating TypeScript stubs from .proto files..."
 
     TS_PROTO_OPT="" # See: https://github.com/stephenh/ts-proto?tab=readme-ov-file#supported-options
+
+    # Configure for ESM support
     TS_PROTO_OPT+="esModuleInterop=true," # Enable ES module interoperability
-    TS_PROTO_OPT+="env=both,"              # Generate code for both Node.js and browser environments
     TS_PROTO_OPT+="importSuffix=.js,"      # Emit ESM-friendly import specifiers
-    # TS_PROTO_OPT+="exportCommonSymbols=false," # Do not export common symbols multiple times, to help with barreling
+
+    # Other options
+    TS_PROTO_OPT+="env=both,"              # Generate code for both Node.js and browser environments
     TS_PROTO_OPT+="oneof=unions-values,"  # Use union types for oneof fields
     TS_PROTO_OPT+="stringEnums=true"     # Use string enums instead of numeric enums
     TS_PROTO_OPT+="outputSchema=const,"   # Output JSON schema as a const object
-    # TS_PROTO_OPT+="outputTypeAnnotations=true" # Output type annotations for better type safety
     TS_PROTO_OPT+="useReadonlyTypes=true," # Use readonly types where applicable
     TS_PROTO_OPT+="comments=true,"        # Preserve comments from .proto files
     TS_PROTO_OPT+="outputIndex=true,"    # Output an index.ts file for easier imports
