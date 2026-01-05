@@ -6,6 +6,7 @@ import "player.proto";
 import "board.proto";
 import "piece.proto";
 import "turn.proto";
+import "flag.proto";
 
 // GameSnapshot represents the complete state of a game at a specific point in time.
 // It should be treated as immutable. The Kaboom engine is a "snapshot to snapshot" pure functional engine.
@@ -18,6 +19,7 @@ message GameSnapshot {
   repeated ChessBoardPlayer board_players = 4;
   repeated ChessPiece pieces = 5;
   repeated ExecutedTurn turn_history = 6;
+  repeated Flag flags = 7;
 }
 
 // GameProperties represents the immutable properties of a game.
