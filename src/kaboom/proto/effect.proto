@@ -4,9 +4,14 @@ package proto;
 
 import "board.proto";
 
+// Effect represents a set of changes to the game state and visual hints.
+// These changes and visual hints should be considered to occur simultaneously.
+// Sequential changes/effects are implemented elsewhere.
 message Effect {
   repeated StateChange state_changes = 1;
   repeated VisualHint visual_hints = 2;
+
+  // StateChange represents a change to the game state.
   message StateChange {
     oneof type {
       NoOp no_op = 1;
@@ -14,27 +19,37 @@ message Effect {
       PieceCaptured piece_captured = 3;
       PieceDeployed piece_deployed = 4;
     }
+
+    // NoOp represents no operation / no change.
     message NoOp {}
 
+    // PieceMoved represents a piece moving to a new place within the same board.
     message PieceMoved {
       string piece_id = 1;
-      Place to = 3;
+      Vector to = 2;
     }
 
+    // PieceCaptured represents a piece being captured. It is moved to the captured zone.
     message PieceCaptured {
       string piece_id = 1;
     }
 
+    // PieceDeployed represents a piece being deployed to the board's active area.
     message PieceDeployed {
       string piece_id = 1;
-      Place to = 2;
+      Vector to = 2;
     }
   }
 
+  // VisualHint represents a visual effect cue that a client may choose to follow accompanying state effects.
   message VisualHint {
     oneof type {
       NoOp no_op = 1;
     }
-    message NoOp {}
+
+    // NoOp represents no visual hint (or a placeholder).
+    message NoOp {
+      string comment = 1;
+    }
   }
 }

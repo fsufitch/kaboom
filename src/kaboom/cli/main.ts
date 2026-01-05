@@ -1,4 +1,6 @@
-import * as P from '@kaboom/proto';
+#!/usr/bin/env node
+
+import P from 'kaboom/proto';
 
 export const main = () => {
   console.log('Hello, Kaboom CLI!');

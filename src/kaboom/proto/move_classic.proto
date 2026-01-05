@@ -5,6 +5,8 @@ package proto;
 import "board.proto";
 import "piece.proto";
 
+// ClassicChessMove represents a move in classic chess.
+// It contains a oneof for each piece type, and within each piece type, a oneof for each move type.
 message ClassicChessMove {
   oneof piece {
     Pawn pawn = 1;

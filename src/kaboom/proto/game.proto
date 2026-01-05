@@ -7,20 +7,27 @@ import "board.proto";
 import "piece.proto";
 import "turn.proto";
 
+// GameSnapshot represents the complete state of a game at a specific point in time.
+// It should be treated as immutable. The Kaboom engine is a "snapshot to snapshot" pure functional engine.
+//
+// The data in a snapshot is normalized, e.g. pieces reference boards and players by ID.
 message GameSnapshot {
   GameProperties properties = 1;
   repeated Player players = 2;
   repeated ChessBoard boards = 3;
-  repeated ChessPiece pieces = 4;
-  repeated ExecutedTurn turn_history = 5;
+  repeated ChessBoardPlayer board_players = 4;
+  repeated ChessPiece pieces = 5;
+  repeated ExecutedTurn turn_history = 6;
 }
 
+// GameProperties represents the immutable properties of a game.
 message GameProperties {
   string id = 1;
   Variant variant = 2;
 }
 
 
+// Variant represents the different chess variants supported by the Kaboom engine.
 enum Variant {
   VARIANT_UNKNOWN = 0;
   CLASSIC = 1;

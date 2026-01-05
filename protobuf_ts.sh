@@ -41,6 +41,7 @@ build() {
     TS_PROTO_OPT="" # See: https://github.com/stephenh/ts-proto?tab=readme-ov-file#supported-options
     TS_PROTO_OPT+="esModuleInterop=true," # Enable ES module interoperability
     TS_PROTO_OPT+="env=both,"              # Generate code for both Node.js and browser environments
+    TS_PROTO_OPT+="importSuffix=.js,"      # Emit ESM-friendly import specifiers
     # TS_PROTO_OPT+="exportCommonSymbols=false," # Do not export common symbols multiple times, to help with barreling
     TS_PROTO_OPT+="oneof=unions-values,"  # Use union types for oneof fields
     TS_PROTO_OPT+="stringEnums=true"     # Use string enums instead of numeric enums

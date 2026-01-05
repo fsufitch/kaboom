@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package proto;
 
+// ChessColor represents the color of a chess piece (or other thing in chess).
 enum ChessColor {
   COLOR_UNKNOWN = 0;
   WHITE = 1;

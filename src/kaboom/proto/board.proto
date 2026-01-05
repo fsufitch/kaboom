@@ -2,12 +2,21 @@ syntax = "proto3";
 
 package proto;
 
+import "color.proto";
+// ChessBoard represents the dimensions and identity of a chess board.
 message ChessBoard {
   string id = 1;
   int64 rows = 2;
   int64 columns = 3;
 }
 
+message ChessBoardPlayer {
+  string board_id = 1;
+  string player_id = 2;
+  ChessColor color = 3;
+}
+
+// Place represents a specific location of a piece, either on the board or off the board (captured or on bench).
 message Place {
   string board_id = 1;
   oneof zone {
@@ -17,6 +26,7 @@ message Place {
   }
 }
 
+// Vector represents either a position or a direction/delta on the board.
 message Vector {
   int64 row = 1;
   int64 column = 2;
