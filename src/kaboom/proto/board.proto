@@ -9,7 +9,7 @@ message ChessBoard {
   int64 rows = 2;
   int64 columns = 3;
 
-  string active_player_id = 4; // The player whose turn it is to move.
+  ChessColor active_color = 4; // The player whose turn it is to move.
 }
 
 // ChessBoardPlayer is a "many-to-many" mapping between chess boards and players.
