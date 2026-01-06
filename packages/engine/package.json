@@ -2,12 +2,46 @@
   "name": "@kaboom/engine",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./*": {
+      "require": "./dist/*.cjs",
+      "import": "./dist/*.js",
+      "types": "./dist/*.d.ts"
+    },
+    "./base": {
+      "require": "./dist/base/index.cjs",
+      "import": "./dist/base/index.js",
+      "types": "./dist/base/index.d.ts"
+    },
+    "./base/*": {
+      "require": "./dist/base/*.cjs",
+      "import": "./dist/base/*.js",
+      "types": "./dist/base/*.d.ts"
+    },
+    "./classic": {
+      "require": "./dist/classic/index.cjs",
+      "import": "./dist/classic/index.js",
+      "types": "./dist/classic/index.d.ts"
+    },
+    "./classic/*": {
+      "require": "./dist/classic/*.cjs",
+      "import": "./dist/classic/*.js",
+      "types": "./dist/classic/*.d.ts"
+    }
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsup --config tsup.config.ts",
     "lint": "pnpm -C ../.. exec eslint --config packages/engine/eslint.config.ts packages/engine",
-    "lint:fix": "pnpm -C ../.. exec eslint --config packages/engine/eslint.config.ts packages/engine --fix",
-    "start": "node dist/main.js"
+    "lint:fix": "pnpm -C ../.. exec eslint --config packages/engine/eslint.config.ts packages/engine --fix"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +51,7 @@
     "@kaboom/proto": "workspace:^"
   },
   "devDependencies": {
+    "tsup": "catalog:",
     "typescript": "catalog:"
   }
 }

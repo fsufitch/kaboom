@@ -1,7 +1,7 @@
 import { GameSnapshot, type ResolvedTurn } from '@kaboom/proto';
 
-import type { KaboomRuleset } from './base/ruleset';
-import { writable } from './base/types';
+import type { KaboomRuleset } from './ruleset';
+import { writable } from './types';
 
 export class KaboomEngine {
   constructor(public readonly ruleset: KaboomRuleset) {}

@@ -1,1 +1,1 @@
-export * from './gen/index.proto.js';
+export * from './gen/index.proto';

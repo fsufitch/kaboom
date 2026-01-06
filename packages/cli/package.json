@@ -5,19 +5,21 @@
   "type": "module",
   "main": "dist/main.js",
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsup --config tsup.config.ts",
     "lint": "pnpm -C ../.. exec eslint --config packages/cli/eslint.config.ts packages/cli",
     "lint:fix": "pnpm -C ../.. exec eslint --config packages/cli/eslint.config.ts packages/cli --fix",
-    "start": "node dist/main.js"
+    "start": "node dist/main.cjs"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.27.0",
   "dependencies": {
+    "@kaboom/engine": "workspace:^",
     "@kaboom/proto": "workspace:^"
   },
   "devDependencies": {
+    "tsup": "catalog:",
     "typescript": "catalog:"
   }
 }

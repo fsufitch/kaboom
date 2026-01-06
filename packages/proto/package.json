@@ -3,24 +3,19 @@
   "version": "0.0.1",
   "description": "",
   "type": "module",
-  "main": "dist/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
+      "require": "./dist/index.cjs",
       "types": "./dist/index.d.ts"
-    },
-    "./*": {
-      "import": "./dist/*.js",
-      "types": "./dist/*.d.ts"
-    },
-    "./gen/*": {
-      "import": "./dist/gen/*.js",
-      "types": "./dist/gen/*.d.ts"
     }
   },
   "scripts": {
     "prebuild": "pnpm generate",
-    "build": "tsc --build",
+    "build": "tsup --config tsup.config.ts",
     "generate": "bash ./protobuf_ts.sh build",
     "clean": "bash ./protobuf_ts.sh clean",
     "lint": "pnpm -C ../.. exec eslint --config packages/proto/eslint.config.ts packages/proto",
@@ -32,6 +27,7 @@
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {
     "protoc": "^33.2.0",
+    "tsup": "catalog:",
     "typescript": "^5.9.3"
   },
   "dependencies": {
