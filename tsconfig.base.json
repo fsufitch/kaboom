@@ -15,7 +15,6 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "isolatedDeclarations": true,
     // Stricter Typechecking Options
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,

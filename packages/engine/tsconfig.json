@@ -8,6 +8,11 @@
     "types": [
       "node"
     ],
+    "paths": {
+      "@kaboom/engine/*": [
+        "./*"
+      ],
+    }
   },
   "exclude": [
     "dist",
