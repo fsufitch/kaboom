@@ -106,3 +106,14 @@ export const ChessDirectionVectors = {
   SOUTHEAST: new SmartVector({ row: -1, column: 1 }),
   SOUTHWEST: new SmartVector({ row: -1, column: -1 }),
 };
+
+export const KnightDirectionVectors: SmartVector[] = [
+  new SmartVector({ row: 2, column: 1 }),
+  new SmartVector({ row: 2, column: -1 }),
+  new SmartVector({ row: -2, column: 1 }),
+  new SmartVector({ row: -2, column: -1 }),
+  new SmartVector({ row: 1, column: 2 }),
+  new SmartVector({ row: 1, column: -2 }),
+  new SmartVector({ row: -1, column: 2 }),
+  new SmartVector({ row: -1, column: -2 }),
+];
