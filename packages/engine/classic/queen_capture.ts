@@ -1,3 +1,12 @@
+import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
+import {
+  getBoardById,
+  getPieceAtBoardPosition,
+  getPieceById,
+  movesEqual,
+  truePieceKind,
+} from '@kaboom/engine/base';
+import { ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
 import {
   ChessPieceKind,
   Effect,
@@ -6,15 +15,6 @@ import {
   Move,
 } from '@kaboom/proto';
 
-import { IllegalMoveError, type MoveResolver } from '../base/ruleset';
-import {
-  getBoardById,
-  getPieceAtBoardPosition,
-  getPieceById,
-  movesEqual,
-  truePieceKind,
-} from '../base/state_utils';
-import { ChessDirectionVectors, SmartVector } from '../base/vector';
 import { getClassicBoard } from './utils';
 
 export const QueenCaptureResolver: MoveResolver = {
@@ -117,9 +117,7 @@ export const QueenCaptureResolver: MoveResolver = {
     }
     const queen = getPieceById(snapshot, movedPieces[0]);
     if (!queen) {
-      throw new Error(
-        `Invalid move: could not find queen piece with ID '${movedPieces[0]}'`,
-      );
+      throw new Error(`Invalid move: could not find queen piece with ID '${movedPieces[0]}'`);
     }
 
     const validMoves = QueenCaptureResolver.validMoves(snapshot, queen.id);

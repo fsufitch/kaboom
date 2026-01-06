@@ -1,18 +1,8 @@
-import { truncate } from 'node:fs';
-
 import type { KaboomRuleset } from '@kaboom/engine/base/ruleset';
-import {
-  ChessColor,
-  Effect,
-  Effect_StateChange,
-  Effect_StateChange_SetBoardActiveColor,
-  GameSnapshot,
-  ResolvedTurn,
-} from '@kaboom/proto';
+import { ChessColor, Effect, Effect_StateChange, GameSnapshot, ResolvedTurn } from '@kaboom/proto';
 
-import { SetBoardActiveColorMutator } from '../base/mutators';
-import { applyEffectInPlace, getPieceById, getPlayerColor } from '../base/state_utils';
-import { writable } from '../base/types';
+import { applyEffectInPlace, getPieceById, getPlayerColor } from '@kaboom/engine/base';
+import { writable } from '@kaboom/engine/base';
 import { BishopCaptureResolver } from './bishop_capture';
 import { BishopMoveResolver } from './bishop_move';
 import { KingCaptureResolver } from './king_capture';

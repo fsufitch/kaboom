@@ -6,15 +6,15 @@ import {
   Move,
 } from '@kaboom/proto';
 
-import { IllegalMoveError, type MoveResolver } from '../base/ruleset';
+import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
 import {
   getBoardById,
   getPieceAtBoardPosition,
   getPieceById,
   movesEqual,
   truePieceKind,
-} from '../base/state_utils';
-import { ChessDirectionVectors, SmartVector } from '../base/vector';
+} from '@kaboom/engine/base';
+import { ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard } from './utils';
 
 export const KingMoveResolver: MoveResolver = {
