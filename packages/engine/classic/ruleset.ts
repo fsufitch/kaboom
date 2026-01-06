@@ -3,6 +3,7 @@ import type { KaboomRuleset } from '@kaboom/engine/base/ruleset';
 import { BishopCaptureResolver } from './bishop_capture';
 import { BishopMoveResolver } from './bishop_move';
 import { KingCaptureResolver } from './king_capture';
+import { KingCastleResolver } from './king_castle';
 import { KingMoveResolver } from './king_move';
 import { KnightCaptureResolver } from './knight_capture';
 import { KnightMoveResolver } from './knight_move';
@@ -29,6 +30,7 @@ export const ClassicChessRuleset = {
     QueenCaptureResolver,
     KingMoveResolver,
     KingCaptureResolver,
+    KingCastleResolver,
   ],
 
   newGame: newClassicChessGame,
