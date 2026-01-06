@@ -22,7 +22,9 @@
     "prebuild": "pnpm generate",
     "build": "tsc --build",
     "generate": "bash ./protobuf_ts.sh build",
-    "clean": "bash ./protobuf_ts.sh clean"
+    "clean": "bash ./protobuf_ts.sh clean",
+    "lint": "pnpm -C ../.. exec eslint --config packages/proto/eslint.config.ts packages/proto",
+    "lint:fix": "pnpm -C ../.. exec eslint --config packages/proto/eslint.config.ts packages/proto --fix"
   },
   "keywords": [],
   "author": "",

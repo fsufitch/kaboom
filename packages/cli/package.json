@@ -6,6 +6,8 @@
   "main": "dist/main.js",
   "scripts": {
     "build": "tsc -b",
+    "lint": "pnpm -C ../.. exec eslint --config packages/cli/eslint.config.ts packages/cli",
+    "lint:fix": "pnpm -C ../.. exec eslint --config packages/cli/eslint.config.ts packages/cli --fix",
     "start": "node dist/main.js"
   },
   "keywords": [],

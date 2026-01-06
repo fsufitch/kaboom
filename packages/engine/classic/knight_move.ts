@@ -13,8 +13,7 @@ import {
   getPieceById,
   movesEqual,
   truePieceKind,
-} from '@kaboom/engine/base';
-import { KnightDirectionVectors, SmartVector } from '@kaboom/engine/base';
+ KnightDirectionVectors, SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard } from './utils';
 
 export const KnightMoveResolver: MoveResolver = {

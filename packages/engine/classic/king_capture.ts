@@ -1,3 +1,13 @@
+import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
+import {
+  ChessDirectionVectors,
+  SmartVector,
+  getBoardById,
+  getPieceAtBoardPosition,
+  getPieceById,
+  movesEqual,
+  truePieceKind,
+} from '@kaboom/engine/base';
 import {
   ChessPieceKind,
   Effect,
@@ -6,15 +16,6 @@ import {
   Move,
 } from '@kaboom/proto';
 
-import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
-import {
-  getBoardById,
-  getPieceAtBoardPosition,
-  getPieceById,
-  movesEqual,
-  truePieceKind,
-} from '@kaboom/engine/base';
-import { ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard } from './utils';
 
 export const KingCaptureResolver: MoveResolver = {
@@ -115,9 +116,7 @@ export const KingCaptureResolver: MoveResolver = {
     }
     const king = getPieceById(snapshot, movedPieces[0]);
     if (!king) {
-      throw new Error(
-        `Invalid move: could not find king piece with ID '${movedPieces[0]}'`,
-      );
+      throw new Error(`Invalid move: could not find king piece with ID '${movedPieces[0]}'`);
     }
 
     const validMoves = KingCaptureResolver.validMoves(snapshot, king.id);
@@ -136,7 +135,7 @@ export const KingCaptureResolver: MoveResolver = {
         move,
         `No piece to capture at position ${JSON.stringify(
           kingCapture.to?.boardPosition,
-        )} on board '${board.id}'`,
+        )} on board '${kingCapture.to?.boardId}'`,
       );
     }
 

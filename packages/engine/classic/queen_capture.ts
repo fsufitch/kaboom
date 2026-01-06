@@ -1,12 +1,13 @@
 import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
 import {
+  ChessDirectionVectors,
+  SmartVector,
   getBoardById,
   getPieceAtBoardPosition,
   getPieceById,
   movesEqual,
   truePieceKind,
 } from '@kaboom/engine/base';
-import { ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
 import {
   ChessPieceKind,
   Effect,
@@ -136,7 +137,7 @@ export const QueenCaptureResolver: MoveResolver = {
         move,
         `No piece to capture at position ${JSON.stringify(
           queenCapture.to?.boardPosition,
-        )} on board '${board.id}'`,
+        )} on board '${queenCapture.to?.boardId}'`,
       );
     }
 

@@ -1,3 +1,12 @@
+import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
+import {
+  SmartVector,
+  getBoardById,
+  getPieceAtBoardPosition,
+  getPieceById,
+  movesEqual,
+  truePieceKind,
+} from '@kaboom/engine/base';
 import {
   ChessPieceKind,
   Effect,
@@ -6,15 +15,6 @@ import {
   Move,
 } from '@kaboom/proto';
 
-import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
-import {
-  getBoardById,
-  getPieceAtBoardPosition,
-  getPieceById,
-  movesEqual,
-  truePieceKind,
-} from '@kaboom/engine/base';
-import { SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard } from './utils';
 
 export const PawnCaptureResolver: MoveResolver = {
@@ -102,9 +102,7 @@ export const PawnCaptureResolver: MoveResolver = {
     }
     const pawn = getPieceById(snapshot, movedPieces[0]);
     if (!pawn) {
-      throw new Error(
-        `Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`,
-      );
+      throw new Error(`Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`);
     }
     if (truePieceKind(pawn) !== ChessPieceKind.PAWN) {
       throw new Error(`Invalid move: piece at origin is not a Pawn`);
@@ -126,7 +124,7 @@ export const PawnCaptureResolver: MoveResolver = {
         move,
         `No piece to capture at position ${JSON.stringify(
           pawnMove.to?.boardPosition,
-        )} on board '${board.id}'`,
+        )} on board '${pawnMove.to?.boardId}'`,
       );
     }
     if (target.color === pawn.color) {

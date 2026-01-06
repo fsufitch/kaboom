@@ -27,7 +27,8 @@
         "openai.chatgpt",
         "rvest.vs-code-prettier-eslint",
         "esbenp.prettier-vscode",
-        "DrBlury.protobuf-vsc"
+        "DrBlury.protobuf-vsc",
+        "dbaeumer.vscode-eslint"
       ]
     }
   },

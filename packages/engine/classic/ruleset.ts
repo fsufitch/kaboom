@@ -1,8 +1,7 @@
+import { applyEffectInPlace, getPieceById, getPlayerColor, writable } from '@kaboom/engine/base';
 import type { KaboomRuleset } from '@kaboom/engine/base/ruleset';
 import { ChessColor, Effect, Effect_StateChange, GameSnapshot, ResolvedTurn } from '@kaboom/proto';
 
-import { applyEffectInPlace, getPieceById, getPlayerColor } from '@kaboom/engine/base';
-import { writable } from '@kaboom/engine/base';
 import { BishopCaptureResolver } from './bishop_capture';
 import { BishopMoveResolver } from './bishop_move';
 import { KingCaptureResolver } from './king_capture';
@@ -49,7 +48,7 @@ export const ClassicChessRuleset = {
 
   newGame: newClassicChessGame,
 
-  parseTurn: (snapshot, rawTurn) => {
+  parseTurn: (_snapshot, _rawTurn) => {
     throw new Error('parseTurn is not implemented yet');
   },
 

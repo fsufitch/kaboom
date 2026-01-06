@@ -14,8 +14,7 @@ import {
   getPieceById,
   movesEqual,
   truePieceKind,
-} from '@kaboom/engine/base';
-import { SmartVector } from '@kaboom/engine/base';
+ SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard } from './utils';
 
 const PROMOTION_OPTIONS: ChessPieceKind[] = [

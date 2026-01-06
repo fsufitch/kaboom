@@ -46,7 +46,7 @@ export const newClassicChessGame = (opts?: Partial<NewGameOpts>): GameSnapshot =
         color: ChessColor.BLACK,
       },
     ] as readonly ChessBoardPlayer[],
-    pieces: classicChessPieceSetup.map(([color, kind, row, column, id], index) =>
+    pieces: classicChessPieceSetup.map(([color, kind, row, column, id]) =>
       ChessPiece.create({
         id,
         color,

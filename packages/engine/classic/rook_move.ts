@@ -1,3 +1,11 @@
+import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
+import {
+  getBoardById,
+  getPieceAtBoardPosition,
+  getPieceById,
+  movesEqual,
+  truePieceKind,
+ ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
 import {
   ChessPieceKind,
   Effect,
@@ -6,15 +14,6 @@ import {
   Move,
 } from '@kaboom/proto';
 
-import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
-import {
-  getBoardById,
-  getPieceAtBoardPosition,
-  getPieceById,
-  movesEqual,
-  truePieceKind,
-} from '@kaboom/engine/base';
-import { ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard } from './utils';
 
 export const RookMoveResolver: MoveResolver = {
@@ -111,9 +110,7 @@ export const RookMoveResolver: MoveResolver = {
     }
     const rook = getPieceById(snapshot, movedPieces[0]);
     if (!rook) {
-      throw new Error(
-        `Invalid move: could not find rook piece with ID '${movedPieces[0]}'`,
-      );
+      throw new Error(`Invalid move: could not find rook piece with ID '${movedPieces[0]}'`);
     }
 
     const validMoves = RookMoveResolver.validMoves(snapshot, rook.id);

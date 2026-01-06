@@ -13,8 +13,7 @@ import {
   getPieceById,
   movesEqual,
   truePieceKind,
-} from '@kaboom/engine/base';
-import { SmartVector } from '@kaboom/engine/base';
+ SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard } from './utils';
 
 export const PawnOneStepMoveResolver: MoveResolver = {

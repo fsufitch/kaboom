@@ -30,6 +30,7 @@
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
     "eslint-plugin-jsonc": "^2.21.0",
     "eslint-plugin-yml": "^1.19.1",
     "jiti": "^2.6.1",

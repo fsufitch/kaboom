@@ -13,8 +13,7 @@ import {
   getPieceById,
   movesEqual,
   truePieceKind,
-} from '@kaboom/engine/base';
-import { ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
+ ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard } from './utils';
 
 export const BishopCaptureResolver: MoveResolver = {

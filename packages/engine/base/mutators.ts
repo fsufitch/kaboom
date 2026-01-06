@@ -12,7 +12,7 @@ import { getFlagById, getPieceById, truePieceKind } from './state_utils';
 
 export const NoOpMutator: GameSnapshotMutator = {
   applicable: (stateChange: Effect_StateChange) => !!stateChange.noOp,
-  mutate: (gsw: GameSnapshotWritable, stateChange: Effect_StateChange) => {},
+  mutate: (_gsw: GameSnapshotWritable, _stateChange: Effect_StateChange) => {},
 };
 
 export const CreateFlagMutator: GameSnapshotMutator = {

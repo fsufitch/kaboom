@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc -b",
+    "lint": "pnpm -C ../.. exec eslint --config packages/engine/eslint.config.ts packages/engine",
+    "lint:fix": "pnpm -C ../.. exec eslint --config packages/engine/eslint.config.ts packages/engine --fix",
     "start": "node dist/main.js"
   },
   "keywords": [],

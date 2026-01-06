@@ -13,8 +13,7 @@ import {
   getPieceById,
   movesEqual,
   truePieceKind,
-} from '@kaboom/engine/base';
-import { SmartVector } from '@kaboom/engine/base';
+ SmartVector } from '@kaboom/engine/base';
 import { getClassicBoard, pieceMovedThisGame } from './utils';
 
 // Simplified castling: does not currently check for check/through-check or prior moves.
