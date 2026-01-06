@@ -10,6 +10,6 @@ export const writable = <T>(obj: T): DeepWritable<T> => {
   return obj as DeepWritable<T>;
 };
 
-export const newReadOnlyArray = <T>(...elements: T[]): ReadonlyArray<T> => {
+export const newReadonlyArray = <T>(...elements: T[]): ReadonlyArray<T> => {
   return [...elements] as ReadonlyArray<T>;
 };
