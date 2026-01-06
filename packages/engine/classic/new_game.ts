@@ -8,6 +8,7 @@ import {
   Player,
   Variant,
 } from '@kaboom/proto';
+import { newReadonlyArray } from '@kaboom/engine/base';
 
 export const newClassicChessGame = (opts?: Partial<NewGameOpts>): GameSnapshot => {
   const gOpts = { ...defaultNewGameOpts, ...opts };
@@ -16,7 +17,7 @@ export const newClassicChessGame = (opts?: Partial<NewGameOpts>): GameSnapshot =
       id: gOpts.gameId,
       variant: Variant.CLASSIC,
     },
-    players: [
+    players: newReadonlyArray(
       {
         id: gOpts.whitePlayerId,
         name: gOpts.whitePlayerName,
@@ -25,16 +26,14 @@ export const newClassicChessGame = (opts?: Partial<NewGameOpts>): GameSnapshot =
         id: gOpts.blackPlayerId,
         name: gOpts.blackPlayerName,
       },
-    ] as readonly Player[],
-    boards: [
-      {
-        id: 'classic-board',
-        columns: 8,
-        rows: 8,
-        activeColor: ChessColor.WHITE,
-      },
-    ] as readonly ChessBoard[],
-    boardPlayers: [
+    ),
+    boards: newReadonlyArray({
+      id: 'classic-board',
+      columns: 8,
+      rows: 8,
+      activeColor: ChessColor.WHITE,
+    }),
+    boardPlayers: newReadonlyArray(
       {
         boardId: 'classic-board',
         playerId: gOpts.whitePlayerId,
@@ -45,18 +44,20 @@ export const newClassicChessGame = (opts?: Partial<NewGameOpts>): GameSnapshot =
         playerId: gOpts.blackPlayerId,
         color: ChessColor.BLACK,
       },
-    ] as readonly ChessBoardPlayer[],
-    pieces: classicChessPieceSetup.map(([color, kind, row, column, id]) =>
-      ChessPiece.create({
-        id,
-        color,
-        kind,
-        place: {
-          boardId: 'classic-board',
-          boardPosition: { row, column },
-        },
-      }),
-    ) as readonly ChessPiece[],
+    ),
+    pieces: newReadonlyArray(
+      ...classicChessPieceSetup.map(([color, kind, row, column, id]) =>
+        ChessPiece.create({
+          id,
+          color,
+          kind,
+          place: {
+            boardId: 'classic-board',
+            boardPosition: { row, column },
+          },
+        }),
+      ),
+    ),
   });
 
   return snapshot;

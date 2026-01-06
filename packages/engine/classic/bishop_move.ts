@@ -1,12 +1,11 @@
 import {
   ChessPieceKind,
   Effect,
-  type Effect_StateChange,
   type GameSnapshot,
   Move,
 } from '@kaboom/proto';
 
-import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
+import { IllegalMoveError, type MoveResolver, newReadonlyArray } from '@kaboom/engine/base';
 import {
   getBoardById,
   getPieceAtBoardPosition,
@@ -123,14 +122,12 @@ export const BishopMoveResolver: MoveResolver = {
 
     return [
       Effect.create({
-        stateChanges: [
-          {
-            pieceMoved: {
-              pieceId: bishop.id,
-              to: bishopMove.to,
-            },
+        stateChanges: newReadonlyArray({
+          pieceMoved: {
+            pieceId: bishop.id,
+            to: bishopMove.to?.boardPosition,
           },
-        ] as readonly Effect_StateChange[],
+        }),
       }),
     ];
   },

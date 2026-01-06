@@ -2,12 +2,11 @@ import {
   ChessColor,
   ChessPieceKind,
   Effect,
-  type Effect_StateChange,
   type GameSnapshot,
   Move,
 } from '@kaboom/proto';
 
-import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
+import { IllegalMoveError, type MoveResolver, newReadonlyArray } from '@kaboom/engine/base';
 import {
   getBoardById,
   getPieceAtBoardPosition,
@@ -120,14 +119,12 @@ export const PawnPromotionResolver: MoveResolver = {
 
     return [
       Effect.create({
-        stateChanges: [
-          {
-            piecePromoted: {
-              pieceId: pawn.id,
-              newKind: promotion.promoteTo,
-            },
+        stateChanges: newReadonlyArray({
+          piecePromoted: {
+            pieceId: pawn.id,
+            newKind: promotion.promoteTo,
           },
-        ] as readonly Effect_StateChange[],
+        }),
       }),
     ];
   },
