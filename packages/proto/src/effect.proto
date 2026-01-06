@@ -5,6 +5,7 @@ package proto;
 import "color.proto";
 import "board.proto";
 import "flag.proto";
+import "piece.proto";
 
 // Effect represents a set of changes to the game state and visual hints.
 // These changes and visual hints should be considered to occur simultaneously.
@@ -20,9 +21,10 @@ message Effect {
       PieceMoved          piece_moved            = 2;
       PieceCaptured       piece_captured         = 3;
       PieceDeployed       piece_deployed         = 4;
-      CreateFlag          create_flag            = 5;
-      DeleteFlag          delete_flag            = 6;
-      SetBoardActiveColor set_board_active_color = 7;
+      PiecePromoted       piece_promoted         = 5;
+      CreateFlag          create_flag            = 6;
+      DeleteFlag          delete_flag            = 7;
+      SetBoardActiveColor set_board_active_color = 8;
     }
 
     // NoOp represents no operation / no change.
@@ -45,6 +47,12 @@ message Effect {
     message PieceDeployed {
       string piece_id = 1;
       Vector to       = 2;
+    }
+
+    // PiecePromoted represents a piece being promoted to a new kind.
+    message PiecePromoted {
+      string piece_id       = 1;
+      ChessPieceKind new_kind = 2;
     }
 
     // CreateFlag represents the creation of a new game flag, attached to the game state.

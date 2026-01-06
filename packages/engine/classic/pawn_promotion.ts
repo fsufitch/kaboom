@@ -96,12 +96,14 @@ export const PawnPromotionResolver: MoveResolver = {
       throw new IllegalMoveError(move, `Illegal pawn promotion move`);
     }
 
-    // Promotion state change not yet supported by mutators; emit a NoOp for now.
     return [
       Effect.create({
         stateChanges: [
           {
-            noOp: {},
+            piecePromoted: {
+              pieceId: pawn.id,
+              newKind: promotion.promoteTo,
+            },
           },
         ] as readonly Effect_StateChange[],
       }),

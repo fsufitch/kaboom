@@ -1,8 +1,14 @@
 import type { GameSnapshotMutator } from '@kaboom/engine/base/ruleset';
 import { type GameSnapshotWritable, writable } from '@kaboom/engine/base/types';
-import { type Effect_StateChange, Flag, Place_Captured } from '@kaboom/proto';
+import {
+  ChessPieceKind,
+  type Effect_StateChange,
+  type Effect_StateChange_PiecePromoted,
+  Flag,
+  Place_Captured,
+} from '@kaboom/proto';
 
-import { getFlagById, getPieceById } from './state_utils';
+import { getFlagById, getPieceById, truePieceKind } from './state_utils';
 
 export const NoOpMutator: GameSnapshotMutator = {
   applicable: (stateChange: Effect_StateChange) => !!stateChange.noOp,
@@ -103,6 +109,39 @@ const PieceCapturedMutator: GameSnapshotMutator = {
   },
 };
 
+export const PiecePromotedMutator: GameSnapshotMutator = {
+  applicable: (stateChange: Effect_StateChange) => !!stateChange.piecePromoted,
+  mutate: (gsw: GameSnapshotWritable, stateChange: Effect_StateChange) => {
+    const promotion: Effect_StateChange_PiecePromoted | undefined = stateChange.piecePromoted;
+    if (!promotion?.pieceId) {
+      throw new InvalidStateChangeError('(Piece Promoted) pieceId is required');
+    }
+    if (promotion.newKind === undefined) {
+      throw new InvalidStateChangeError('(Piece Promoted) promoteTo is required');
+    }
+    if (
+      promotion.newKind === ChessPieceKind.KIND_UNKNOWN ||
+      promotion.newKind === ChessPieceKind.UNRECOGNIZED
+    ) {
+      throw new InvalidStateChangeError(`(Piece Promoted) promoteTo must be a known piece kind`);
+    }
+
+    const pieceToPromote = writable(getPieceById(gsw, promotion.pieceId));
+    if (!pieceToPromote) {
+      throw new InvalidStateChangeError(
+        `(Piece Promoted) Piece with ID '${promotion.pieceId}' does not exist`,
+      );
+    }
+    if (truePieceKind(pieceToPromote) !== ChessPieceKind.PAWN) {
+      throw new InvalidStateChangeError(
+        `(Piece Promoted) Piece with ID '${promotion.pieceId}' is not a pawn`,
+      );
+    }
+
+    pieceToPromote.promotedKind = promotion.newKind;
+  },
+};
+
 export const SetBoardActiveColorMutator: GameSnapshotMutator = {
   applicable: (stateChange: Effect_StateChange) => !!stateChange.setBoardActiveColor,
   mutate: (gsw: GameSnapshotWritable, stateChange: Effect_StateChange) => {
@@ -140,5 +179,6 @@ export const BASE_MUTATORS: readonly GameSnapshotMutator[] = [
   DeleteFlagMutator,
   PieceMovedMutator,
   PieceCapturedMutator,
+  PiecePromotedMutator,
   SetBoardActiveColorMutator,
 ];
