@@ -82,6 +82,8 @@ export const KingCastleResolver: MoveResolver = {
         continue;
       }
 
+      // TODO: Check for through-check
+
       castles.push({
         kingFrom: kingPos,
         kingTo,

@@ -32,7 +32,7 @@ export const PieceCapturedMutator: GameSnapshotMutator = {
   },
 };
 
-export const CLASSIC_CHESS_MUTATORS: readonly GameSnapshotMutator[] = [
+export const CLASSIC_CHESS_MUTATORS: GameSnapshotMutator[] = [
   ...BASE_MUTATORS,
   PieceCapturedMutator,
 ];

@@ -1,4 +1,11 @@
-import type { Effect, Effect_StateChange, GameSnapshot, IntendedTurn, Move } from '@kaboom/proto';
+import type {
+  Effect,
+  Effect_StateChange,
+  GameSnapshot,
+  IntendedTurn,
+  Move,
+  ResolvedTurn,
+} from '@kaboom/proto';
 
 import type { GameSnapshotWritable } from './types';
 
@@ -6,11 +13,12 @@ export interface KaboomRuleset {
   id: string;
   name: string;
 
-  gameSnapshotMutators: readonly GameSnapshotMutator[];
-  moveResolvers: readonly MoveResolver[];
+  gameSnapshotMutators: GameSnapshotMutator[];
+  moveResolvers: MoveResolver[];
 
   newGame: () => GameSnapshot;
   parseTurn(snapshot: GameSnapshot, rawTurn: string): IntendedTurn;
+  resolveTurn(snapshot: GameSnapshot, intendedTurn: IntendedTurn): ResolvedTurn;
 }
 
 // A mutator applies a specific kind of state change to a game snapshot.
