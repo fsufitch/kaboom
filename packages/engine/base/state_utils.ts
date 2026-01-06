@@ -11,6 +11,7 @@ import {
 
 import type { GameSnapshotMutator } from './ruleset';
 import type { GameSnapshotWritable } from './types';
+import { SmartVector } from './vector';
 
 export const getFlagById = (gs: GameSnapshot | GameSnapshotWritable, flagId: string) =>
   gs.flags.find((f) => f.id === flagId);
@@ -50,7 +51,7 @@ export const getPieceAtBoardPosition = (
     if (p.place?.benched || p.place?.captured) {
       return false;
     }
-    return p.place?.boardId === boardId && p.place?.boardPosition === vector;
+    return p.place?.boardId === boardId && SmartVector.of(vector).equals(p.place?.boardPosition);
   });
 
 export const truePieceKind = (piece: ChessPiece): ChessPieceKind => {

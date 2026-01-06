@@ -78,6 +78,12 @@ export const PieceMovedMutator: GameSnapshotMutator = {
         `(Piece Moved) Piece with ID '${pieceId}' is not on a board`,
       );
     }
+
+    console.log('Moving piece:', pieceToMove);
+    console.log('From:', pieceToMove.place.boardPosition);
+    console.log('To:', toBoardPosition);
+    console.log('State change:', stateChange);
+
     pieceToMove.place.boardPosition = toBoardPosition;
   },
 };

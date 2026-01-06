@@ -9,3 +9,7 @@ export type GameSnapshotWritable = DeepWritable<GameSnapshot>;
 export const writable = <T>(obj: T): DeepWritable<T> => {
   return obj as DeepWritable<T>;
 };
+
+export const toReadOnlyArray = <T>(arr: T[]): ReadonlyArray<T> => {
+  return arr as ReadonlyArray<T>;
+};

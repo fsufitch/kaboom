@@ -1,13 +1,17 @@
 import { type ChessBoard, ChessColor, type Vector } from '@kaboom/proto';
 
 export class SmartVector {
-  constructor(public readonly vector: Vector) {}
+  constructor(private readonly _vector: Vector) {}
 
   get row() {
-    return this.vector.row;
+    return this._vector.row;
   }
   get column() {
-    return this.vector.column;
+    return this._vector.column;
+  }
+
+  get vector(): Vector {
+    return { row: this.row, column: this.column };
   }
 
   toString = () => {
@@ -51,7 +55,10 @@ export class SmartVector {
     );
   };
 
-  equals = (other: Vector | SmartVector): boolean => {
+  equals = (other?: Vector | SmartVector): boolean => {
+    if (!other) {
+      return false;
+    }
     return this.row === other.row && this.column === other.column;
   };
 

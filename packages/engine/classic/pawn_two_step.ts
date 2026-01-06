@@ -1,20 +1,14 @@
+import { IllegalMoveError, type MoveResolver, toReadOnlyArray } from '@kaboom/engine/base';
 import {
-  ChessColor,
-  ChessPieceKind,
-  Effect,
-  type Effect_StateChange,
-  type GameSnapshot,
-  Move,
-} from '@kaboom/proto';
-
-import { IllegalMoveError, type MoveResolver } from '@kaboom/engine/base';
-import {
+  SmartVector,
   getBoardById,
   getPieceAtBoardPosition,
   getPieceById,
   movesEqual,
   truePieceKind,
- SmartVector } from '@kaboom/engine/base';
+} from '@kaboom/engine/base';
+import { ChessColor, ChessPieceKind, Effect, type GameSnapshot, Move } from '@kaboom/proto';
+
 import { getClassicBoard, pieceMovedThisGame } from './utils';
 
 export const PawnTwoStepMoveResolver: MoveResolver = {
@@ -113,9 +107,7 @@ export const PawnTwoStepMoveResolver: MoveResolver = {
     }
     const pawn = getPieceById(snapshot, movedPieces[0]);
     if (!pawn) {
-      throw new Error(
-        `Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`,
-      );
+      throw new Error(`Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`);
     }
     if (truePieceKind(pawn) !== ChessPieceKind.PAWN) {
       throw new Error(`Invalid move: piece at origin is not a Pawn`);
@@ -129,14 +121,14 @@ export const PawnTwoStepMoveResolver: MoveResolver = {
 
     return [
       Effect.create({
-        stateChanges: [
+        stateChanges: toReadOnlyArray([
           {
             pieceMoved: {
               pieceId: pawn.id,
-              to: pawnMove.to,
+              to: pawnMove.to?.boardPosition,
             },
           },
-        ] as readonly Effect_StateChange[],
+        ]),
       }),
     ];
   },
