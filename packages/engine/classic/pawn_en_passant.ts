@@ -150,6 +150,15 @@ export const PawnEnPassantResolver: MoveResolver = {
     if (!enPassant) {
       throw new Error('Invalid move: not a Pawn en passant move');
     }
+    if (!enPassant.from?.boardPosition) {
+      throw new IllegalMoveError(move, `En passant origin missing board position`);
+    }
+    if (!enPassant.to?.boardPosition) {
+      throw new IllegalMoveError(move, `En passant destination missing board position`);
+    }
+    if (enPassant.to?.boardId !== enPassant.from?.boardId) {
+      throw new IllegalMoveError(move, `En passant destination board mismatch`);
+    }
     const movedPieces = PawnEnPassantResolver.getMovedPieceIds(snapshot, move);
     if (movedPieces.length !== 1 || !movedPieces[0]) {
       throw new Error(
@@ -172,14 +181,16 @@ export const PawnEnPassantResolver: MoveResolver = {
       throw new IllegalMoveError(move, `Illegal pawn en passant move`);
     }
 
-    const capturePos = SmartVector.of(enPassant.from.boardPosition!).add({
+    const fromPosition = enPassant.from.boardPosition;
+    const toPosition = enPassant.to.boardPosition;
+    const capturePos = SmartVector.of(fromPosition).add({
       row: 0,
-      column: enPassant.to.boardPosition.column - enPassant.from.boardPosition!.column,
+      column: toPosition.column - fromPosition.column,
     });
 
     const target = getPieceAtBoardPosition(
       snapshot,
-      enPassant.from?.boardId || '',
+      enPassant.from.boardId || '',
       capturePos.vector,
     );
     if (!target) {
@@ -187,7 +198,7 @@ export const PawnEnPassantResolver: MoveResolver = {
         move,
         `No pawn to capture en passant at position ${JSON.stringify(
           capturePos.vector,
-        )} on board '${enPassant.from?.boardId}'`,
+        )} on board '${enPassant.from.boardId}'`,
       );
     }
     if (target.color === pawn.color) {
