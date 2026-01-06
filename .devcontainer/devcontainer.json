@@ -32,6 +32,6 @@
     }
   },
   "updateContentCommand": {
-    "nodeInstall": "npm install"
+    "nodeInstall": "pnpm install"
   }
 }
