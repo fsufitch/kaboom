@@ -1,4 +1,4 @@
-import { IllegalMoveError, type MoveResolver, toReadOnlyArray } from '@kaboom/engine/base';
+import { IllegalMoveError, type MoveResolver, newReadOnlyArray } from '@kaboom/engine/base';
 import {
   SmartVector,
   getBoardById,
@@ -121,14 +121,12 @@ export const PawnTwoStepMoveResolver: MoveResolver = {
 
     return [
       Effect.create({
-        stateChanges: toReadOnlyArray([
-          {
-            pieceMoved: {
-              pieceId: pawn.id,
-              to: pawnMove.to?.boardPosition,
-            },
+        stateChanges: newReadOnlyArray({
+          pieceMoved: {
+            pieceId: pawn.id,
+            to: pawnMove.to?.boardPosition,
           },
-        ]),
+        }),
       }),
     ];
   },
