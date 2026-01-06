@@ -73,7 +73,7 @@ export const RookCaptureResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const rookCapture = move.classicMove?.rook?.capture;
     if (!rookCapture) {
       throw new Error('Invalid move: not a Rook capture');
@@ -94,13 +94,41 @@ export const RookCaptureResolver: MoveResolver = {
       );
     }
 
+    return [rook.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const rookCapture = move.classicMove?.rook?.capture;
+    if (!rookCapture) {
+      throw new Error('Invalid move: not a Rook capture');
+    }
+
+    const movedPieces = RookCaptureResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Rook capture should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const rook = getPieceById(snapshot, movedPieces[0]);
+    if (!rook) {
+      throw new Error(
+        `Invalid move: could not find rook piece with ID '${movedPieces[0]}'`,
+      );
+    }
+
     const validMoves = RookCaptureResolver.validMoves(snapshot, rook.id);
     const isValidMove = validMoves.some((validMove) => movesEqual(validMove, move));
     if (!isValidMove) {
       throw new IllegalMoveError(move, `Illegal rook capture move`);
     }
 
-    const target = getPieceAtBoardPosition(snapshot, board.id, rookCapture.to?.boardPosition!);
+    const target = getPieceAtBoardPosition(
+      snapshot,
+      rookCapture.to?.boardId || '',
+      rookCapture.to?.boardPosition!,
+    );
     if (!target) {
       throw new IllegalMoveError(
         move,

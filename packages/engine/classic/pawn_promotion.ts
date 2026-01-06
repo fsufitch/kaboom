@@ -63,7 +63,7 @@ export const PawnPromotionResolver: MoveResolver = {
     );
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const promotion = move.classicMove?.pawn?.promotion;
     if (!promotion) {
       throw new Error('Invalid move: not a Pawn promotion');
@@ -84,6 +84,29 @@ export const PawnPromotionResolver: MoveResolver = {
         `Invalid move: no piece at position ${JSON.stringify(
           promotion.from.boardPosition,
         )} on board '${board.id}'`,
+      );
+    }
+
+    return [pawn.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const promotion = move.classicMove?.pawn?.promotion;
+    if (!promotion) {
+      throw new Error('Invalid move: not a Pawn promotion');
+    }
+    const movedPieces = PawnPromotionResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Pawn promotion should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const pawn = getPieceById(snapshot, movedPieces[0]);
+    if (!pawn) {
+      throw new Error(
+        `Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`,
       );
     }
     if (truePieceKind(pawn) !== ChessPieceKind.PAWN) {

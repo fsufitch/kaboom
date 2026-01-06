@@ -109,10 +109,19 @@ export const PawnEnPassantResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const enPassant = move.classicMove?.pawn?.enPassant;
     if (!enPassant) {
       throw new Error('Invalid move: not a Pawn en passant move');
+    }
+    if (!enPassant.from?.boardPosition) {
+      throw new IllegalMoveError(move, `En passant origin missing board position`);
+    }
+    if (!enPassant.to?.boardPosition) {
+      throw new IllegalMoveError(move, `En passant destination missing board position`);
+    }
+    if (enPassant.to?.boardId !== enPassant.from?.boardId) {
+      throw new IllegalMoveError(move, `En passant destination board mismatch`);
     }
     const board = getBoardById(snapshot, enPassant.from?.boardId || '');
     if (!board || enPassant.from?.boardId === undefined) {
@@ -123,12 +132,6 @@ export const PawnEnPassantResolver: MoveResolver = {
     if (!enPassant.from.boardPosition) {
       throw new IllegalMoveError(move, `En passant origin missing board position`);
     }
-    if (enPassant.to?.boardId !== board.id) {
-      throw new IllegalMoveError(move, `En passant destination board mismatch`);
-    }
-    if (!enPassant.to?.boardPosition) {
-      throw new IllegalMoveError(move, `En passant destination missing board position`);
-    }
 
     const pawn = getPieceAtBoardPosition(snapshot, board.id, enPassant.from.boardPosition!);
     if (!pawn) {
@@ -136,6 +139,29 @@ export const PawnEnPassantResolver: MoveResolver = {
         `Invalid move: no piece at position ${JSON.stringify(
           enPassant.from.boardPosition,
         )} on board '${board.id}'`,
+      );
+    }
+
+    return [pawn.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const enPassant = move.classicMove?.pawn?.enPassant;
+    if (!enPassant) {
+      throw new Error('Invalid move: not a Pawn en passant move');
+    }
+    const movedPieces = PawnEnPassantResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Pawn en passant should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const pawn = getPieceById(snapshot, movedPieces[0]);
+    if (!pawn) {
+      throw new Error(
+        `Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`,
       );
     }
     if (truePieceKind(pawn) !== ChessPieceKind.PAWN) {
@@ -153,7 +179,11 @@ export const PawnEnPassantResolver: MoveResolver = {
       column: enPassant.to.boardPosition.column - enPassant.from.boardPosition!.column,
     });
 
-    const target = getPieceAtBoardPosition(snapshot, board.id, capturePos.vector);
+    const target = getPieceAtBoardPosition(
+      snapshot,
+      enPassant.from?.boardId || '',
+      capturePos.vector,
+    );
     if (!target) {
       throw new IllegalMoveError(
         move,

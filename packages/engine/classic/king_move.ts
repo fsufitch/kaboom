@@ -73,7 +73,7 @@ export const KingMoveResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const kingMove = move.classicMove?.king?.move;
     if (!kingMove) {
       throw new Error('Invalid move: not a King move');
@@ -91,6 +91,30 @@ export const KingMoveResolver: MoveResolver = {
         `Invalid move: no piece at position ${JSON.stringify(
           kingMove.from.boardPosition,
         )} on board '${board.id}'`,
+      );
+    }
+
+    return [king.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const kingMove = move.classicMove?.king?.move;
+    if (!kingMove) {
+      throw new Error('Invalid move: not a King move');
+    }
+
+    const movedPieces = KingMoveResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: King move should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const king = getPieceById(snapshot, movedPieces[0]);
+    if (!king) {
+      throw new Error(
+        `Invalid move: could not find king piece with ID '${movedPieces[0]}'`,
       );
     }
 

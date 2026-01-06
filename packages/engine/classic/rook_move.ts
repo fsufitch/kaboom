@@ -71,7 +71,7 @@ export const RookMoveResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const rookMove = move.classicMove?.rook?.move;
     if (!rookMove) {
       throw new Error('Invalid move: not a Rook move');
@@ -89,6 +89,30 @@ export const RookMoveResolver: MoveResolver = {
         `Invalid move: no piece at position ${JSON.stringify(
           rookMove.from.boardPosition,
         )} on board '${board.id}'`,
+      );
+    }
+
+    return [rook.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const rookMove = move.classicMove?.rook?.move;
+    if (!rookMove) {
+      throw new Error('Invalid move: not a Rook move');
+    }
+
+    const movedPieces = RookMoveResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Rook move should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const rook = getPieceById(snapshot, movedPieces[0]);
+    if (!rook) {
+      throw new Error(
+        `Invalid move: could not find rook piece with ID '${movedPieces[0]}'`,
       );
     }
 

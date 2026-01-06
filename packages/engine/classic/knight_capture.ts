@@ -65,7 +65,7 @@ export const KnightCaptureResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const knightCapture = move.classicMove?.knight?.capture;
     if (!knightCapture) {
       throw new Error('Invalid move: not a Knight capture');
@@ -86,13 +86,41 @@ export const KnightCaptureResolver: MoveResolver = {
       );
     }
 
+    return [knight.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const knightCapture = move.classicMove?.knight?.capture;
+    if (!knightCapture) {
+      throw new Error('Invalid move: not a Knight capture');
+    }
+
+    const movedPieces = KnightCaptureResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Knight capture should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const knight = getPieceById(snapshot, movedPieces[0]);
+    if (!knight) {
+      throw new Error(
+        `Invalid move: could not find knight piece with ID '${movedPieces[0]}'`,
+      );
+    }
+
     const validMoves = KnightCaptureResolver.validMoves(snapshot, knight.id);
     const isValidMove = validMoves.some((validMove) => movesEqual(validMove, move));
     if (!isValidMove) {
       throw new IllegalMoveError(move, `Illegal knight capture move`);
     }
 
-    const target = getPieceAtBoardPosition(snapshot, board.id, knightCapture.to?.boardPosition!);
+    const target = getPieceAtBoardPosition(
+      snapshot,
+      knightCapture.to?.boardId || '',
+      knightCapture.to?.boardPosition!,
+    );
     if (!target) {
       throw new IllegalMoveError(
         move,

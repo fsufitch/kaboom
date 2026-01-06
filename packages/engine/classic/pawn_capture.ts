@@ -62,7 +62,7 @@ export const PawnCaptureResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const pawnMove = move.classicMove?.pawn?.capture;
     if (!pawnMove) {
       throw new Error('Invalid move: not a Pawn capture move');
@@ -82,6 +82,30 @@ export const PawnCaptureResolver: MoveResolver = {
         )} on board '${board.id}'`,
       );
     }
+
+    return [pawn.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const pawnMove = move.classicMove?.pawn?.capture;
+    if (!pawnMove) {
+      throw new Error('Invalid move: not a Pawn capture move');
+    }
+
+    const movedPieces = PawnCaptureResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Pawn capture should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const pawn = getPieceById(snapshot, movedPieces[0]);
+    if (!pawn) {
+      throw new Error(
+        `Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`,
+      );
+    }
     if (truePieceKind(pawn) !== ChessPieceKind.PAWN) {
       throw new Error(`Invalid move: piece at origin is not a Pawn`);
     }
@@ -92,7 +116,11 @@ export const PawnCaptureResolver: MoveResolver = {
       throw new IllegalMoveError(move, `Illegal pawn capture move`);
     }
 
-    const target = getPieceAtBoardPosition(snapshot, board.id, pawnMove.to?.boardPosition!);
+    const target = getPieceAtBoardPosition(
+      snapshot,
+      pawnMove.to?.boardId || '',
+      pawnMove.to?.boardPosition!,
+    );
     if (!target) {
       throw new IllegalMoveError(
         move,

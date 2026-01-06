@@ -73,7 +73,7 @@ export const BishopCaptureResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const bishopCapture = move.classicMove?.bishop?.capture;
     if (!bishopCapture) {
       throw new Error('Invalid move: not a Bishop capture');
@@ -94,19 +94,45 @@ export const BishopCaptureResolver: MoveResolver = {
       );
     }
 
+    return [bishop.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const bishopCapture = move.classicMove?.bishop?.capture;
+    if (!bishopCapture) {
+      throw new Error('Invalid move: not a Bishop capture');
+    }
+
+    const movedPieces = BishopCaptureResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Bishop capture should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const bishop = getPieceById(snapshot, movedPieces[0]);
+    if (!bishop) {
+      throw new Error(`Invalid move: could not find bishop piece with ID '${movedPieces[0]}'`);
+    }
+
     const validMoves = BishopCaptureResolver.validMoves(snapshot, bishop.id);
     const isValidMove = validMoves.some((validMove) => movesEqual(validMove, move));
     if (!isValidMove) {
       throw new IllegalMoveError(move, `Illegal bishop capture move`);
     }
 
-    const target = getPieceAtBoardPosition(snapshot, board.id, bishopCapture.to?.boardPosition!);
+    const target = getPieceAtBoardPosition(
+      snapshot,
+      bishopCapture.to?.boardId || '',
+      bishopCapture.to?.boardPosition!,
+    );
     if (!target) {
       throw new IllegalMoveError(
         move,
         `No piece to capture at position ${JSON.stringify(
           bishopCapture.to?.boardPosition,
-        )} on board '${board.id}'`,
+        )} on board '${bishopCapture.to?.boardId}'`,
       );
     }
 

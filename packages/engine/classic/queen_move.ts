@@ -75,7 +75,7 @@ export const QueenMoveResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const queenMove = move.classicMove?.queen?.move;
     if (!queenMove) {
       throw new Error('Invalid move: not a Queen move');
@@ -93,6 +93,30 @@ export const QueenMoveResolver: MoveResolver = {
         `Invalid move: no piece at position ${JSON.stringify(
           queenMove.from.boardPosition,
         )} on board '${board.id}'`,
+      );
+    }
+
+    return [queen.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const queenMove = move.classicMove?.queen?.move;
+    if (!queenMove) {
+      throw new Error('Invalid move: not a Queen move');
+    }
+
+    const movedPieces = QueenMoveResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Queen move should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const queen = getPieceById(snapshot, movedPieces[0]);
+    if (!queen) {
+      throw new Error(
+        `Invalid move: could not find queen piece with ID '${movedPieces[0]}'`,
       );
     }
 

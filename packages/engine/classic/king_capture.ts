@@ -75,7 +75,7 @@ export const KingCaptureResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const kingCapture = move.classicMove?.king?.capture;
     if (!kingCapture) {
       throw new Error('Invalid move: not a King capture');
@@ -96,13 +96,41 @@ export const KingCaptureResolver: MoveResolver = {
       );
     }
 
+    return [king.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const kingCapture = move.classicMove?.king?.capture;
+    if (!kingCapture) {
+      throw new Error('Invalid move: not a King capture');
+    }
+
+    const movedPieces = KingCaptureResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: King capture should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const king = getPieceById(snapshot, movedPieces[0]);
+    if (!king) {
+      throw new Error(
+        `Invalid move: could not find king piece with ID '${movedPieces[0]}'`,
+      );
+    }
+
     const validMoves = KingCaptureResolver.validMoves(snapshot, king.id);
     const isValidMove = validMoves.some((validMove) => movesEqual(validMove, move));
     if (!isValidMove) {
       throw new IllegalMoveError(move, `Illegal king capture move`);
     }
 
-    const target = getPieceAtBoardPosition(snapshot, board.id, kingCapture.to?.boardPosition!);
+    const target = getPieceAtBoardPosition(
+      snapshot,
+      kingCapture.to?.boardId || '',
+      kingCapture.to?.boardPosition!,
+    );
     if (!target) {
       throw new IllegalMoveError(
         move,

@@ -108,7 +108,7 @@ export const KingCastleResolver: MoveResolver = {
     );
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const castle = move.classicMove?.king?.castle;
     if (!castle) {
       throw new Error('Invalid move: not a King castle');
@@ -136,6 +136,32 @@ export const KingCastleResolver: MoveResolver = {
           castle.rookFrom?.boardPosition,
         )} on board '${board.id}'`,
       );
+    }
+
+    return [king.id, rook.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const castle = move.classicMove?.king?.castle;
+    if (!castle) {
+      throw new Error('Invalid move: not a King castle');
+    }
+
+    const movedPieces = KingCastleResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 2 || !movedPieces[0] || !movedPieces[1]) {
+      throw new Error(
+        `Invalid move: King castle should move exactly two pieces, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const king = getPieceById(snapshot, movedPieces[0]);
+    const rook = getPieceById(snapshot, movedPieces[1]);
+    if (!king) {
+      throw new Error(`Invalid move: could not find king piece with ID '${movedPieces[0]}'`);
+    }
+    if (!rook) {
+      throw new Error(`Invalid move: could not find rook piece with ID '${movedPieces[1]}'`);
     }
 
     const validMoves = KingCastleResolver.validMoves(snapshot, king.id);

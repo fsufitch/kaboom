@@ -31,6 +31,7 @@ export interface GameSnapshotMutator {
 export interface MoveResolver {
   applicable: (move: Move) => boolean;
   validMoves: (snapshot: GameSnapshot, pieceId: string) => Move[];
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move) => string[];
   resolveToEffects: (snapshot: GameSnapshot, move: Move) => Effect[];
 }
 

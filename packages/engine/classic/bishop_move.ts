@@ -71,7 +71,7 @@ export const BishopMoveResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const bishopMove = move.classicMove?.bishop?.move;
     if (!bishopMove) {
       throw new Error('Invalid move: not a Bishop move');
@@ -89,6 +89,30 @@ export const BishopMoveResolver: MoveResolver = {
         `Invalid move: no piece at position ${JSON.stringify(
           bishopMove.from.boardPosition,
         )} on board '${board.id}'`,
+      );
+    }
+
+    return [bishop.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const bishopMove = move.classicMove?.bishop?.move;
+    if (!bishopMove) {
+      throw new Error('Invalid move: not a Bishop move');
+    }
+
+    const movedPieces = BishopMoveResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Bishop move should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const bishop = getPieceById(snapshot, movedPieces[0]);
+    if (!bishop) {
+      throw new Error(
+        `Invalid move: could not find bishop piece with ID '${movedPieces[0]}'`,
       );
     }
 

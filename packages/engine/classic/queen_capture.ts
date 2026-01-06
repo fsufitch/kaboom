@@ -77,7 +77,7 @@ export const QueenCaptureResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const queenCapture = move.classicMove?.queen?.capture;
     if (!queenCapture) {
       throw new Error('Invalid move: not a Queen capture');
@@ -98,13 +98,41 @@ export const QueenCaptureResolver: MoveResolver = {
       );
     }
 
+    return [queen.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const queenCapture = move.classicMove?.queen?.capture;
+    if (!queenCapture) {
+      throw new Error('Invalid move: not a Queen capture');
+    }
+
+    const movedPieces = QueenCaptureResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Queen capture should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const queen = getPieceById(snapshot, movedPieces[0]);
+    if (!queen) {
+      throw new Error(
+        `Invalid move: could not find queen piece with ID '${movedPieces[0]}'`,
+      );
+    }
+
     const validMoves = QueenCaptureResolver.validMoves(snapshot, queen.id);
     const isValidMove = validMoves.some((validMove) => movesEqual(validMove, move));
     if (!isValidMove) {
       throw new IllegalMoveError(move, `Illegal queen capture move`);
     }
 
-    const target = getPieceAtBoardPosition(snapshot, board.id, queenCapture.to?.boardPosition!);
+    const target = getPieceAtBoardPosition(
+      snapshot,
+      queenCapture.to?.boardId || '',
+      queenCapture.to?.boardPosition!,
+    );
     if (!target) {
       throw new IllegalMoveError(
         move,

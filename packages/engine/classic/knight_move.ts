@@ -63,7 +63,7 @@ export const KnightMoveResolver: MoveResolver = {
     return moves;
   },
 
-  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+  getMovedPieceIds: (snapshot: GameSnapshot, move: Move): string[] => {
     const knightMove = move.classicMove?.knight?.move;
     if (!knightMove) {
       throw new Error('Invalid move: not a Knight move');
@@ -81,6 +81,30 @@ export const KnightMoveResolver: MoveResolver = {
         `Invalid move: no piece at position ${JSON.stringify(
           knightMove.from.boardPosition,
         )} on board '${board.id}'`,
+      );
+    }
+
+    return [knight.id];
+  },
+
+  resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
+    const knightMove = move.classicMove?.knight?.move;
+    if (!knightMove) {
+      throw new Error('Invalid move: not a Knight move');
+    }
+
+    const movedPieces = KnightMoveResolver.getMovedPieceIds(snapshot, move);
+    if (movedPieces.length !== 1 || !movedPieces[0]) {
+      throw new Error(
+        `Invalid move: Knight move should move exactly one piece, but movedPieces=${JSON.stringify(
+          movedPieces,
+        )}`,
+      );
+    }
+    const knight = getPieceById(snapshot, movedPieces[0]);
+    if (!knight) {
+      throw new Error(
+        `Invalid move: could not find knight piece with ID '${movedPieces[0]}'`,
       );
     }
 
