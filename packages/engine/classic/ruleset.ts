@@ -1,7 +1,9 @@
+import { truncate } from 'node:fs';
+
 import type { KaboomRuleset } from '@kaboom/engine/base/ruleset';
 import { Effect, GameSnapshot, ResolvedTurn } from '@kaboom/proto';
 
-import { applyEffectInPlace } from '../base/state_utils';
+import { applyEffectInPlace, getPieceById, getPlayerColor } from '../base/state_utils';
 import { writable } from '../base/types';
 import { BishopCaptureResolver } from './bishop_capture';
 import { BishopMoveResolver } from './bishop_move';
@@ -21,6 +23,7 @@ import { QueenCaptureResolver } from './queen_capture';
 import { QueenMoveResolver } from './queen_move';
 import { RookCaptureResolver } from './rook_capture';
 import { RookMoveResolver } from './rook_move';
+import { getClassicBoard } from './utils';
 
 export const ClassicChessRuleset = {
   id: 'classic-chess',
@@ -53,6 +56,23 @@ export const ClassicChessRuleset = {
   },
 
   resolveTurn: (snapshot, intendedTurn) => {
+    const classicBoard = getClassicBoard(snapshot);
+    const intendedTurnPlayerColor = getPlayerColor(
+      snapshot,
+      classicBoard.id,
+      intendedTurn.playerId,
+    );
+    if (intendedTurnPlayerColor === undefined) {
+      throw new Error(
+        `Player with ID '${intendedTurn.playerId}' does not have a color on board '${classicBoard.id}'`,
+      );
+    }
+    if (intendedTurnPlayerColor !== classicBoard.activeColor) {
+      throw new Error(
+        `It is not player '${intendedTurn.playerId}'s turn (active color is '${classicBoard.activeColor}')`,
+      );
+    }
+
     let intermediateSnapshot = writable(GameSnapshot.create(snapshot));
 
     const effects: Effect[] = [];
@@ -63,7 +83,6 @@ export const ClassicChessRuleset = {
 
     for (const move of intendedTurn.moves) {
       // TODO: Legality checks beyond what is in resolvers
-      // * is the piece owned by the player whose turn it is?
       // * does the move put or leave own king in check?
 
       const applicableResolvers = ClassicChessRuleset.moveResolvers.filter((r) =>
@@ -80,6 +99,16 @@ export const ClassicChessRuleset = {
         throw new Error(
           `Move found undefined resolver: ${JSON.stringify(move)} (this should be unreachable)`,
         );
+      }
+
+      const movedPieces = resolver.getMovedPieceIds(intermediateSnapshot as GameSnapshot, move);
+      for (const pieceId of movedPieces) {
+        const piece = getPieceById(intermediateSnapshot as GameSnapshot, pieceId);
+        if (piece?.color !== intendedTurnPlayerColor) {
+          throw new Error(
+            `Player with ID '${intendedTurn.playerId}' cannot move piece with ID '${pieceId}' because it is color '${piece?.color}' but the player's color is '${intendedTurnPlayerColor}'`,
+          );
+        }
       }
 
       const moveEffects = resolver.resolveToEffects(intermediateSnapshot as GameSnapshot, move);

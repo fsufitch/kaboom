@@ -1,4 +1,5 @@
 import {
+  ChessColor,
   type ChessPiece,
   ChessPieceKind,
   Effect,
@@ -25,6 +26,19 @@ export const getSingleBoard = (gs: GameSnapshot | GameSnapshotWritable) => {
     throw new Error('Expected exactly one board in the game snapshot');
   }
   return gs.boards[0];
+};
+
+export const getPlayerColor = (
+  gs: GameSnapshot | GameSnapshotWritable,
+  boardId: string,
+  playerId: string,
+): ChessColor | undefined => {
+  for (const bp of gs.boardPlayers) {
+    if (bp.boardId === boardId && bp.playerId === playerId) {
+      return bp.color;
+    }
+  }
+  return undefined;
 };
 
 export const getPieceAtBoardPosition = (
