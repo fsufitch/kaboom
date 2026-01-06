@@ -17,23 +17,27 @@ import {
 import { ChessDirectionVectors, SmartVector } from '../base/vector';
 import { getClassicBoard } from './utils';
 
-export const BishopCaptureResolver: MoveResolver = {
-  applicable: (move: Move) => move.classicMove?.bishop?.capture !== undefined,
+export const QueenMoveResolver: MoveResolver = {
+  applicable: (move: Move) => move.classicMove?.queen?.move !== undefined,
   validMoves: (snapshot: GameSnapshot, pieceId: string): Move[] => {
-    const bishop = getPieceById(snapshot, pieceId);
-    if (!bishop) {
+    const queen = getPieceById(snapshot, pieceId);
+    if (!queen) {
       throw new Error(`Piece with ID '${pieceId}' does not exist`);
     }
-    if (truePieceKind(bishop) !== ChessPieceKind.BISHOP) {
-      throw new Error(`Piece with ID '${pieceId}' is not a Bishop`);
+    if (truePieceKind(queen) !== ChessPieceKind.QUEEN) {
+      throw new Error(`Piece with ID '${pieceId}' is not a Queen`);
     }
-    if (!bishop.place?.boardPosition) {
+    if (!queen.place?.boardPosition) {
       throw new Error(`Piece with ID '${pieceId}' is not on a board`);
     }
 
     const board = getClassicBoard(snapshot);
-    const position = SmartVector.of(bishop.place.boardPosition);
+    const position = SmartVector.of(queen.place.boardPosition);
     const directions = [
+      ChessDirectionVectors.NORTH,
+      ChessDirectionVectors.SOUTH,
+      ChessDirectionVectors.EAST,
+      ChessDirectionVectors.WEST,
       ChessDirectionVectors.NORTHEAST,
       ChessDirectionVectors.NORTHWEST,
       ChessDirectionVectors.SOUTHEAST,
@@ -49,19 +53,17 @@ export const BishopCaptureResolver: MoveResolver = {
       ) {
         const occupyingPiece = getPieceAtBoardPosition(snapshot, board.id, pos.vector);
         if (occupyingPiece) {
-          if (occupyingPiece.color !== bishop.color) {
-            destinations.push(pos); // Can capture opponent piece
-          }
           break;
         }
+        destinations.push(pos);
       }
     }
 
     const moves = destinations.map((dest) =>
       Move.create({
         classicMove: {
-          bishop: {
-            capture: {
+          queen: {
+            move: {
               from: { boardId: board.id, boardPosition: position.vector },
               to: { boardId: board.id, boardPosition: dest.vector },
             },
@@ -74,40 +76,30 @@ export const BishopCaptureResolver: MoveResolver = {
   },
 
   resolveToEffects: (snapshot: GameSnapshot, move: Move) => {
-    const bishopCapture = move.classicMove?.bishop?.capture;
-    if (!bishopCapture) {
-      throw new Error('Invalid move: not a Bishop capture');
+    const queenMove = move.classicMove?.queen?.move;
+    if (!queenMove) {
+      throw new Error('Invalid move: not a Queen move');
     }
-    const board = getBoardById(snapshot, bishopCapture.from?.boardId || '');
-    if (bishopCapture.from?.boardId === undefined || !board) {
+    const board = getBoardById(snapshot, queenMove.from?.boardId || '');
+    if (queenMove.from?.boardId === undefined || !board) {
       throw new Error(
-        `Invalid move: Bishop capture specified unknown board ID '${bishopCapture.from?.boardId}'`,
+        `Invalid move: Queen move specified unknown board ID '${queenMove.from?.boardId}'`,
       );
     }
 
-    const bishop = getPieceAtBoardPosition(snapshot, board.id, bishopCapture.from.boardPosition!);
-    if (!bishop) {
+    const queen = getPieceAtBoardPosition(snapshot, board.id, queenMove.from.boardPosition!);
+    if (!queen) {
       throw new Error(
         `Invalid move: no piece at position ${JSON.stringify(
-          bishopCapture.from.boardPosition,
+          queenMove.from.boardPosition,
         )} on board '${board.id}'`,
       );
     }
 
-    const validMoves = BishopCaptureResolver.validMoves(snapshot, bishop.id);
+    const validMoves = QueenMoveResolver.validMoves(snapshot, queen.id);
     const isValidMove = validMoves.some((validMove) => movesEqual(validMove, move));
     if (!isValidMove) {
-      throw new IllegalMoveError(move, `Illegal bishop capture move`);
-    }
-
-    const target = getPieceAtBoardPosition(snapshot, board.id, bishopCapture.to?.boardPosition!);
-    if (!target) {
-      throw new IllegalMoveError(
-        move,
-        `No piece to capture at position ${JSON.stringify(
-          bishopCapture.to?.boardPosition,
-        )} on board '${board.id}'`,
-      );
+      throw new IllegalMoveError(move, `Not a legal queen move`);
     }
 
     return [
@@ -115,13 +107,8 @@ export const BishopCaptureResolver: MoveResolver = {
         stateChanges: [
           {
             pieceMoved: {
-              pieceId: bishop.id,
-              to: bishopCapture.to,
-            },
-          },
-          {
-            pieceCaptured: {
-              pieceId: target.id,
+              pieceId: queen.id,
+              to: queenMove.to,
             },
           },
         ] as readonly Effect_StateChange[],
