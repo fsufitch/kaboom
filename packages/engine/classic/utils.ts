@@ -13,7 +13,7 @@ export const getClassicBoard = (gs: GameSnapshot): ChessBoard => {
 };
 
 export const pieceMovedThisGame = (gs: GameSnapshot, pieceId: string): boolean =>
-  gs.turnHistory.some((turn) =>
+  (gs.turnHistory ?? []).some((turn) =>
     turn.effects.some((effect) =>
       effect.stateChanges.some(
         (sc) => sc.pieceMoved?.pieceId === pieceId || sc.pieceCaptured?.pieceId === pieceId,

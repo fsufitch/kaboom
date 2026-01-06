@@ -7,6 +7,11 @@ import { KingCastleResolver } from './king_castle';
 import { KingMoveResolver } from './king_move';
 import { KnightCaptureResolver } from './knight_capture';
 import { KnightMoveResolver } from './knight_move';
+import { PawnCaptureResolver } from './pawn_capture';
+import { PawnEnPassantResolver } from './pawn_en_passant';
+import { PawnOneStepMoveResolver } from './pawn_one_step';
+import { PawnPromotionResolver } from './pawn_promotion';
+import { PawnTwoStepMoveResolver } from './pawn_two_step';
 import { QueenCaptureResolver } from './queen_capture';
 import { QueenMoveResolver } from './queen_move';
 import { RookCaptureResolver } from './rook_capture';
@@ -20,6 +25,11 @@ export const ClassicChessRuleset = {
 
   gameSnapshotMutators: CLASSIC_CHESS_MUTATORS,
   moveResolvers: [
+    PawnOneStepMoveResolver,
+    PawnTwoStepMoveResolver,
+    PawnCaptureResolver,
+    PawnEnPassantResolver,
+    PawnPromotionResolver,
     BishopMoveResolver,
     BishopCaptureResolver,
     KnightMoveResolver,
