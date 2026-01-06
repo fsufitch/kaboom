@@ -1,8 +1,16 @@
 import { truncate } from 'node:fs';
 
 import type { KaboomRuleset } from '@kaboom/engine/base/ruleset';
-import { Effect, GameSnapshot, ResolvedTurn } from '@kaboom/proto';
+import {
+  ChessColor,
+  Effect,
+  Effect_StateChange,
+  Effect_StateChange_SetBoardActiveColor,
+  GameSnapshot,
+  ResolvedTurn,
+} from '@kaboom/proto';
 
+import { SetBoardActiveColorMutator } from '../base/mutators';
 import { applyEffectInPlace, getPieceById, getPlayerColor } from '../base/state_utils';
 import { writable } from '../base/types';
 import { BishopCaptureResolver } from './bishop_capture';
@@ -117,6 +125,20 @@ export const ClassicChessRuleset = {
         applyEffectInPlace(intermediateSnapshot, effect, ClassicChessRuleset.gameSnapshotMutators);
       }
     }
+
+    effects.push(
+      Effect.create({
+        stateChanges: [
+          {
+            setBoardActiveColor: {
+              boardId: classicBoard.id,
+              activeColor:
+                classicBoard.activeColor === ChessColor.WHITE ? ChessColor.BLACK : ChessColor.WHITE,
+            },
+          },
+        ] as readonly Effect_StateChange[],
+      }),
+    );
 
     const resolvedTurn = ResolvedTurn.create({
       ...intendedTurn,
