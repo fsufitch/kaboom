@@ -51,8 +51,12 @@ This is a monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces).
 
 ### Linting
 
-- Lint all workspaces: `pnpm lint`
+- Lint all workspaces: `pnpm -r lint`
+  - Or lint a single package: `pnpm -C packages/engine lint`
+  - Or: in the package directory, run `pnpm lint`
 - Fix lint issues: `pnpm lint:fix`
+  - Or fix a single package: `pnpm -C packages/engine lint:fix`
+  - Or: in the package directory, run `pnpm lint:fix`
 - Format code: `pnpm format`
 
 ### Testing
