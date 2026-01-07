@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { IllegalMoveError, movesEqual } from '@kaboom/engine/base';
 import { BishopMoveResolver } from '@kaboom/engine/classic/bishop_move';
-import { ChessColor, ChessPieceKind, Move } from '@kaboom/proto';
+import { ChessColor, ChessPiece, ChessPieceKind, Move, Place } from '@kaboom/proto';
 
 import { BOARD_ID, mkPiece, mkSnapshot } from './helpers';
 
@@ -92,5 +92,94 @@ describe('BishopMoveResolver (classic)', () => {
     const illegal = mkBishopMove(3, 3, 5, 5);
 
     expect(() => BishopMoveResolver.resolveToEffects(gs, illegal)).toThrow(IllegalMoveError);
+  });
+
+  it('validates invariant checks for bishop moves', () => {
+    expect(() => BishopMoveResolver.validMoves(mkSnapshot(), 'missing')).toThrow(
+      "Piece with ID 'missing' does not exist",
+    );
+
+    const unplaced = ChessPiece.create({
+      id: 'wb-unplaced',
+      kind: ChessPieceKind.BISHOP,
+      color: ChessColor.WHITE,
+      place: Place.create({ boardId: BOARD_ID }),
+    });
+    const gsUnplaced = mkSnapshot({ pieces: [unplaced] });
+    expect(() => BishopMoveResolver.validMoves(gsUnplaced, unplaced.id)).toThrow('not on a board');
+
+    const pawn = mkPiece({ id: 'wp', kind: ChessPieceKind.PAWN, row: 3, column: 3 });
+    const gsWrong = mkSnapshot({ pieces: [pawn] });
+    expect(() => BishopMoveResolver.validMoves(gsWrong, pawn.id)).toThrow('not a Bishop');
+
+    const bishop = mkPiece({ id: 'wb', kind: ChessPieceKind.BISHOP, row: 2, column: 2 });
+    const gsBishop = mkSnapshot({ pieces: [bishop] });
+    const badBoardMove = Move.create({
+      classicMove: {
+        bishop: {
+          move: {
+            from: { boardId: 'unknown', boardPosition: { row: 2, column: 2 } },
+            to: { boardId: 'unknown', boardPosition: { row: 3, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => BishopMoveResolver.getMovedPieceIds(gsBishop, badBoardMove)).toThrow(
+      "unknown board ID 'unknown'",
+    );
+
+    const missingBoardIdMove = Move.create({
+      classicMove: {
+        bishop: {
+          move: {
+            from: { boardPosition: { row: 2, column: 2 } },
+            to: { boardId: BOARD_ID, boardPosition: { row: 3, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => BishopMoveResolver.getMovedPieceIds(gsBishop, missingBoardIdMove)).toThrow(
+      "unknown board ID ''",
+    );
+
+    const emptyMove = mkBishopMove(2, 2, 3, 3);
+    expect(() => BishopMoveResolver.getMovedPieceIds(mkSnapshot(), emptyMove)).toThrow(
+      'no piece at position',
+    );
+  });
+
+  it('rejects moves that are not bishop moves', () => {
+    const bishop = mkPiece({ id: 'wb', kind: ChessPieceKind.BISHOP, row: 2, column: 2 });
+    const gs = mkSnapshot({ pieces: [bishop] });
+
+    expect(() => BishopMoveResolver.getMovedPieceIds(gs, Move.create({}))).toThrow(
+      'not a Bishop move',
+    );
+    expect(() => BishopMoveResolver.resolveToEffects(gs, Move.create({}))).toThrow(
+      'not a Bishop move',
+    );
+
+    const rook = mkPiece({ id: 'wr', kind: ChessPieceKind.ROOK, row: 2, column: 2 });
+    const gsWrong = mkSnapshot({ pieces: [rook] });
+    const move = mkBishopMove(2, 2, 3, 3);
+    expect(() => BishopMoveResolver.resolveToEffects(gsWrong, move)).toThrow('not a Bishop');
+  });
+
+  it('guards against inconsistent moved piece resolution', () => {
+    const bishop = mkPiece({ id: 'wb', kind: ChessPieceKind.BISHOP, row: 2, column: 2 });
+    const gs = mkSnapshot({ pieces: [bishop] });
+    const move = mkBishopMove(2, 2, 3, 3);
+
+    const emptySpy = vi.spyOn(BishopMoveResolver, 'getMovedPieceIds').mockReturnValue([]);
+    expect(() => BishopMoveResolver.resolveToEffects(gs, move)).toThrow(
+      'Bishop move should move exactly one piece',
+    );
+    emptySpy.mockRestore();
+
+    const missingSpy = vi.spyOn(BishopMoveResolver, 'getMovedPieceIds').mockReturnValue(['x']);
+    expect(() => BishopMoveResolver.resolveToEffects(gs, move)).toThrow(
+      "could not find bishop piece with ID 'x'",
+    );
+    missingSpy.mockRestore();
   });
 });

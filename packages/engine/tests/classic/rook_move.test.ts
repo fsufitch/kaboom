@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { IllegalMoveError, movesEqual } from '@kaboom/engine/base';
 import { RookMoveResolver } from '@kaboom/engine/classic/rook_move';
-import { ChessColor, ChessPieceKind, Move } from '@kaboom/proto';
+import { ChessColor, ChessPiece, ChessPieceKind, Move, Place } from '@kaboom/proto';
 
 import { BOARD_ID, mkPiece, mkSnapshot } from './helpers';
 
@@ -84,5 +84,90 @@ describe('RookMoveResolver (classic)', () => {
     const illegal = mkRookMove(3, 3, 4, 4);
 
     expect(() => RookMoveResolver.resolveToEffects(gs, illegal)).toThrow(IllegalMoveError);
+  });
+
+  it('validates invariant checks for rook moves', () => {
+    expect(() => RookMoveResolver.validMoves(mkSnapshot(), 'missing')).toThrow(
+      "Piece with ID 'missing' does not exist",
+    );
+
+    const unplaced = ChessPiece.create({
+      id: 'wr-unplaced',
+      kind: ChessPieceKind.ROOK,
+      color: ChessColor.WHITE,
+      place: Place.create({ boardId: BOARD_ID }),
+    });
+    const gsUnplaced = mkSnapshot({ pieces: [unplaced] });
+    expect(() => RookMoveResolver.validMoves(gsUnplaced, unplaced.id)).toThrow('not on a board');
+
+    const pawn = mkPiece({ id: 'wp', kind: ChessPieceKind.PAWN, row: 3, column: 3 });
+    const gsWrong = mkSnapshot({ pieces: [pawn] });
+    expect(() => RookMoveResolver.validMoves(gsWrong, pawn.id)).toThrow('not a Rook');
+
+    const rook = mkPiece({ id: 'wr', kind: ChessPieceKind.ROOK, row: 2, column: 2 });
+    const gsRook = mkSnapshot({ pieces: [rook] });
+    const badBoardMove = Move.create({
+      classicMove: {
+        rook: {
+          move: {
+            from: { boardId: 'unknown', boardPosition: { row: 2, column: 2 } },
+            to: { boardId: 'unknown', boardPosition: { row: 2, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => RookMoveResolver.getMovedPieceIds(gsRook, badBoardMove)).toThrow(
+      "unknown board ID 'unknown'",
+    );
+
+    const missingBoardIdMove = Move.create({
+      classicMove: {
+        rook: {
+          move: {
+            from: { boardPosition: { row: 2, column: 2 } },
+            to: { boardId: BOARD_ID, boardPosition: { row: 2, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => RookMoveResolver.getMovedPieceIds(gsRook, missingBoardIdMove)).toThrow(
+      "unknown board ID ''",
+    );
+
+    const emptyMove = mkRookMove(2, 2, 2, 3);
+    expect(() => RookMoveResolver.getMovedPieceIds(mkSnapshot(), emptyMove)).toThrow(
+      'no piece at position',
+    );
+  });
+
+  it('rejects moves that are not rook moves', () => {
+    const rook = mkPiece({ id: 'wr', kind: ChessPieceKind.ROOK, row: 2, column: 2 });
+    const gs = mkSnapshot({ pieces: [rook] });
+
+    expect(() => RookMoveResolver.getMovedPieceIds(gs, Move.create({}))).toThrow('not a Rook move');
+    expect(() => RookMoveResolver.resolveToEffects(gs, Move.create({}))).toThrow('not a Rook move');
+
+    const bishop = mkPiece({ id: 'wb', kind: ChessPieceKind.BISHOP, row: 2, column: 2 });
+    const gsWrong = mkSnapshot({ pieces: [bishop] });
+    const move = mkRookMove(2, 2, 2, 3);
+    expect(() => RookMoveResolver.resolveToEffects(gsWrong, move)).toThrow('not a Rook');
+  });
+
+  it('guards against inconsistent moved piece resolution', () => {
+    const rook = mkPiece({ id: 'wr', kind: ChessPieceKind.ROOK, row: 2, column: 2 });
+    const gs = mkSnapshot({ pieces: [rook] });
+    const move = mkRookMove(2, 2, 2, 3);
+
+    const emptySpy = vi.spyOn(RookMoveResolver, 'getMovedPieceIds').mockReturnValue([]);
+    expect(() => RookMoveResolver.resolveToEffects(gs, move)).toThrow(
+      'Rook move should move exactly one piece',
+    );
+    emptySpy.mockRestore();
+
+    const missingSpy = vi.spyOn(RookMoveResolver, 'getMovedPieceIds').mockReturnValue(['x']);
+    expect(() => RookMoveResolver.resolveToEffects(gs, move)).toThrow(
+      "could not find rook piece with ID 'x'",
+    );
+    missingSpy.mockRestore();
   });
 });

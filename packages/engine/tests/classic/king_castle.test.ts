@@ -1,10 +1,18 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { IllegalMoveError, movesEqual, newReadonlyArray } from '@kaboom/engine/base';
 import { KingCastleResolver } from '@kaboom/engine/classic/king_castle';
-import { ChessColor, ChessPieceKind, Effect, Effect_StateChange, Move } from '@kaboom/proto';
+import {
+  ChessColor,
+  ChessPiece,
+  ChessPieceKind,
+  Effect,
+  Effect_StateChange,
+  Move,
+  Place,
+} from '@kaboom/proto';
 
-import { BOARD_ID, mkExecutedTurn, mkPiece, mkSnapshot } from './helpers';
+import { BOARD_ID, mkBoard, mkExecutedTurn, mkPiece, mkSnapshot } from './helpers';
 
 const mkCastleMove = (
   row: number,
@@ -64,6 +72,24 @@ describe('KingCastleResolver (classic)', () => {
     expect(moves.some((m) => movesEqual(m, mkCastleMove(0, 4, 2, 0, 3)))).toBe(true);
   });
 
+  it('skips castles when rook and king share a column', () => {
+    const board = mkBoard({ columns: 1 });
+    const king = mkPiece({ id: 'wk', kind: ChessPieceKind.KING, row: 0, column: 0 });
+    const rook = mkPiece({ id: 'wr', kind: ChessPieceKind.ROOK, row: 0, column: 0 });
+    const gs = mkSnapshot({ boards: [board], pieces: [rook, king] });
+
+    expect(KingCastleResolver.validMoves(gs, king.id)).toHaveLength(0);
+  });
+
+  it('skips castles that would move off the board', () => {
+    const board = mkBoard({ columns: 3 });
+    const king = mkPiece({ id: 'wk', kind: ChessPieceKind.KING, row: 0, column: 1 });
+    const rook = mkPiece({ id: 'wr', kind: ChessPieceKind.ROOK, row: 0, column: 2 });
+    const gs = mkSnapshot({ boards: [board], pieces: [king, rook] });
+
+    expect(KingCastleResolver.validMoves(gs, king.id)).toHaveLength(0);
+  });
+
   it('returns no castles if the king has moved earlier in the game', () => {
     const king = mkPiece({ id: 'wk', kind: ChessPieceKind.KING, row: 0, column: 4 });
     const rookA = mkPiece({ id: 'wr-a', kind: ChessPieceKind.ROOK, row: 0, column: 0 });
@@ -121,5 +147,107 @@ describe('KingCastleResolver (classic)', () => {
     const illegal = mkCastleMove(0, 4, 6, 7, 5);
 
     expect(() => KingCastleResolver.resolveToEffects(gs, illegal)).toThrow(IllegalMoveError);
+  });
+
+  it('validates invariant checks for castling moves', () => {
+    expect(() => KingCastleResolver.validMoves(mkSnapshot(), 'missing')).toThrow(
+      "Piece with ID 'missing' does not exist",
+    );
+
+    const unplaced = ChessPiece.create({
+      id: 'wk-unplaced',
+      kind: ChessPieceKind.KING,
+      color: ChessColor.WHITE,
+      place: Place.create({ boardId: BOARD_ID }),
+    });
+    const gsUnplaced = mkSnapshot({ pieces: [unplaced] });
+    expect(() => KingCastleResolver.validMoves(gsUnplaced, unplaced.id)).toThrow('not on a board');
+
+    const rook = mkPiece({ id: 'wr', kind: ChessPieceKind.ROOK, row: 0, column: 7 });
+    const gsWrong = mkSnapshot({ pieces: [rook] });
+    expect(() => KingCastleResolver.validMoves(gsWrong, rook.id)).toThrow('not a King');
+
+    const king = mkPiece({ id: 'wk', kind: ChessPieceKind.KING, row: 0, column: 4 });
+    const gsKing = mkSnapshot({ pieces: [king] });
+    const badBoardMove = Move.create({
+      classicMove: {
+        king: {
+          castle: {
+            kingFrom: { boardId: 'unknown', boardPosition: { row: 0, column: 4 } },
+            kingTo: { boardId: 'unknown', boardPosition: { row: 0, column: 6 } },
+            rookFrom: { boardId: 'unknown', boardPosition: { row: 0, column: 7 } },
+            rookTo: { boardId: 'unknown', boardPosition: { row: 0, column: 5 } },
+          },
+        },
+      },
+    });
+    expect(() => KingCastleResolver.getMovedPieceIds(gsKing, badBoardMove)).toThrow(
+      "unknown board ID 'unknown'",
+    );
+
+    const missingBoardIdMove = Move.create({
+      classicMove: {
+        king: {
+          castle: {
+            kingFrom: { boardPosition: { row: 0, column: 4 } },
+            kingTo: { boardId: BOARD_ID, boardPosition: { row: 0, column: 6 } },
+            rookFrom: { boardId: BOARD_ID, boardPosition: { row: 0, column: 7 } },
+            rookTo: { boardId: BOARD_ID, boardPosition: { row: 0, column: 5 } },
+          },
+        },
+      },
+    });
+    expect(() => KingCastleResolver.getMovedPieceIds(gsKing, missingBoardIdMove)).toThrow(
+      "unknown board ID ''",
+    );
+
+    const emptyCastle = mkCastleMove(0, 4, 6, 7, 5);
+    expect(() => KingCastleResolver.getMovedPieceIds(mkSnapshot(), emptyCastle)).toThrow(
+      'no king at position',
+    );
+
+    const missingRook = mkCastleMove(0, 4, 6, 7, 5);
+    expect(() => KingCastleResolver.getMovedPieceIds(gsKing, missingRook)).toThrow(
+      'no rook at position',
+    );
+  });
+
+  it('rejects moves that are not castling moves', () => {
+    const king = mkPiece({ id: 'wk', kind: ChessPieceKind.KING, row: 0, column: 4 });
+    const gs = mkSnapshot({ pieces: [king] });
+
+    expect(() => KingCastleResolver.getMovedPieceIds(gs, Move.create({}))).toThrow(
+      'not a King castle',
+    );
+    expect(() => KingCastleResolver.resolveToEffects(gs, Move.create({}))).toThrow(
+      'not a King castle',
+    );
+  });
+
+  it('guards against inconsistent moved piece resolution', () => {
+    const king = mkPiece({ id: 'wk', kind: ChessPieceKind.KING, row: 0, column: 4 });
+    const rook = mkPiece({ id: 'wr', kind: ChessPieceKind.ROOK, row: 0, column: 7 });
+    const gs = mkSnapshot({ pieces: [king, rook] });
+    const move = mkCastleMove(0, 4, 6, 7, 5);
+
+    const emptySpy = vi.spyOn(KingCastleResolver, 'getMovedPieceIds').mockReturnValue([]);
+    expect(() => KingCastleResolver.resolveToEffects(gs, move)).toThrow(
+      'King castle should move exactly two pieces',
+    );
+    emptySpy.mockRestore();
+
+    const missingSpy = vi.spyOn(KingCastleResolver, 'getMovedPieceIds').mockReturnValue(['x', 'y']);
+    expect(() => KingCastleResolver.resolveToEffects(gs, move)).toThrow(
+      "could not find king piece with ID 'x'",
+    );
+    missingSpy.mockRestore();
+
+    const missingRookSpy = vi
+      .spyOn(KingCastleResolver, 'getMovedPieceIds')
+      .mockReturnValue([king.id, 'missing-rook']);
+    expect(() => KingCastleResolver.resolveToEffects(gs, move)).toThrow(
+      "could not find rook piece with ID 'missing-rook'",
+    );
+    missingRookSpy.mockRestore();
   });
 });

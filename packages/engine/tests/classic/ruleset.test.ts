@@ -168,6 +168,26 @@ describe('ClassicChessRuleset', () => {
     expect(setColor?.activeColor).toBe(ChessColor.BLACK);
   });
 
+  it('flips the active color from black to white after a black move', () => {
+    const pawn = mkPiece({
+      id: 'bp',
+      kind: ChessPieceKind.PAWN,
+      color: ChessColor.BLACK,
+      row: 6,
+      column: 0,
+    });
+    const snapshot = mkSnapshotWithPlayers({ pieces: [pawn], activeColor: ChessColor.BLACK });
+    const move = mkPawnOneStepMove(6, 0, 5, 0);
+
+    const turn = mkIntendedTurn(BLACK_PLAYER_ID, [move]);
+    const resolved = ClassicChessRuleset.resolveTurn(snapshot, turn);
+
+    const lastEffect = resolved.effects[1];
+    const setColor = lastEffect?.stateChanges[0]?.setBoardActiveColor;
+    expect(setColor?.boardId).toBe(BOARD_ID);
+    expect(setColor?.activeColor).toBe(ChessColor.WHITE);
+  });
+
   it('resolves multiple moves in a single turn in order', () => {
     const pawnA = mkPiece({ id: 'wp1', kind: ChessPieceKind.PAWN, row: 1, column: 0 });
     const pawnB = mkPiece({ id: 'wp2', kind: ChessPieceKind.PAWN, row: 1, column: 1 });

@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { IllegalMoveError, movesEqual } from '@kaboom/engine/base';
 import { QueenMoveResolver } from '@kaboom/engine/classic/queen_move';
-import { ChessColor, ChessPieceKind, Move } from '@kaboom/proto';
+import { ChessColor, ChessPiece, ChessPieceKind, Move, Place } from '@kaboom/proto';
 
 import { BOARD_ID, mkPiece, mkSnapshot } from './helpers';
 
@@ -120,5 +120,94 @@ describe('QueenMoveResolver (classic)', () => {
     const illegal = mkQueenMove(3, 3, 5, 5);
 
     expect(() => QueenMoveResolver.resolveToEffects(gs, illegal)).toThrow(IllegalMoveError);
+  });
+
+  it('validates invariant checks for queen moves', () => {
+    expect(() => QueenMoveResolver.validMoves(mkSnapshot(), 'missing')).toThrow(
+      "Piece with ID 'missing' does not exist",
+    );
+
+    const unplaced = ChessPiece.create({
+      id: 'wq-unplaced',
+      kind: ChessPieceKind.QUEEN,
+      color: ChessColor.WHITE,
+      place: Place.create({ boardId: BOARD_ID }),
+    });
+    const gsUnplaced = mkSnapshot({ pieces: [unplaced] });
+    expect(() => QueenMoveResolver.validMoves(gsUnplaced, unplaced.id)).toThrow('not on a board');
+
+    const pawn = mkPiece({ id: 'wp', kind: ChessPieceKind.PAWN, row: 3, column: 3 });
+    const gsWrong = mkSnapshot({ pieces: [pawn] });
+    expect(() => QueenMoveResolver.validMoves(gsWrong, pawn.id)).toThrow('not a Queen');
+
+    const queen = mkPiece({ id: 'wq', kind: ChessPieceKind.QUEEN, row: 2, column: 2 });
+    const gsQueen = mkSnapshot({ pieces: [queen] });
+    const badBoardMove = Move.create({
+      classicMove: {
+        queen: {
+          move: {
+            from: { boardId: 'unknown', boardPosition: { row: 2, column: 2 } },
+            to: { boardId: 'unknown', boardPosition: { row: 2, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => QueenMoveResolver.getMovedPieceIds(gsQueen, badBoardMove)).toThrow(
+      "unknown board ID 'unknown'",
+    );
+
+    const missingBoardIdMove = Move.create({
+      classicMove: {
+        queen: {
+          move: {
+            from: { boardPosition: { row: 2, column: 2 } },
+            to: { boardId: BOARD_ID, boardPosition: { row: 2, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => QueenMoveResolver.getMovedPieceIds(gsQueen, missingBoardIdMove)).toThrow(
+      "unknown board ID ''",
+    );
+
+    const emptyMove = mkQueenMove(2, 2, 2, 3);
+    expect(() => QueenMoveResolver.getMovedPieceIds(mkSnapshot(), emptyMove)).toThrow(
+      'no piece at position',
+    );
+  });
+
+  it('rejects moves that are not queen moves', () => {
+    const queen = mkPiece({ id: 'wq', kind: ChessPieceKind.QUEEN, row: 2, column: 2 });
+    const gs = mkSnapshot({ pieces: [queen] });
+
+    expect(() => QueenMoveResolver.getMovedPieceIds(gs, Move.create({}))).toThrow(
+      'not a Queen move',
+    );
+    expect(() => QueenMoveResolver.resolveToEffects(gs, Move.create({}))).toThrow(
+      'not a Queen move',
+    );
+
+    const bishop = mkPiece({ id: 'wb', kind: ChessPieceKind.BISHOP, row: 2, column: 2 });
+    const gsWrong = mkSnapshot({ pieces: [bishop] });
+    const move = mkQueenMove(2, 2, 2, 3);
+    expect(() => QueenMoveResolver.resolveToEffects(gsWrong, move)).toThrow('not a Queen');
+  });
+
+  it('guards against inconsistent moved piece resolution', () => {
+    const queen = mkPiece({ id: 'wq', kind: ChessPieceKind.QUEEN, row: 2, column: 2 });
+    const gs = mkSnapshot({ pieces: [queen] });
+    const move = mkQueenMove(2, 2, 2, 3);
+
+    const emptySpy = vi.spyOn(QueenMoveResolver, 'getMovedPieceIds').mockReturnValue([]);
+    expect(() => QueenMoveResolver.resolveToEffects(gs, move)).toThrow(
+      'Queen move should move exactly one piece',
+    );
+    emptySpy.mockRestore();
+
+    const missingSpy = vi.spyOn(QueenMoveResolver, 'getMovedPieceIds').mockReturnValue(['x']);
+    expect(() => QueenMoveResolver.resolveToEffects(gs, move)).toThrow(
+      "could not find queen piece with ID 'x'",
+    );
+    missingSpy.mockRestore();
   });
 });

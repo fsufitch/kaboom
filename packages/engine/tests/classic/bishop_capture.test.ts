@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { IllegalMoveError, movesEqual, newReadonlyArray } from '@kaboom/engine/base';
 import { BishopCaptureResolver } from '@kaboom/engine/classic/bishop_capture';
@@ -9,6 +9,7 @@ import {
   ChessPieceKind,
   GameSnapshot,
   Move,
+  Place,
   Variant,
 } from '@kaboom/proto';
 
@@ -130,5 +131,122 @@ describe('BishopCaptureResolver (classic)', () => {
     const illegal = mkBishopCaptureMove(3, 3, 4, 4);
 
     expect(() => BishopCaptureResolver.resolveToEffects(gs, illegal)).toThrow(IllegalMoveError);
+  });
+
+  it('validates invariant checks for bishop captures', () => {
+    expect(() => BishopCaptureResolver.validMoves(mkSnapshot([]), 'missing')).toThrow(
+      "Piece with ID 'missing' does not exist",
+    );
+
+    const unplaced = ChessPiece.create({
+      id: 'wb-unplaced',
+      kind: ChessPieceKind.BISHOP,
+      color: ChessColor.WHITE,
+      place: Place.create({ boardId: BOARD_ID }),
+    });
+    const gsUnplaced = mkSnapshot([unplaced]);
+    expect(() => BishopCaptureResolver.validMoves(gsUnplaced, unplaced.id)).toThrow(
+      'not on a board',
+    );
+
+    const pawn = mkPiece('wp', ChessPieceKind.PAWN, ChessColor.WHITE, 3, 3);
+    const gsWrong = mkSnapshot([pawn]);
+    expect(() => BishopCaptureResolver.validMoves(gsWrong, pawn.id)).toThrow('not a Bishop');
+
+    const bishop = mkPiece('wb', ChessPieceKind.BISHOP, ChessColor.WHITE, 2, 2);
+    const gsBishop = mkSnapshot([bishop]);
+    const badBoardMove = Move.create({
+      classicMove: {
+        bishop: {
+          capture: {
+            from: { boardId: 'unknown', boardPosition: { row: 2, column: 2 } },
+            to: { boardId: 'unknown', boardPosition: { row: 3, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => BishopCaptureResolver.getMovedPieceIds(gsBishop, badBoardMove)).toThrow(
+      "unknown board ID 'unknown'",
+    );
+
+    const missingBoardIdMove = Move.create({
+      classicMove: {
+        bishop: {
+          capture: {
+            from: { boardPosition: { row: 2, column: 2 } },
+            to: { boardId: BOARD_ID, boardPosition: { row: 3, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => BishopCaptureResolver.getMovedPieceIds(gsBishop, missingBoardIdMove)).toThrow(
+      "unknown board ID ''",
+    );
+
+    const emptyCapture = mkBishopCaptureMove(2, 2, 3, 3);
+    expect(() => BishopCaptureResolver.getMovedPieceIds(mkSnapshot([]), emptyCapture)).toThrow(
+      'no piece at position',
+    );
+  });
+
+  it('rejects moves that are not bishop captures', () => {
+    const bishop = mkPiece('wb', ChessPieceKind.BISHOP, ChessColor.WHITE, 3, 3);
+    const gs = mkSnapshot([bishop]);
+
+    expect(() => BishopCaptureResolver.getMovedPieceIds(gs, Move.create({}))).toThrow(
+      'not a Bishop capture',
+    );
+    expect(() => BishopCaptureResolver.resolveToEffects(gs, Move.create({}))).toThrow(
+      'not a Bishop capture',
+    );
+
+    const rook = mkPiece('wr', ChessPieceKind.ROOK, ChessColor.WHITE, 3, 3);
+    const gsWrong = mkSnapshot([rook]);
+    const move = mkBishopCaptureMove(3, 3, 4, 4);
+    expect(() => BishopCaptureResolver.resolveToEffects(gsWrong, move)).toThrow('not a Bishop');
+  });
+
+  it('guards against inconsistent moved piece resolution and capture targets', () => {
+    const bishop = mkPiece('wb', ChessPieceKind.BISHOP, ChessColor.WHITE, 2, 2);
+    const gs = mkSnapshot([bishop]);
+    const move = mkBishopCaptureMove(2, 2, 3, 3);
+
+    const emptySpy = vi.spyOn(BishopCaptureResolver, 'getMovedPieceIds').mockReturnValue([]);
+    expect(() => BishopCaptureResolver.resolveToEffects(gs, move)).toThrow(
+      'Bishop capture should move exactly one piece',
+    );
+    emptySpy.mockRestore();
+
+    const missingSpy = vi.spyOn(BishopCaptureResolver, 'getMovedPieceIds').mockReturnValue(['x']);
+    expect(() => BishopCaptureResolver.resolveToEffects(gs, move)).toThrow(
+      "could not find bishop piece with ID 'x'",
+    );
+    missingSpy.mockRestore();
+
+    const validSpy = vi.spyOn(BishopCaptureResolver, 'validMoves').mockReturnValue([move]);
+    const movedSpy = vi
+      .spyOn(BishopCaptureResolver, 'getMovedPieceIds')
+      .mockReturnValue([bishop.id]);
+    expect(() => BishopCaptureResolver.resolveToEffects(gs, move)).toThrow('No piece to capture');
+    movedSpy.mockRestore();
+    validSpy.mockRestore();
+
+    const missingTargetBoardMove = Move.create({
+      classicMove: {
+        bishop: {
+          capture: {
+            from: { boardId: BOARD_ID, boardPosition: { row: 2, column: 2 } },
+            to: { boardPosition: { row: 3, column: 3 } },
+          },
+        },
+      },
+    });
+    const validSpy2 = vi
+      .spyOn(BishopCaptureResolver, 'validMoves')
+      .mockReturnValue([missingTargetBoardMove]);
+    expect(() => BishopCaptureResolver.resolveToEffects(gs, missingTargetBoardMove)).toThrow(
+      'No piece to capture',
+    );
+    validSpy2.mockRestore();
   });
 });

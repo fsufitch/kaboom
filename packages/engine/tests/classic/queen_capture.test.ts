@@ -1,8 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 
 import { IllegalMoveError, movesEqual } from '@kaboom/engine/base';
 import { QueenCaptureResolver } from '@kaboom/engine/classic/queen_capture';
-import { ChessColor, ChessPieceKind, Move } from '@kaboom/proto';
+import { ChessColor, ChessPiece, ChessPieceKind, Move, Place } from '@kaboom/proto';
 
 import { BOARD_ID, mkPiece, mkSnapshot } from './helpers';
 
@@ -181,5 +181,120 @@ describe('QueenCaptureResolver (classic)', () => {
     const illegal = mkQueenCapture(3, 3, 4, 4);
 
     expect(() => QueenCaptureResolver.resolveToEffects(gs, illegal)).toThrow(IllegalMoveError);
+  });
+
+  it('validates invariant checks for queen captures', () => {
+    expect(() => QueenCaptureResolver.validMoves(mkSnapshot(), 'missing')).toThrow(
+      "Piece with ID 'missing' does not exist",
+    );
+
+    const unplaced = ChessPiece.create({
+      id: 'wq-unplaced',
+      kind: ChessPieceKind.QUEEN,
+      color: ChessColor.WHITE,
+      place: Place.create({ boardId: BOARD_ID }),
+    });
+    const gsUnplaced = mkSnapshot({ pieces: [unplaced] });
+    expect(() => QueenCaptureResolver.validMoves(gsUnplaced, unplaced.id)).toThrow(
+      'not on a board',
+    );
+
+    const pawn = mkPiece({ id: 'wp', kind: ChessPieceKind.PAWN, row: 3, column: 3 });
+    const gsWrong = mkSnapshot({ pieces: [pawn] });
+    expect(() => QueenCaptureResolver.validMoves(gsWrong, pawn.id)).toThrow('not a Queen');
+
+    const queen = mkPiece({ id: 'wq', kind: ChessPieceKind.QUEEN, row: 2, column: 2 });
+    const gsQueen = mkSnapshot({ pieces: [queen] });
+    const badBoardMove = Move.create({
+      classicMove: {
+        queen: {
+          capture: {
+            from: { boardId: 'unknown', boardPosition: { row: 2, column: 2 } },
+            to: { boardId: 'unknown', boardPosition: { row: 2, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => QueenCaptureResolver.getMovedPieceIds(gsQueen, badBoardMove)).toThrow(
+      "unknown board ID 'unknown'",
+    );
+
+    const missingBoardIdMove = Move.create({
+      classicMove: {
+        queen: {
+          capture: {
+            from: { boardPosition: { row: 2, column: 2 } },
+            to: { boardId: BOARD_ID, boardPosition: { row: 2, column: 3 } },
+          },
+        },
+      },
+    });
+    expect(() => QueenCaptureResolver.getMovedPieceIds(gsQueen, missingBoardIdMove)).toThrow(
+      "unknown board ID ''",
+    );
+
+    const emptyCapture = mkQueenCapture(2, 2, 2, 3);
+    expect(() => QueenCaptureResolver.getMovedPieceIds(mkSnapshot(), emptyCapture)).toThrow(
+      'no piece at position',
+    );
+  });
+
+  it('rejects moves that are not queen captures', () => {
+    const queen = mkPiece({ id: 'wq', kind: ChessPieceKind.QUEEN, row: 2, column: 2 });
+    const gs = mkSnapshot({ pieces: [queen] });
+
+    expect(() => QueenCaptureResolver.getMovedPieceIds(gs, Move.create({}))).toThrow(
+      'not a Queen capture',
+    );
+    expect(() => QueenCaptureResolver.resolveToEffects(gs, Move.create({}))).toThrow(
+      'not a Queen capture',
+    );
+
+    const bishop = mkPiece({ id: 'wb', kind: ChessPieceKind.BISHOP, row: 2, column: 2 });
+    const gsWrong = mkSnapshot({ pieces: [bishop] });
+    const move = mkQueenCapture(2, 2, 2, 3);
+    expect(() => QueenCaptureResolver.resolveToEffects(gsWrong, move)).toThrow('not a Queen');
+  });
+
+  it('guards against inconsistent moved piece resolution and capture targets', () => {
+    const queen = mkPiece({ id: 'wq', kind: ChessPieceKind.QUEEN, row: 2, column: 2 });
+    const gs = mkSnapshot({ pieces: [queen] });
+    const move = mkQueenCapture(2, 2, 2, 3);
+
+    const emptySpy = vi.spyOn(QueenCaptureResolver, 'getMovedPieceIds').mockReturnValue([]);
+    expect(() => QueenCaptureResolver.resolveToEffects(gs, move)).toThrow(
+      'Queen capture should move exactly one piece',
+    );
+    emptySpy.mockRestore();
+
+    const missingSpy = vi.spyOn(QueenCaptureResolver, 'getMovedPieceIds').mockReturnValue(['x']);
+    expect(() => QueenCaptureResolver.resolveToEffects(gs, move)).toThrow(
+      "could not find queen piece with ID 'x'",
+    );
+    missingSpy.mockRestore();
+
+    const validSpy = vi.spyOn(QueenCaptureResolver, 'validMoves').mockReturnValue([move]);
+    const movedSpy = vi.spyOn(QueenCaptureResolver, 'getMovedPieceIds').mockReturnValue([queen.id]);
+    expect(() => QueenCaptureResolver.resolveToEffects(gs, move)).toThrow('No piece to capture');
+    movedSpy.mockRestore();
+    validSpy.mockRestore();
+
+    const missingTargetBoardMove = Move.create({
+      classicMove: {
+        queen: {
+          capture: {
+            from: { boardId: BOARD_ID, boardPosition: { row: 2, column: 2 } },
+            to: { boardPosition: { row: 2, column: 3 } },
+          },
+        },
+      },
+    });
+    const validSpy2 = vi
+      .spyOn(QueenCaptureResolver, 'validMoves')
+      .mockReturnValue([missingTargetBoardMove]);
+    expect(() => QueenCaptureResolver.resolveToEffects(gs, missingTargetBoardMove)).toThrow(
+      'No piece to capture',
+    );
+    validSpy2.mockRestore();
   });
 });
