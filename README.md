@@ -26,15 +26,37 @@ Kaboom Chess is a family of chess variants with:
 - **Player rules:** see `KABOOM.md`
 - **Engine design:** see `ARCHITECTURE.md`
 
-## Status
+## Repo structure
 
-This repository currently contains:
+This is a monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces).
 
-- protobuf schemas for snapshots/turns/moves/effects
-- TypeScript code generation tooling (`ts-proto`)
-- a minimal scaffold for future engine code
+- `packages/engine`: core rules engine (Classic + Kaboom rulesets)
+- `packages/proto`: protobuf schemas + generated TypeScript
+- `packages/cli`: headless CLI wrapper for running the engine
+- `ARCHITECTURE.md`: internal design notes and data flow
+- `KABOOM.md`: player-facing rules for the Kaboom variant
+- `TESTING.md`: test strategy and commands
 
-Rules evaluation, effect resolution, and move generation are planned but not implemented yet.
+## Development
+
+### Install
+
+- `pnpm install` - install dependencies for all packages
+
+### Builds
+
+- Build everything: `pnpm -r run build`
+- Build a single package: `pnpm -C packages/engine build`
+  - Or: in the package directory, run `pnpm build`
+
+### Linting
+
+- Lint all workspaces: `pnpm lint`
+- Fix lint issues: `pnpm lint:fix`
+
+### Testing
+
+See [TESTING.md](TESTING.md) for details on the testing strategy, setup, and commands.
 
 ## License
 
