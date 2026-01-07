@@ -1,11 +1,14 @@
+/// <reference types="node" />
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
 import markdownPlugin from '@eslint/markdown';
+import type { Linter } from 'eslint';
 import jsoncPlugin from 'eslint-plugin-jsonc';
 import yamlPlugin from 'eslint-plugin-yml';
 import globals from 'globals';
 import jsoncParser from 'jsonc-eslint-parser';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import tseslint from 'typescript-eslint';
 import yamlParser from 'yaml-eslint-parser';
 
@@ -15,11 +18,23 @@ type BaseConfigOptions = {
   ignores?: string[];
 };
 
+const defaultBaseDirectory = path.dirname(fileURLToPath(import.meta.url));
+const tsRules = {
+  'no-unused-vars': 'off',
+  '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+  'no-restricted-imports': [
+    'error',
+    {
+      patterns: ['../*', '../**/*'],
+    },
+  ],
+} satisfies Linter.RulesRecord;
+
 export const createConfig = ({
-  baseDirectory = import.meta.dirname,
+  baseDirectory = defaultBaseDirectory,
   tsconfigPaths,
   ignores = [],
-}: BaseConfigOptions) => {
+}: BaseConfigOptions): Linter.Config[] => {
   const compat = new FlatCompat({ baseDirectory });
   const resolvedTsconfigPaths = tsconfigPaths.map((tsconfigPath) =>
     path.resolve(baseDirectory, tsconfigPath),
@@ -33,7 +48,7 @@ export const createConfig = ({
     '**/pnpm-lock.yaml',
   ];
 
-  return [
+  const config = [
     // Base
     {
       ignores: [...defaultIgnores, ...ignores],
@@ -59,16 +74,7 @@ export const createConfig = ({
         },
       },
 
-      rules: {
-        'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-        'no-restricted-imports': [
-          'error',
-          {
-            patterns: ['../*', '../**/*'],
-          },
-        ],
-      },
+      rules: tsRules,
       settings: {
         'import/resolver': {
           typescript: {
@@ -84,7 +90,7 @@ export const createConfig = ({
       languageOptions: { parser: jsoncParser },
       plugins: { jsonc: jsoncPlugin },
       rules: {
-        ...jsoncPlugin.configs['recommended-with-jsonc'].rules,
+        ...(jsoncPlugin.configs['recommended-with-jsonc'].rules as Linter.RulesRecord),
       },
     },
 
@@ -96,7 +102,7 @@ export const createConfig = ({
         parser: yamlParser,
       },
       rules: {
-        ...yamlPlugin.configs.standard.rules,
+        ...(yamlPlugin.configs.standard.rules as Linter.RulesRecord),
       },
     },
 
@@ -112,5 +118,7 @@ export const createConfig = ({
 
     // Turn off ESLint rules that conflict with Prettier
     ...compat.extends('prettier'),
-  ];
+  ] as Linter.Config[];
+
+  return config;
 };

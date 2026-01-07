@@ -1,14 +1,5 @@
-import {
-  ChessBoard,
-  ChessBoardPlayer,
-  ChessColor,
-  ChessPiece,
-  ChessPieceKind,
-  GameSnapshot,
-  Player,
-  Variant,
-} from '@kaboom/proto';
 import { newReadonlyArray } from '@kaboom/engine/base';
+import { ChessColor, ChessPiece, ChessPieceKind, GameSnapshot, Variant } from '@kaboom/proto';
 
 export const newClassicChessGame = (opts?: Partial<NewGameOpts>): GameSnapshot => {
   const gOpts = { ...defaultNewGameOpts, ...opts };

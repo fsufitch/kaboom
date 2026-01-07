@@ -1,6 +1,8 @@
+import type { Linter } from 'eslint';
+
 import { createConfig } from '../../eslint.base.config';
 
-export default [
+const config: Linter.Config[] = [
   ...createConfig({
     baseDirectory: import.meta.dirname,
     tsconfigPaths: ['./tsconfig.json'],
@@ -13,3 +15,5 @@ export default [
     },
   },
 ];
+
+export default config;

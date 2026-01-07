@@ -6,12 +6,11 @@
     "outDir": "dist",
   },
   "include": [
-    "index.ts",
+    "*.ts",
     "gen/**/*.ts"
   ],
   "exclude": [
     "dist",
     "node_modules",
-    "eslint.config.ts"
   ]
 }
