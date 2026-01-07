@@ -45,7 +45,7 @@ This is a monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces).
 
 ### Builds
 
-- Build everything: `pnpm -r run build`
+- Build everything: `pnpm -r build`
 - Build a single package: `pnpm -C packages/engine build`
   - Or: in the package directory, run `pnpm build`
 
@@ -53,6 +53,7 @@ This is a monorepo managed with [pnpm workspaces](https://pnpm.io/workspaces).
 
 - Lint all workspaces: `pnpm lint`
 - Fix lint issues: `pnpm lint:fix`
+- Format code: `pnpm format`
 
 ### Testing
 
