@@ -39,15 +39,15 @@ describe('SetBoardActiveColorMutator', () => {
     );
   });
 
-  it('rejects missing active colors', () => {
-    const gsw = writable(mkSnapshot());
-    const stateChange = {
-      setBoardActiveColor: { boardId: BOARD_ID, activeColor: undefined },
-    } as Effect_StateChange;
+  it('defaults missing active colors to COLOR_UNKNOWN', () => {
+    const gsw = writable(mkSnapshot({ boards: [mkBoard({ activeColor: ChessColor.WHITE })] }));
+    const stateChange = Effect_StateChange.create({
+      setBoardActiveColor: { boardId: BOARD_ID } as any,
+    });
 
-    expect(() => SetBoardActiveColorMutator.mutate(gsw, stateChange)).toThrow(
-      InvalidStateChangeError,
-    );
+    SetBoardActiveColorMutator.mutate(gsw, stateChange);
+
+    expect(gsw.boards[0]?.activeColor).toBe(ChessColor.COLOR_UNKNOWN);
   });
 
   it('rejects unknown board IDs', () => {

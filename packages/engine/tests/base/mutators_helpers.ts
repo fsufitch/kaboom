@@ -1,13 +1,18 @@
 import {
   ChessBoard,
+  ChessBoardPlayer,
   ChessColor,
   ChessPiece,
   ChessPieceKind,
+  ExecutedTurn,
   Flag,
   GameSnapshot,
   Place,
+  Player,
   Variant,
 } from '@kaboom/proto';
+
+import { newReadonlyArray } from '@kaboom/engine/base/types';
 
 export const BOARD_ID = 'board-1';
 
@@ -48,16 +53,16 @@ export const mkPiece = (options: {
 export const mkFlag = (id: string): Flag => Flag.create({ id });
 
 export const mkSnapshot = (options: {
-  boards?: ChessBoard[];
-  pieces?: ChessPiece[];
-  flags?: Flag[];
+  boards?: readonly ChessBoard[];
+  pieces?: readonly ChessPiece[];
+  flags?: readonly Flag[];
 } = {}): GameSnapshot =>
   GameSnapshot.create({
     properties: { id: 'game-1', variant: Variant.CLASSIC },
-    boards: options.boards ?? [mkBoard()],
-    pieces: options.pieces ?? [],
-    flags: options.flags ?? [],
-    players: [],
-    boardPlayers: [],
-    turnHistory: [],
+    boards: newReadonlyArray(...(options.boards ?? [mkBoard()])),
+    pieces: newReadonlyArray(...(options.pieces ?? [])),
+    flags: newReadonlyArray(...(options.flags ?? [])),
+    players: newReadonlyArray<Player>(),
+    boardPlayers: newReadonlyArray<ChessBoardPlayer>(),
+    turnHistory: newReadonlyArray<ExecutedTurn>(),
   });
