@@ -1,17 +1,14 @@
 import { IllegalMoveError, type MoveResolver, newReadonlyArray } from '@kaboom/engine/base';
 import {
+  KnightDirectionVectors,
+  SmartVector,
   getBoardById,
   getPieceAtBoardPosition,
   getPieceById,
   movesEqual,
   truePieceKind,
- KnightDirectionVectors, SmartVector } from '@kaboom/engine/base';
-import {
-  ChessPieceKind,
-  Effect,
-  type GameSnapshot,
-  Move,
-} from '@kaboom/proto';
+} from '@kaboom/engine/base';
+import { ChessPieceKind, Effect, type GameSnapshot, Move } from '@kaboom/proto';
 
 import { getClassicBoard } from './utils';
 

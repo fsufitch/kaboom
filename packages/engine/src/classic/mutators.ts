@@ -1,7 +1,11 @@
-import { type Effect_StateChange, Place_Captured } from '@kaboom/proto';
-
-import { BASE_MUTATORS, InvalidStateChangeError, getPieceById, writable } from '@kaboom/engine/base';
+import {
+  BASE_MUTATORS,
+  InvalidStateChangeError,
+  getPieceById,
+  writable,
+} from '@kaboom/engine/base';
 import type { GameSnapshotMutator, GameSnapshotWritable } from '@kaboom/engine/base';
+import { type Effect_StateChange, Place_Captured } from '@kaboom/proto';
 
 export const PieceCapturedMutator: GameSnapshotMutator = {
   applicable: (stateChange: Effect_StateChange) => !!stateChange.pieceCaptured,

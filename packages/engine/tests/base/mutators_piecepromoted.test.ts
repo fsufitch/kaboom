@@ -11,7 +11,9 @@ describe('PiecePromotedMutator', () => {
     const promoted = Effect_StateChange.create({
       piecePromoted: { pieceId: 'p1', newKind: ChessPieceKind.QUEEN },
     });
-    const other = Effect_StateChange.create({ pieceMoved: { pieceId: 'p1', to: { row: 1, column: 1 } } });
+    const other = Effect_StateChange.create({
+      pieceMoved: { pieceId: 'p1', to: { row: 1, column: 1 } },
+    });
 
     expect(PiecePromotedMutator.applicable(promoted)).toBe(true);
     expect(PiecePromotedMutator.applicable(other)).toBe(false);

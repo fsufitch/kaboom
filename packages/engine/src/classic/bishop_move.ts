@@ -1,18 +1,15 @@
-import {
-  ChessPieceKind,
-  Effect,
-  type GameSnapshot,
-  Move,
-} from '@kaboom/proto';
-
 import { IllegalMoveError, type MoveResolver, newReadonlyArray } from '@kaboom/engine/base';
 import {
+  ChessDirectionVectors,
+  SmartVector,
   getBoardById,
   getPieceAtBoardPosition,
   getPieceById,
   movesEqual,
   truePieceKind,
- ChessDirectionVectors, SmartVector } from '@kaboom/engine/base';
+} from '@kaboom/engine/base';
+import { ChessPieceKind, Effect, type GameSnapshot, Move } from '@kaboom/proto';
+
 import { getClassicBoard } from './utils';
 
 export const BishopMoveResolver: MoveResolver = {
@@ -109,9 +106,7 @@ export const BishopMoveResolver: MoveResolver = {
     }
     const bishop = getPieceById(snapshot, movedPieces[0]);
     if (!bishop) {
-      throw new Error(
-        `Invalid move: could not find bishop piece with ID '${movedPieces[0]}'`,
-      );
+      throw new Error(`Invalid move: could not find bishop piece with ID '${movedPieces[0]}'`);
     }
 
     const validMoves = BishopMoveResolver.validMoves(snapshot, bishop.id);

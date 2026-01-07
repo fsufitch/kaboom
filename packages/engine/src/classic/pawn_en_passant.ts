@@ -7,12 +7,7 @@ import {
   movesEqual,
   truePieceKind,
 } from '@kaboom/engine/base';
-import {
-  ChessPieceKind,
-  Effect,
-  type GameSnapshot,
-  Move,
-} from '@kaboom/proto';
+import { ChessPieceKind, Effect, type GameSnapshot, Move } from '@kaboom/proto';
 
 import { getClassicBoard } from './utils';
 

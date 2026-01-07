@@ -1,18 +1,14 @@
-import {
-  ChessPieceKind,
-  Effect,
-  type GameSnapshot,
-  Move,
-} from '@kaboom/proto';
-
 import { IllegalMoveError, type MoveResolver, newReadonlyArray } from '@kaboom/engine/base';
 import {
+  SmartVector,
   getBoardById,
   getPieceAtBoardPosition,
   getPieceById,
   movesEqual,
   truePieceKind,
- SmartVector } from '@kaboom/engine/base';
+} from '@kaboom/engine/base';
+import { ChessPieceKind, Effect, type GameSnapshot, Move } from '@kaboom/proto';
+
 import { getClassicBoard, pieceMovedThisGame } from './utils';
 
 // Simplified castling: does not currently check for check/through-check or prior moves.

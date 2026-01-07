@@ -1,18 +1,14 @@
-import {
-  ChessPieceKind,
-  Effect,
-  type GameSnapshot,
-  Move,
-} from '@kaboom/proto';
-
 import { IllegalMoveError, type MoveResolver, newReadonlyArray } from '@kaboom/engine/base';
 import {
+  SmartVector,
   getBoardById,
   getPieceAtBoardPosition,
   getPieceById,
   movesEqual,
   truePieceKind,
- SmartVector } from '@kaboom/engine/base';
+} from '@kaboom/engine/base';
+import { ChessPieceKind, Effect, type GameSnapshot, Move } from '@kaboom/proto';
+
 import { getClassicBoard } from './utils';
 
 export const PawnOneStepMoveResolver: MoveResolver = {
@@ -96,9 +92,7 @@ export const PawnOneStepMoveResolver: MoveResolver = {
     }
     const pawn = getPieceById(snapshot, movedPieces[0]);
     if (!pawn) {
-      throw new Error(
-        `Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`,
-      );
+      throw new Error(`Invalid move: could not find pawn piece with ID '${movedPieces[0]}'`);
     }
     if (truePieceKind(pawn) !== ChessPieceKind.PAWN) {
       throw new Error(`Invalid move: piece at origin is not a Pawn`);

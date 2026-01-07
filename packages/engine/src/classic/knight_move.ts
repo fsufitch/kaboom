@@ -1,18 +1,15 @@
-import {
-  ChessPieceKind,
-  Effect,
-  type GameSnapshot,
-  Move,
-} from '@kaboom/proto';
-
 import { IllegalMoveError, type MoveResolver, newReadonlyArray } from '@kaboom/engine/base';
 import {
+  KnightDirectionVectors,
+  SmartVector,
   getBoardById,
   getPieceAtBoardPosition,
   getPieceById,
   movesEqual,
   truePieceKind,
- KnightDirectionVectors, SmartVector } from '@kaboom/engine/base';
+} from '@kaboom/engine/base';
+import { ChessPieceKind, Effect, type GameSnapshot, Move } from '@kaboom/proto';
+
 import { getClassicBoard } from './utils';
 
 export const KnightMoveResolver: MoveResolver = {
@@ -101,9 +98,7 @@ export const KnightMoveResolver: MoveResolver = {
     }
     const knight = getPieceById(snapshot, movedPieces[0]);
     if (!knight) {
-      throw new Error(
-        `Invalid move: could not find knight piece with ID '${movedPieces[0]}'`,
-      );
+      throw new Error(`Invalid move: could not find knight piece with ID '${movedPieces[0]}'`);
     }
 
     const validMoves = KnightMoveResolver.validMoves(snapshot, knight.id);
