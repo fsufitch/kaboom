@@ -27,6 +27,17 @@ const examineGame = (game: GameSnapshot, name: string) => {
 
   const gameProto = GameSnapshot.encode(game).finish();
   console.log('Game protobuf size (bytes):', gameProto.length);
+
+  const firstIntendedMoveTimestamp = game.turnHistory[0]?.intendedAt;
+  console.log('First intended move timestamp:', firstIntendedMoveTimestamp);
+  const lastIntendedMoveExecutedTimestamp =
+    game.turnHistory[game.turnHistory.length - 1]?.executedAt;
+  console.log('Last executed move timestamp:', lastIntendedMoveExecutedTimestamp);
+  console.log(
+    'Total game replay time:',
+    lastIntendedMoveExecutedTimestamp?.getTime()! - firstIntendedMoveTimestamp?.getTime()!,
+    'ms',
+  );
 };
 
 examineGame(FischerSpassky1972, 'Fischer vs Spassky, 1972-07-23');
