@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package proto;
+
+import "color.proto";
+import "board.proto";
+import "flag.proto";
+import "piece.proto";
+
+// Effect represents a set of changes to the game state and visual hints.
+// These changes and visual hints should be considered to occur simultaneously.
+// Sequential changes/effects are implemented elsewhere.
+message Effect {
+  repeated StateChange state_changes = 1;
+  repeated VisualHint  visual_hints  = 2;
+
+  // StateChange represents a change to the game state.
+  message StateChange {
+    oneof type {
+      NoOp                no_op                  = 1;
+      PieceMoved          piece_moved            = 2;
+      PieceCaptured       piece_captured         = 3;
+      PieceDeployed       piece_deployed         = 4;
+      PiecePromoted       piece_promoted         = 5;
+      CreateFlag          create_flag            = 6;
+      DeleteFlag          delete_flag            = 7;
+      SetBoardActiveColor set_board_active_color = 8;
+    }
+
+    // NoOp represents no operation / no change.
+    message NoOp {}
+
+    // PieceMoved represents a piece moving to a new place within the same board.
+    message PieceMoved {
+      string piece_id = 1;
+      Vector to       = 2;
+    }
+
+    // PieceCaptured represents a piece being captured.
+    // In classic rules, it is moved to the capturer's captured zone.
+    // In kaboom rules, it is moved to the original owner's bench (for redeployment).
+    message PieceCaptured {
+      string piece_id = 1;
+    }
+
+    // PieceDeployed represents a piece being deployed to the board's active area.
+    message PieceDeployed {
+      string piece_id = 1;
+      Vector to       = 2;
+    }
+
+    // PiecePromoted represents a piece being promoted to a new kind.
+    message PiecePromoted {
+      string piece_id       = 1;
+      ChessPieceKind new_kind = 2;
+    }
+
+    // CreateFlag represents the creation of a new game flag, attached to the game state.
+    message CreateFlag {
+      Flag flag = 1;
+    }
+
+    // DeleteFlag represents the deletion of an existing game flag from the game state.
+    message DeleteFlag {
+      string flag_id = 1;
+    }
+
+    message SetBoardActiveColor {
+      string     board_id     = 1;
+      ChessColor active_color = 2;
+    }
+  }
+
+  // VisualHint represents a visual effect cue that a client may choose to follow accompanying state effects.
+  message VisualHint {
+    oneof type {
+      NoOp no_op = 1;
+    }
+
+    // NoOp represents no visual hint (or a placeholder).
+    message NoOp {
+      string comment = 1;
+    }
+  }
+}

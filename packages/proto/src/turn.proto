@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package proto;
+
+import "move.proto";
+import "effect.proto";
+import "google/protobuf/timestamp.proto";
+
+
+// IntendedTurn represents a turn as intended by a player, before any validation.
+message IntendedTurn {
+  string id = 1;
+  string player_id = 2;
+  repeated Move moves = 3;
+  google.protobuf.Timestamp intended_at = 4;
+}
+
+// ResolvedTurn represents a turn after validation and resolution, but before execution.
+// It builds upon an IntendedTurn by adding the resulting effects and the time it was resolved.
+message ResolvedTurn {
+  string id = 1;
+  string player_id = 2;
+  repeated Move moves = 3;
+  repeated Effect effects = 4;
+  google.protobuf.Timestamp intended_at = 5;
+  google.protobuf.Timestamp resolved_at = 6;
+}
+
+// ExecutedTurn represents a turn that has been fully executed in the game.
+message ExecutedTurn {
+  string id = 1;
+  string player_id = 2;
+  repeated Move moves = 3;
+  repeated Effect effects = 4;
+  google.protobuf.Timestamp intended_at = 5;
+  google.protobuf.Timestamp resolved_at = 6;
+  google.protobuf.Timestamp executed_at = 7;
+}

@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package proto;
+
+import "color.proto";
+// ChessBoard represents the dimensions and identity of a chess board.
+message ChessBoard {
+  string id = 1;
+  int64 rows = 2;
+  int64 columns = 3;
+
+  ChessColor active_color = 4; // The player whose turn it is to move.
+}
+
+// ChessBoardPlayer is a "many-to-many" mapping between chess boards and players.
+// It indicates which players are participating in which boards, and their assigned colors.
+message ChessBoardPlayer {
+  string board_id = 1;
+  string player_id = 2;
+  ChessColor color = 3;
+}
+
+// Place represents a specific location of a piece, either on the board or off the board (captured or on bench).
+message Place {
+  string board_id = 1;
+  oneof zone {
+    Vector board_position = 2;
+    Captured captured = 3;
+    Benched benched = 4;
+  }
+
+  message Captured {
+    // The color of the holder of the captured piece (the player who captured it).
+    ChessColor holder_color = 1;
+  }
+  message Benched {
+    // The color of the holder of the captured piece (the player who may deploy it).
+    ChessColor holder_color = 1;
+  }
+}
+
+// Vector represents either a position or a direction/delta on the board.
+//
+// As a location, row and column are 0-indexed from the bottom-left corner of the board,
+// from the perspective of the white player. E.g. on a conventional 8x8 chess board,
+// the bottom-left corner (A1) is (0, 0), and the top-right corner (H8) is (7, 7).
+// The white queen starts at (D1) (0, 3) and the black queen starts at (D8) (7, 3).
+message Vector {
+  int64 row = 1;
+  int64 column = 2;
+}

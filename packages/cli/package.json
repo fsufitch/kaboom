@@ -1,0 +1,32 @@
+{
+  "name": "@kaboom/cli",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsup --config tsup.config.ts",
+    "lint": "pnpm -C ../.. exec eslint --config packages/cli/eslint.config.ts packages/cli",
+    "lint:fix": "pnpm -C ../.. exec eslint --config packages/cli/eslint.config.ts packages/cli --fix",
+    "start": "node dist/main.cjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.27.0",
+  "dependencies": {
+    "@kaboom/engine": "workspace:^",
+    "@kaboom/proto": "workspace:^"
+  },
+  "devDependencies": {
+    "tsup": "catalog:",
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:",
+    "@vitest/coverage-v8": "catalog:"
+  }
+}

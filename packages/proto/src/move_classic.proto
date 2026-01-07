@@ -1,0 +1,144 @@
+syntax = "proto3";
+
+package proto;
+
+import "board.proto";
+import "piece.proto";
+
+// ClassicChessMove represents a move in classic chess.
+// It contains a oneof for each piece type, and within each piece type, a oneof for each move type.
+message ClassicChessMove {
+  oneof piece {
+    Pawn pawn = 1;
+    Rook rook = 2;
+    Knight knight = 3;
+    Bishop bishop = 4;
+    Queen queen = 5;
+    King king = 6;
+  }
+
+  message Pawn {
+    oneof type {
+      OneStep one_step = 1;
+      TwoStep two_step = 2;
+      Capture capture = 3;
+      EnPassant en_passant = 4;
+      Promotion promotion = 5;
+    }
+
+    message OneStep {
+      Place from = 1;
+      Place to = 2;
+    }
+    message TwoStep {
+      Place from = 1;
+      Place to = 2;
+    }
+    message Capture {
+      Place from = 1;
+      Place to = 2;
+    }
+    message EnPassant {
+      Place from = 1;
+      Place to = 2;
+    }
+
+    // Promotion represents a pawn promotion. It is handled as a standalone separate "Move".
+    // That is, a turn in which a pawn moves into the final rank and promotes will consist of two Moves:
+    // 1) A ClassicChessMove.Pawn.OneStep move into the final rank.
+    // 2) A ClassicChessMove.Pawn.Promotion move specifying the promotion.
+    // Same applies for a pawn entering the final rank with a capture, etc.
+    message Promotion {
+      Place from = 1;
+      ChessPieceKind promote_to = 2;
+    }
+  }
+
+  message Rook {
+    oneof type{
+      Move move = 1;
+      Capture capture = 2;
+    }
+
+    message Move {
+      Place from = 1;
+      Place to = 2;
+    }
+    message Capture {
+      Place from = 1;
+      Place to = 2;
+    }
+  }
+
+  message Knight {
+    oneof type{
+      Move move = 1;
+      Capture capture = 2;
+    }
+
+    message Move {
+      Place from = 1;
+      Place to = 2;
+    }
+    message Capture {
+      Place from = 1;
+      Place to = 2;
+    }
+  }
+
+  message Bishop {
+    oneof type {
+      Move move = 1;
+      Capture capture = 2;
+    }
+
+    message Move {
+      Place from = 1;
+      Place to = 2;
+    }
+    message Capture {
+      Place from = 1;
+      Place to = 2;
+    }
+  }
+
+  message Queen {
+    oneof type {
+      Move move = 1;
+      Capture capture = 2;
+    }
+
+    message Move {
+      Place from = 1;
+      Place to = 2;
+    }
+    message Capture {
+      Place from = 1;
+      Place to = 2;
+    }
+  }
+
+  message King {
+    oneof type{
+      Move move = 1;
+      Capture capture = 2;
+      Castle castle = 3;
+    }
+
+    message Move {
+      Place from = 1;
+      Place to = 2;
+    }
+    message Capture {
+      Place from = 1;
+      Place to = 2;
+    }
+    message Castle {
+      Place king_from = 1;
+      Place king_to = 2;
+      Place rook_from = 3;
+      Place rook_to = 4;
+    }
+  }
+}
+
