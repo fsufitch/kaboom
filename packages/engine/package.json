@@ -5,34 +5,34 @@
   "type": "module",
   "exports": {
     ".": {
-      "require": "./dist/index.cjs",
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.cjs"
     },
     "./*": {
-      "require": "./dist/*.cjs",
+      "types": "./dist/*.d.ts",
       "import": "./dist/*.js",
-      "types": "./dist/*.d.ts"
+      "require": "./dist/*.cjs"
     },
     "./base": {
-      "require": "./dist/base/index.cjs",
+      "types": "./dist/base/index.d.ts",
       "import": "./dist/base/index.js",
-      "types": "./dist/base/index.d.ts"
+      "require": "./dist/base/index.cjs"
     },
     "./base/*": {
-      "require": "./dist/base/*.cjs",
+      "types": "./dist/base/*.d.ts",
       "import": "./dist/base/*.js",
-      "types": "./dist/base/*.d.ts"
+      "require": "./dist/base/*.cjs"
     },
     "./classic": {
-      "require": "./dist/classic/index.cjs",
+      "types": "./dist/classic/index.d.ts",
       "import": "./dist/classic/index.js",
-      "types": "./dist/classic/index.d.ts"
+      "require": "./dist/classic/index.cjs"
     },
     "./classic/*": {
-      "require": "./dist/classic/*.cjs",
+      "types": "./dist/classic/*.d.ts",
       "import": "./dist/classic/*.js",
-      "types": "./dist/classic/*.d.ts"
+      "require": "./dist/classic/*.cjs"
     }
   },
   "main": "dist/index.cjs",
@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "@vitest/coverage-v8": "catalog:",
+    "@vitest/ui": "catalog:",
     "tsup": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:",

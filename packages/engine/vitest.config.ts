@@ -27,5 +27,9 @@ export default defineConfig({
       provider: 'v8',
       reportsDirectory: path.join(repoRoot, 'coverage', 'engine'),
     },
+    typecheck: {
+      tsconfig: path.join(engineRoot, 'tsconfig.json'),
+    },
+    reporters: ['verbose'],
   },
 });
