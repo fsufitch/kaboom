@@ -79,11 +79,6 @@ export const PieceMovedMutator: GameSnapshotMutator = {
       );
     }
 
-    console.log('Moving piece:', pieceToMove);
-    console.log('From:', pieceToMove.place.boardPosition);
-    console.log('To:', toBoardPosition);
-    console.log('State change:', stateChange);
-
     pieceToMove.place.boardPosition = toBoardPosition;
   },
 };

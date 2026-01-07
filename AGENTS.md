@@ -35,10 +35,10 @@ You may need to install additional "system" dependencies depending on your OS an
 
 ## Code validation
 
-The project uses linting and testing to ensure code quality.
+The project uses linting and testing to ensure code quality. Run the following commands to validate your code, **in this order**:
 
-- Type checking is done with TypeScript. Run `pnpm build` to check for type errors.
-- Linting is done with ESLint. Run `pnpm lint` to check for issues, and `pnpm lint:fix` to automatically fix some issues.
+- Type checking is done with TypeScript. Run `pnpm typecheck` to check for type errors (including tests).
+- Linting is done with ESLint. Run `pnpm -r lint` to check for issues, and `pnpm -r lint:fix` to automatically fix some issues. (without -r when run from a package directory)
 - Formatting is done with Prettier. Run `pnpm format` to format code.
 - Testing is done with Vitest. See TESTING.md for details on running tests and the testing strategy.
 
