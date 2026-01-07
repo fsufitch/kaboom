@@ -4,7 +4,7 @@ So you're here to work with my code. Great! Below you'll find some instructions 
 
 ## What this project is
 
-TODO
+Kaboom is a headless, stateless TypeScript rules engine for classic chess and Kaboom chess variants. It operates on immutable `GameSnapshot` data defined in protobuf schemas, validating and resolving turns into deterministic effects and producing new snapshots. The codebase is designed to be embedded in other systems (servers, CLIs, UIs, AI tooling), and includes the core engine, protobuf schema/tooling, and a CLI scaffold.
 
 ## Crucial concepts and context
 
