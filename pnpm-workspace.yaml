@@ -3,10 +3,17 @@ packages:
   - packages/*
 
 catalog:
+  '@vitest/coverage-v8': ^2.0.0
   tsup: ^8.5.1
   typescript: ^5.9.3
+  vite: ^5.0.0
+  vitest: ^2.0.0
+  vite-tsconfig-paths: ^5.0.0
 
 hoist: true
+
+ignoredBuiltDependencies:
+  - esbuild
 
 linkWorkspacePackages: true
 

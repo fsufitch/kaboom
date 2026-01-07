@@ -41,7 +41,11 @@
   "scripts": {
     "build": "tsup --config tsup.config.ts",
     "lint": "pnpm -C ../.. exec eslint --config packages/engine/eslint.config.ts packages/engine",
-    "lint:fix": "pnpm -C ../.. exec eslint --config packages/engine/eslint.config.ts packages/engine --fix"
+    "lint:fix": "pnpm -C ../.. exec eslint --config packages/engine/eslint.config.ts packages/engine --fix",
+    "pretest": "pnpm -C ../proto generate",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": "",
@@ -51,7 +55,11 @@
     "@kaboom/proto": "workspace:^"
   },
   "devDependencies": {
+    "@vitest/coverage-v8": "catalog:",
     "tsup": "catalog:",
-    "typescript": "catalog:"
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:"
   }
 }

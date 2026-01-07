@@ -5,10 +5,6 @@
   "compilerOptions": {
     "outDir": "dist",
   },
-  "include": [
-    "*.ts",
-    "gen/**/*.ts"
-  ],
   "exclude": [
     "dist",
     "node_modules",

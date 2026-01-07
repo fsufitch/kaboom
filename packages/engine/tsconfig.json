@@ -10,8 +10,14 @@
     ],
     "paths": {
       "@kaboom/engine/*": [
-        "./*"
+        "./src/*"
       ],
+      "@kaboom/proto": [
+        "../proto/src/index.ts"
+      ],
+      "@kaboom/proto/*": [
+        "../proto/src/*"
+      ]
     }
   },
   "exclude": [

@@ -8,9 +8,9 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/src/index.js",
+      "require": "./dist/src/index.cjs",
+      "types": "./dist/src/index.d.ts"
     }
   },
   "scripts": {
@@ -19,16 +19,23 @@
     "generate": "bash ./protobuf_ts.sh build",
     "clean": "bash ./protobuf_ts.sh clean",
     "lint": "pnpm -C ../.. exec eslint --config packages/proto/eslint.config.ts packages/proto",
-    "lint:fix": "pnpm -C ../.. exec eslint --config packages/proto/eslint.config.ts packages/proto --fix"
+    "lint:fix": "pnpm -C ../.. exec eslint --config packages/proto/eslint.config.ts packages/proto --fix",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {
+    "@vitest/coverage-v8": "catalog:",
     "protoc": "^33.2.0",
     "tsup": "catalog:",
-    "typescript": "^5.9.3"
+    "typescript": "catalog:",
+    "vite": "catalog:",
+    "vite-tsconfig-paths": "catalog:",
+    "vitest": "catalog:"
   },
   "dependencies": {
     "@bufbuild/protobuf": "^2.10.2",

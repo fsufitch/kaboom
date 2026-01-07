@@ -38,5 +38,7 @@ export interface MoveResolver {
 export class IllegalMoveError extends Error {
   constructor(move: Move, message: string) {
     super(`Illegal move (${JSON.stringify(move)}): ${message}`);
+    this.name = 'IllegalMoveError';
+    Object.setPrototypeOf(this, new.target.prototype);
   }
 }
