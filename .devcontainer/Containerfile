@@ -25,7 +25,8 @@ RUN dnf install -y \
   gcc \
   gdb \
   make \
-  pkgconf
+  pkgconf \
+  cmake
 
 # Extra bashrc, paths, etc
 COPY ./bashrc-load-dir.sh /etc/bashrc-load-dir.sh
