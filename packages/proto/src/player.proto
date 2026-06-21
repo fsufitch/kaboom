@@ -1,9 +1,0 @@
-syntax = "proto3";
-
-package proto;
-
-// Player represents a player in the chess game.
-message Player {
-  string id = 1;
-  string name = 2;
-}

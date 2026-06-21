@@ -1,4 +1,4 @@
-FROM docker.io/fedora:43 AS devcontainer
+FROM docker.io/fedora:44 AS devcontainer
 
 RUN dnf install -y \
   bash-completion \
@@ -11,8 +11,6 @@ RUN dnf install -y \
   jq \
   man-db \
   ncurses \
-  nodejs \
-  npm \
   openssh-clients \
   protobuf-compiler \
   protobuf-devel \
@@ -22,9 +20,12 @@ RUN dnf install -y \
   vim \
   wget \
   xz \
-  zip
-
-RUN npm i -g pnpm
+  zip \
+  \
+  gcc \
+  gdb \
+  make \
+  pkgconf
 
 # Extra bashrc, paths, etc
 COPY ./bashrc-load-dir.sh /etc/bashrc-load-dir.sh
