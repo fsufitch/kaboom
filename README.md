@@ -24,7 +24,7 @@ Kaboom Chess is a family of chess variants with:
 ## Docs
 
 - **Player rules:** see `KABOOM.md`
-- **Engine design:** see `ARCHITECTURE.md`
+- **Engine design:** see `ARCHITECTURE.md` (WIP)
 
 ## Repo structure
 

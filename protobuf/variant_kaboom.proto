@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package kaboomproto.kaboom;
+
+import "board.proto";
+import "piece.proto";
+
+enum MoveType {
+  KMOVE_UNKNOWN       = 0;
+  KMOVE_PAWN_MOVE_ONE = 1;
+  KMOVE_PAWN_MOVE_TWO = 2;
+  KMOVE_PAWN_BUMP     = 3;
+  KMOVE_PAWN_EXPLODE  = 4;
+  KMOVE_KNIGHT_MOVE   = 5;
+  KMOVE_KNIGHT_BUMP   = 6;
+  KMOVE_KNIGHT_STOMP  = 7;
+  KMOVE_BISHOP_MOVE   = 8;
+  KMOVE_BISHOP_BUMP   = 9;
+  KMOVE_BISHOP_SNIPE  = 10;
+  KMOVE_ROOK_MOVE     = 11;
+  KMOVE_ROOK_BUMP_ONE = 12;
+  KMOVE_ROOK_BUMP_TWO = 13;
+  KMOVE_QUEEN_MOVE    = 14;
+  KMOVE_QUEEN_BUMP    = 15;
+  KMOVE_QUEEN_NOVA    = 16;
+  KMOVE_KING_MOVE     = 17;
+  KMOVE_KING_BUMP     = 18;
+  KMOVE_KING_CONTROL  = 19;
+}

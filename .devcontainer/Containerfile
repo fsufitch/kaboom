@@ -23,10 +23,12 @@ RUN dnf install -y \
   zip \
   \
   gcc \
+  clang \
   gdb \
   make \
   pkgconf \
-  cmake
+  cmake \
+  ninja
 
 # Extra bashrc, paths, etc
 COPY ./bashrc-load-dir.sh /etc/bashrc-load-dir.sh

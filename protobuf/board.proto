@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package kaboomproto;
+
+message Vec {
+  uint32 row = 1;
+  uint32 col = 2;
+}
+
+message Board {
+  uint32 id   = 1;
+  uint32 rows = 2;
+  uint32 cols = 3;
+}
+
+enum ChessColor {
+  COLOR_UNKNOWN = 0;
+  COLOR_WHITE   = 1;
+  COLOR_BLACK   = 2;
+}
+
+enum Zone {
+  ZONE_UNKNOWN  = 0;
+  ZONE_ON_BOARD = 1;
+  ZONE_CAPTURED = 2;
+  ZONE_BENCHED  = 3;
+}

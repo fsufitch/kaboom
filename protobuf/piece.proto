@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package kaboomproto;
+
+import "board.proto";
+
+enum PieceType {
+  PIECE_UNKNOWN = 0;
+  PIECE_PAWN    = 1;
+  PIECE_KNIGHT  = 2;
+  PIECE_BISHOP  = 3;
+  PIECE_ROOK    = 4;
+  PIECE_QUEEN   = 5;
+  PIECE_KING    = 6;
+}
+
+message Piece {
+  uint32     id       = 1;
+  PieceType  type     = 2;
+  ChessColor color    = 3;
+  Vec        pos      = 4;
+  uint32     board_id = 5;
+  Zone       zone     = 6;
+}

@@ -1,0 +1,146 @@
+syntax = "proto3";
+
+package kaboomproto.classic;
+
+import "board.proto";
+import "piece.proto";
+
+enum MoveType {
+  CMOVE_UNKNOWN                = 0;
+  CMOVE_PAWN_MOVE_ONE          = 1;
+  CMOVE_PAWN_MOVE_TWO          = 2;
+  CMOVE_PAWN_EN_PASSANT        = 3;
+  CMOVE_PAWN_CAPTURE           = 4;
+  CMOVE_PAWN_ENPASSANT_CAPTURE = 5;
+  CMOVE_PAWN_PROMOTION         = 6;
+  CMOVE_KNIGHT_MOVE            = 7;
+  CMOVE_KNIGHT_CAPTURE         = 8;
+  CMOVE_BISHOP_MOVE            = 9;
+  CMOVE_BISHOP_CAPTURE         = 10;
+  CMOVE_ROOK_MOVE              = 11;
+  CMOVE_ROOK_CAPTURE           = 12;
+  CMOVE_QUEEN_MOVE             = 13;
+  CMOVE_QUEEN_CAPTURE          = 14;
+  CMOVE_KING_MOVE              = 15;
+  CMOVE_KING_CAPTURE           = 16;
+  CMOVE_KING_CASTLE_KINGSIDE   = 17;
+  CMOVE_KING_CASTLE_QUEENSIDE  = 18;
+}
+
+message MoveDetail {
+  oneof detail {
+    MoveDetail.PawnMoveOne          pawn_move_one           = 1;
+    MoveDetail.PawnMoveTwo          pawn_move_two           = 2;
+    MoveDetail.PawnEnPassant        pawn_en_passant         = 3;
+    MoveDetail.PawnCapture          pawn_capture            = 4;
+    MoveDetail.PawnEnPassantCapture pawn_en_passant_capture = 5;
+    MoveDetail.PawnPromotion        pawn_promotion          = 6;
+    MoveDetail.KnightMove           knight_move             = 7;
+    MoveDetail.KnightCapture        knight_capture          = 8;
+    MoveDetail.BishopMove           bishop_move             = 9;
+    MoveDetail.BishopCapture        bishop_capture          = 10;
+    MoveDetail.RookMove             rook_move               = 11;
+    MoveDetail.RookCapture          rook_capture            = 12;
+    MoveDetail.QueenMove            queen_move              = 13;
+    MoveDetail.QueenCapture         queen_capture           = 14;
+    MoveDetail.KingMove             king_move               = 15;
+    MoveDetail.KingCapture          king_capture            = 16;
+    MoveDetail.KingCastleKingside   king_castle_kingside    = 17;
+    MoveDetail.KingCastleQueenside  king_castle_queenside   = 18;
+  }
+
+  message PawnMoveOne {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message PawnMoveTwo {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message PawnEnPassant {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message PawnCapture {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message PawnEnPassantCapture {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message PawnPromotion {
+    kaboomproto.Vec       from       = 1;
+    kaboomproto.Vec       to         = 2;
+    kaboomproto.PieceType promote_to = 3;
+  }
+
+  message KnightMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message KnightCapture {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message BishopMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message BishopCapture {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message RookMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message RookCapture {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message QueenMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message QueenCapture {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message KingMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message KingCapture {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message KingCastleKingside {
+    kaboomproto.Vec king_from = 1;
+    kaboomproto.Vec king_to   = 2;
+    kaboomproto.Vec rook_from = 3;
+    kaboomproto.Vec rook_to   = 4;
+  }
+
+  message KingCastleQueenside {
+    kaboomproto.Vec king_from = 1;
+    kaboomproto.Vec king_to   = 2;
+    kaboomproto.Vec rook_from = 3;
+    kaboomproto.Vec rook_to   = 4;
+  }
+}

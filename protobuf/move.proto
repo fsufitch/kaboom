@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package kaboomproto;
+
+import "board.proto";
+import "piece.proto";
+
+import "variant_classic.proto";
+
+message Move {
+  uint32 id = 1;
+
+  kaboomproto.classic.MoveType   classic_move_type   = 2;
+  kaboomproto.classic.MoveDetail classic_move_detail = 3;
+}

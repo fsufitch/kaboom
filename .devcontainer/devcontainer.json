@@ -24,15 +24,14 @@
         "wdhongtw.gpg-indicator",
         "yzhang.markdown-all-in-one",
         "EditorConfig.EditorConfig",
-        "openai.chatgpt",
-        "rvest.vs-code-prettier-eslint",
-        "esbenp.prettier-vscode",
         "DrBlury.protobuf-vsc",
-        "dbaeumer.vscode-eslint"
+        "ms-vscode.cmake-tools",
+        "ms-vscode.cpptools-extension-pack",
+        "Anthropic.claude-code"
       ]
     }
   },
-  "updateContentCommand": {
-    "nodeInstall": "pnpm install"
-  }
+  // "updateContentCommand": {
+  //   "nodeInstall": "pnpm install"
+  // }
 }
