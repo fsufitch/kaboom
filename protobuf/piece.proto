@@ -21,13 +21,3 @@ message Piece {
     kaboomproto.kaboom.PieceDetail   kaboom_detail = 8;
   }
 }
-
-
-enum PieceStatus {
-  STATUS_UNKNOWN  = 0;
-  STATUS_ON_BOARD = 1;
-  STATUS_CAPTURED = 2;
-  STATUS_BENCHED  = 3;
-  STATUS_EXHAUSTED  = 4;
-  STATUS_CHECK = 5;
-}
