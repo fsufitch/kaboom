@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package kaboomproto.api;
+
+import "common.proto";
+import "game.proto";
+
+service KaboomGameEngine {
+  rpc NewTwoPlayerGame(NewTwoPlayerGameRequest) returns (GameSnapshot);
+}
+
+message NewTwoPlayerGameRequest {
+  uint32 game_id = 1;
+  kaboomproto.Variant variant = 2;
+
+  uint32 white_player_id = 3;
+  uint32 black_player_id = 4;
+}

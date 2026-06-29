@@ -2,8 +2,7 @@ syntax = "proto3";
 
 package kaboomproto.classic;
 
-import "board.proto";
-import "piece.proto";
+import "common.proto";
 
 enum MoveType {
   CMOVE_UNKNOWN                = 0;
@@ -143,4 +142,15 @@ message MoveDetail {
     kaboomproto.Vec rook_from = 3;
     kaboomproto.Vec rook_to   = 4;
   }
+}
+
+message BoardDetail {
+  kaboomproto.ChessColor turn = 1;
+  kaboomproto.ChessColor winner = 2;
+}
+
+message PieceDetail {
+  bool captured = 1;
+  bool previously_moved = 2;
+  bool threatened = 3;
 }

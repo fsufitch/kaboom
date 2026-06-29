@@ -12,8 +12,6 @@ RUN dnf install -y \
   man-db \
   ncurses \
   openssh-clients \
-  protobuf-compiler \
-  protobuf-devel \
   python3 \
   sudo \
   unzip \
@@ -22,13 +20,15 @@ RUN dnf install -y \
   xz \
   zip \
   \
-  gcc \
   clang \
+  clangd \
   gdb \
   make \
   pkgconf \
   cmake \
-  ninja
+  protobuf-compiler \
+  protobuf-devel \
+  grpc-devel
 
 # Extra bashrc, paths, etc
 COPY ./bashrc-load-dir.sh /etc/bashrc-load-dir.sh

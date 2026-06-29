@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package kaboomproto;
+
+import "board.proto";
+import "common.proto";
+import "piece.proto";
+import "move.proto";
+import "google/protobuf/timestamp.proto";
+
+message GameSnapshot {
+  uint32 game_id = 1;
+  Variant variant = 2;
+
+  repeated Board boards = 3;
+  repeated GamePlayer players = 4;
+  repeated Piece pieces = 5;
+
+  repeated TurnAction turn_history = 6;
+}
+
+message GamePlayer {
+  uint32 player_id = 1;
+  uint32 board_id = 2;
+  ChessColor color = 3;
+}
+
+
+message TurnAction {
+  uint32 player_id = 1;
+  uint32 board_id = 2;
+  google.protobuf.Timestamp timestamp = 3;
+  repeated Move moves = 4;
+}

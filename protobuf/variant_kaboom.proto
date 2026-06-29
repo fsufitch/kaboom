@@ -2,8 +2,7 @@ syntax = "proto3";
 
 package kaboomproto.kaboom;
 
-import "board.proto";
-import "piece.proto";
+import "common.proto";
 
 enum MoveType {
   KMOVE_UNKNOWN       = 0;
@@ -26,4 +25,133 @@ enum MoveType {
   KMOVE_KING_MOVE     = 17;
   KMOVE_KING_BUMP     = 18;
   KMOVE_KING_CONTROL  = 19;
+}
+
+message MoveDetail {
+  oneof detail {
+    MoveDetail.PawnMoveOne  pawn_move_one  = 1;
+    MoveDetail.PawnMoveTwo  pawn_move_two  = 2;
+    MoveDetail.PawnBump     pawn_bump      = 3;
+    MoveDetail.PawnExplode  pawn_explode   = 4;
+    MoveDetail.KnightMove   knight_move    = 5;
+    MoveDetail.KnightBump   knight_bump    = 6;
+    MoveDetail.KnightStomp  knight_stomp   = 7;
+    MoveDetail.BishopMove   bishop_move    = 8;
+    MoveDetail.BishopBump   bishop_bump    = 9;
+    MoveDetail.BishopSnipe  bishop_snipe   = 10;
+    MoveDetail.RookMove     rook_move      = 11;
+    MoveDetail.RookBumpOne  rook_bump_one  = 12;
+    MoveDetail.RookBumpTwo  rook_bump_two  = 13;
+    MoveDetail.QueenMove    queen_move     = 14;
+    MoveDetail.QueenBump    queen_bump     = 15;
+    MoveDetail.QueenNova    queen_nova     = 16;
+    MoveDetail.KingMove     king_move      = 17;
+    MoveDetail.KingBump     king_bump      = 18;
+    MoveDetail.KingControl  king_control   = 19;
+  }
+
+  message PawnMoveOne {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message PawnMoveTwo {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message PawnBump {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message PawnExplode {
+    kaboomproto.Vec loc = 1;
+  }
+
+  message KnightMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message KnightBump {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+    kaboomproto.Vec bump_direction = 3;
+  }
+
+  message KnightStomp {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message BishopMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message BishopBump {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message BishopSnipe {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message RookMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message RookBumpOne {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message RookBumpTwo {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message QueenMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message QueenBump {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message QueenNova {
+    kaboomproto.Vec loc = 1;
+  }
+
+  message KingMove {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message KingBump {
+    kaboomproto.Vec from = 1;
+    kaboomproto.Vec to   = 2;
+  }
+
+  message KingControl {
+    kaboomproto.Vec loc = 1;
+    kaboomproto.Vec target = 2;
+    MoveType target_move_type = 3;
+    MoveDetail target_move_detail = 4;
+  }
+}
+
+message BoardDetail {
+
+}
+
+message PieceDetail {
+  bool benched = 1;
+  bool exhausted = 2;
 }

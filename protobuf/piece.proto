@@ -2,17 +2,10 @@ syntax = "proto3";
 
 package kaboomproto;
 
-import "board.proto";
+import "common.proto";
+import "variant_classic.proto";
+import "variant_kaboom.proto";
 
-enum PieceType {
-  PIECE_UNKNOWN = 0;
-  PIECE_PAWN    = 1;
-  PIECE_KNIGHT  = 2;
-  PIECE_BISHOP  = 3;
-  PIECE_ROOK    = 4;
-  PIECE_QUEEN   = 5;
-  PIECE_KING    = 6;
-}
 
 message Piece {
   uint32     id       = 1;
@@ -20,5 +13,21 @@ message Piece {
   ChessColor color    = 3;
   Vec        pos      = 4;
   uint32     board_id = 5;
-  Zone       zone     = 6;
+
+  PieceType promoted_type = 6;
+
+  oneof detail {
+    kaboomproto.classic.PieceDetail classic_detail = 7;
+    kaboomproto.kaboom.PieceDetail   kaboom_detail = 8;
+  }
+}
+
+
+enum PieceStatus {
+  STATUS_UNKNOWN  = 0;
+  STATUS_ON_BOARD = 1;
+  STATUS_CAPTURED = 2;
+  STATUS_BENCHED  = 3;
+  STATUS_EXHAUSTED  = 4;
+  STATUS_CHECK = 5;
 }

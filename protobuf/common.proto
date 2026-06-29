@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package kaboomproto;
+
+
+message Vec {
+  // Vec is a 2D vector with row and column coordinates.
+  // It can be used to represent positions on a chessboard, or directions of movement.
+  // Rows and columns map onto the A1-H8 chessboard as such:
+  // * Row 0, column 0 = A1
+  // * Row 0, column 7 = A8
+  // * Row 7, column 0 = H1
+  // * Row 7, column 7 = H8
+  int32 row = 1;
+  int32 col = 2;
+}
+
+
+enum ChessColor {
+  COLOR_UNKNOWN = 0;
+  COLOR_WHITE   = 1;
+  COLOR_BLACK   = 2;
+}
+
+enum Variant {
+  VARIANT_CLASSIC = 0;
+  VARIANT_KABOOM = 1;
+}
+
+
+enum PieceType {
+  PIECE_UNKNOWN = 0;
+  PIECE_PAWN    = 1;
+  PIECE_KNIGHT  = 2;
+  PIECE_BISHOP  = 3;
+  PIECE_ROOK    = 4;
+  PIECE_QUEEN   = 5;
+  PIECE_KING    = 6;
+}

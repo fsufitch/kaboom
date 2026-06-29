@@ -3,13 +3,19 @@ syntax = "proto3";
 package kaboomproto;
 
 import "board.proto";
+import "common.proto";
 import "piece.proto";
 
 import "variant_classic.proto";
+import "variant_kaboom.proto";
 
 message Move {
   uint32 id = 1;
+  kaboomproto.Variant variant = 2;
 
-  kaboomproto.classic.MoveType   classic_move_type   = 2;
-  kaboomproto.classic.MoveDetail classic_move_detail = 3;
+  kaboomproto.classic.MoveType   classic_move_type   = 3;
+  kaboomproto.classic.MoveDetail classic_move_detail = 4;
+
+  kaboomproto.kaboom.MoveType   kaboom_move_type   = 5;
+  kaboomproto.kaboom.MoveDetail kaboom_move_detail = 6;
 }
